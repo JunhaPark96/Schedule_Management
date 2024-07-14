@@ -1,6 +1,7 @@
 import 'package:go_router/go_router.dart';
 import 'package:oneline/screens/calendar_screen.dart';
 import 'package:oneline/screens/add_event_page.dart';
+import 'package:oneline/screens/server_list.dart';
 import 'package:oneline/screens/todo_page.dart';
 import 'package:oneline/screens/schedule_page.dart';
 import 'package:oneline/main_navi.dart';
@@ -33,6 +34,10 @@ final router = GoRouter(
         GoRoute(
           path: 'contact', // 연락처 경로 추가
           builder: (context, state) => ContactListScreen(),
+        ),
+        GoRoute(
+          path: 'server_list', // 서버 리스트 경로 추가
+          builder: (context, state) => const ServerList(),
         ),
       ],
     ),

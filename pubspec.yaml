@@ -49,6 +49,7 @@ dependencies:
   firebase_storage: ^12.1.0
   flutter_screenutil: ^5.9.3
   table_calendar: ^3.0.0
+  pluto_grid: ^8.0.0
 
 dev_dependencies:
   flutter_test:

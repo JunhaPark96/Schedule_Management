@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:oneline/models/tab_model.dart';
 import 'package:oneline/screens/calendar_screen.dart';
+import 'package:oneline/screens/server_list.dart';
 import 'package:oneline/widgets/side_navigation_bar.dart';
 import 'package:go_router/go_router.dart';
 import 'package:oneline/screens/contact_list_screen.dart'; // 추가
@@ -49,6 +50,9 @@ class _MainNavigationScreenState extends State<MainNavigationScreen>
     switch (index) {
       case 0:
         context.go('/mainnavi/calendar');
+        break;
+      case 1: // 서버 리스트
+        context.go('/mainnavi/server_list');
         break;
       case 3: // 연락처
         context.go('/mainnavi/contact');
@@ -99,19 +103,21 @@ class _MainNavigationScreenState extends State<MainNavigationScreen>
               children: [
                 if (location.contains('/mainnavi/calendar'))
                   const CalendarScreen(),
-                if (location.contains('/mainnavi/contact')) // 연락처
-                  ContactListScreen(),
+                if (location.contains('/mainnavi/contact')) ContactListScreen(),
+                if (location.contains('/mainnavi/server_list'))
+                  const ServerList(),
                 if (!location.contains('/mainnavi/calendar') &&
-                    !location.contains('/mainnavi/contact'))
+                    !location.contains('/mainnavi/contact') &&
+                    !location.contains('/mainnavi/server_list'))
                   Container(
                     child: const Text('Main Screen'),
                   ),
-                Offstage(
-                  offstage: _selectedIndex != 1,
-                  child: Container(
-                    child: const Text('Server List Screen'),
-                  ),
-                ),
+                // Offstage(
+                //   offstage: _selectedIndex != 1,
+                //   child: Container(
+                //     child: const Text('Server List Screen'),
+                //   ),
+                // ),
                 Offstage(
                   offstage: _selectedIndex != 2,
                   child: Container(
