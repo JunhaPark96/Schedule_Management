@@ -1,11 +1,13 @@
 import 'package:go_router/go_router.dart';
+import 'package:oneline/models/contact_model.dart';
 import 'package:oneline/screens/calendar_screen.dart';
 import 'package:oneline/screens/add_event_page.dart';
 import 'package:oneline/screens/server_list.dart';
 import 'package:oneline/screens/todo_page.dart';
 import 'package:oneline/screens/schedule_page.dart';
 import 'package:oneline/main_navi.dart';
-import 'package:oneline/screens/contact_list_screen.dart'; // 추가
+import 'package:oneline/screens/contact_list_screen.dart';
+import 'package:oneline/screens/contact_detail_page.dart';
 
 final router = GoRouter(
   initialLocation: "/mainnavi",
@@ -32,8 +34,17 @@ final router = GoRouter(
           builder: (context, state) => const SchedulePage(),
         ),
         GoRoute(
-          path: 'contact', // 연락처 경로 추가
+          path: 'contact',
           builder: (context, state) => ContactListScreen(),
+          routes: [
+            GoRoute(
+              path: 'detail',
+              builder: (context, state) {
+                final contact = state.extra as Contact;
+                return ContactDetailPage(contact: contact);
+              },
+            ),
+          ],
         ),
         GoRoute(
           path: 'server_list', // 서버 리스트 경로 추가

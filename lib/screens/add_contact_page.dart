@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:oneline/models/contact_model.dart';
+import 'package:provider/provider.dart';
+import 'package:oneline/models/contact_provider.dart';
 
 class AddContactPage extends StatefulWidget {
   const AddContactPage({super.key});
@@ -12,6 +15,8 @@ class _AddContactPageState extends State<AddContactPage> {
   late String _name;
   late String _phone;
   late String _email;
+  late String _workplace; // 20240716_김재영 : 연락처 내 직장정보 추가
+  late String _notes; // 20240716_김재영 : 연락처 내 메모 추가
 
   @override
   Widget build(BuildContext context) {
@@ -43,11 +48,34 @@ class _AddContactPageState extends State<AddContactPage> {
                   _email = value!;
                 },
               ),
+              TextFormField(
+                decoration: const InputDecoration(
+                    labelText: 'Workplace'), // 20240716_김재영 : 연락처 내 직장정보 추가
+                onSaved: (value) {
+                  _workplace = value!;
+                },
+              ),
+              TextFormField(
+                decoration: const InputDecoration(
+                    labelText: 'Notes'), // 20240716_김재영 : 연락처 내 메모 추가
+                onSaved: (value) {
+                  _notes = value!;
+                },
+              ),
               ElevatedButton(
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {
                     _formKey.currentState!.save();
-                    // 연락처 저장 로직을 여기에 추가할 수 있습니다.
+                    final newContact = Contact(
+                      name: _name,
+                      phone: _phone,
+                      email: _email,
+                      workplace: _workplace, // 20240716_김재영 : 연락처 내 직장정보 추가
+                      notes: _notes, // 20240716_김재영 : 연락처 내 메모 추가
+                    );
+                    Provider.of<ContactProvider>(context, listen: false)
+                        .addContact(
+                            newContact); // 20240716_김재영 : ContactProvider 구현
                     Navigator.pop(context);
                   }
                 },
