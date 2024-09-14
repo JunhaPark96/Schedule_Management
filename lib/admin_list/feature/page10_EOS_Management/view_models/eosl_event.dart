@@ -2,6 +2,8 @@ abstract class EoslEvent {}
 
 class FetchEoslList extends EoslEvent {}
 
+class FetchLocalEoslList extends EoslEvent {} // 로컬 데이터 가져오는 이벤트 추가
+
 class FetchEoslDetailList extends EoslEvent {}
 
 class FetchEoslDetail extends EoslEvent {

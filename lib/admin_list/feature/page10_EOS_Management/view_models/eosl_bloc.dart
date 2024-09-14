@@ -17,6 +17,7 @@ class EoslBloc extends Bloc<EoslEvent, EoslState> {
           loading: true,
         )) {
     on<FetchEoslList>(_onFetchEoslList);
+    on<FetchLocalEoslList>(_onFetchLocalEoslList);
     // on<FetchEoslDetailList>(_onFetchEoslDetailList);
     on<FetchEoslMaintenanceList>(_onFetchEoslMaintenanceList);
     on<AddTaskToEoslDetail>(_onAddTaskToEoslDetail);
@@ -30,6 +31,20 @@ class EoslBloc extends Bloc<EoslEvent, EoslState> {
       List<EoslModel> eoslList = await apiService.fetchEoslList();
       emit(state.copyWith(eoslList: eoslList, loading: false));
     } catch (e) {
+      emit(state.copyWith(loading: false, error: e.toString()));
+    }
+  }
+
+  Future<void> _onFetchLocalEoslList(
+      FetchLocalEoslList event, Emitter<EoslState> emit) async {
+    try {
+      emit(state.copyWith(loading: true, error: ''));
+      List<EoslModel> eoslList = await apiService.fetchLocalEoslList();
+      print(
+          'Fetched Local EOSL List: ${eoslList.length} items'); // 로컬 데이터 로드 확인
+      emit(state.copyWith(eoslList: eoslList, loading: false));
+    } catch (e) {
+      print('Error fetching Local EOSL List: $e'); // 에러 로그
       emit(state.copyWith(loading: false, error: e.toString()));
     }
   }
@@ -85,7 +100,8 @@ class EoslBloc extends Bloc<EoslEvent, EoslState> {
       emit(state.copyWith(loading: true, error: ''));
       List<EoslMaintenance> maintenanceList = await apiService
           .fetchEoslMaintenanceList(event.hostName, event.maintenanceNo);
-      emit(state.copyWith(eoslMaintenanceList: maintenanceList, loading: false));
+      emit(
+          state.copyWith(eoslMaintenanceList: maintenanceList, loading: false));
     } catch (e) {
       emit(state.copyWith(loading: false, error: e.toString()));
     }

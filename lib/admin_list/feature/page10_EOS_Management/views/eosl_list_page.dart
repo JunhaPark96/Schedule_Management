@@ -33,6 +33,11 @@ class _EoslListPageState extends State<EoslListPage> {
     eoslBloc.add(FetchEoslList()); // EOSL 리스트를 로드하는 이벤트 추가
   }
 
+  void loadLocalEoslData() {
+    final eoslBloc = context.read<EoslBloc>();
+    eoslBloc.add(FetchLocalEoslList()); // 로컬 EOSL 리스트를 로드하는 이벤트 추가
+  }
+
   void setFilterRows(String searchTerm) {
     final lowerCaseSearchTerm = searchTerm.toLowerCase();
     stateManager.setFilter((PlutoRow row) {
@@ -50,6 +55,12 @@ class _EoslListPageState extends State<EoslListPage> {
       appBar: AppBar(
         title: const Text('EOSL List'),
         backgroundColor: Colors.teal,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.cloud_download),
+            onPressed: loadLocalEoslData, // 로컬 데이터 로드 버튼 추가
+          ),
+        ],
       ),
       body: BlocBuilder<EoslBloc, EoslState>(
         builder: (context, state) {
@@ -119,9 +130,6 @@ class _EoslListPageState extends State<EoslListPage> {
               onRowDoubleTap: (PlutoGridOnRowDoubleTapEvent event) {
                 final row = event.row;
                 final hostName = row.cells['host_name']?.value ?? '';
-                // final eoslBloc = context.read<EoslBloc>();
-                // 새로운 이벤트를 추가하여 hostName을 전달
-
                 Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -205,8 +213,6 @@ class _EoslListPageState extends State<EoslListPage> {
 
   // 플루토 그리드의 행 생성 메서드
   List<PlutoRow> createRows(List<EoslModel> eoslList) {
-    print("createRows 메소드 호출 완료, 로드된 항목 수: ${eoslList.length}");
-
     return eoslList.map((server) {
       return PlutoRow(
         cells: {
@@ -274,7 +280,6 @@ class _EoslListPageState extends State<EoslListPage> {
           actions: [
             TextButton(
               onPressed: () async {
-                // 모든 입력 필드가 채워졌는지 확인
                 if ([
                   eoslNo,
                   hostName,
@@ -284,7 +289,6 @@ class _EoslListPageState extends State<EoslListPage> {
                   osVersion,
                   eoslDate
                 ].every((element) => element != null && element.isNotEmpty)) {
-                  // 새로운 데이터를 API로 추가
                   await context.read<EoslBloc>().apiService.addEoslData({
                     'eoslNo': eoslNo,
                     'hostName': hostName,

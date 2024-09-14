@@ -1,0 +1,32 @@
+{
+    "eoslDetail": {
+        "hostName": "server1",
+        "field": "Server",
+        "quantity": "2",
+        "note": "Regular maintenance required",
+        "supplier": "Supplier A",
+        "eoslDate": "20230901"
+    },
+    "maintenances": [
+        {
+            "maintenanceNo": "001",
+            "hostName": "server1",
+            "tasks": [
+                {
+                    "date": "2024-08-13",
+                    "content": "Check disk space"
+                }
+            ]
+        },
+        {
+            "maintenanceNo": "002",
+            "hostName": "server1",
+            "tasks": [
+                {
+                    "date": "2024-09-15",
+                    "content": "Update firmware"
+                }
+            ]
+        }
+    ]
+}
