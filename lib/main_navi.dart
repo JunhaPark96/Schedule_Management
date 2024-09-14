@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 
 import 'package:oneline2/admin_list/feature/Page1_Todo/views/todo_screen.dart';
 import 'package:oneline2/admin_list/feature/Page5_Memo/views/memo_screen.dart';
+import 'package:oneline2/admin_list/feature/page10_EOS_Management/views/eosl_list_page.dart';
 import 'package:oneline2/admin_list/feature/page2_Backlog/views/backlogpage.dart';
 
 import 'package:oneline2/admin_list/feature/page3_Group/views/groupscreen.dart';
@@ -96,6 +97,11 @@ class _MainNavigationScreenState extends State<MainNavigationScreen>
                         icon: FaIcon(FontAwesomeIcons.addressBook),
                         label: Text('Contact'),
                       ),
+                      // 박준하
+                      NavigationRailDestination(
+                        icon: FaIcon(FontAwesomeIcons.tableCells),
+                        label: Text('eosl_management'),
+                      ),
                     ],
                     selectedIndex: _selectedIndex),
               ),
@@ -136,6 +142,8 @@ class _MainNavigationScreenState extends State<MainNavigationScreen>
       case 9:
         // Pass contactRepository to ContactListScreen
         return ContactListScreen(contactRepository: contactRepository);
+      case 10:
+        return const EoslListPage();
 
       default:
         return const SplashScreen();

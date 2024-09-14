@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:provider/provider.dart'; // provider 패키지 필요
+import 'package:oneline2/admin_list/feature/page10_EOS_Management/view_models/eosl_bloc.dart';
+import 'package:oneline2/admin_list/feature/page10_EOS_Management/view_models/eosl_event.dart';
+import 'package:provider/provider.dart'; 
 import 'package:oneline2/admin_list/feature/Page1_Todo/repos/todo_repos.dart';
 import 'package:oneline2/admin_list/feature/Page1_Todo/view_models/todo_bloc.dart';
 import 'package:oneline2/admin_list/feature/Page1_Todo/view_models/todo_event.dart';
@@ -44,6 +46,8 @@ Future<void> main() async {
         BlocProvider(create: (context) => EOSBloc()..add(FetchEOS())),
         BlocProvider(create: (context) => LicenseBloc()..add(FetchLicense())),
         BlocProvider(create: (context) => CdcBloc()..add(FetchCdc())),
+        BlocProvider(
+            create: (context) => EoslBloc()..add(FetchEoslList())), // 박준하 bloc
       ],
       child: MyApp(
         appRouteGenerate: AppRouteGenerate(),
@@ -59,14 +63,15 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        debugShowCheckedModeBanner: false,
-        onGenerateRoute: appRouteGenerate.onGenerateRoute,
-        title: "One Line",
-        theme: ThemeData(
-          fontFamily: 'OpenSans',
-          scaffoldBackgroundColor: Colors.white,
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-          useMaterial3: true,
-        ));
+      debugShowCheckedModeBanner: false,
+      onGenerateRoute: appRouteGenerate.onGenerateRoute,
+      title: "One Line",
+      theme: ThemeData(
+        fontFamily: 'OpenSans',
+        scaffoldBackgroundColor: Colors.white,
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        useMaterial3: true,
+      ),
+    );
   }
 }

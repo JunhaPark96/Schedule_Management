@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:oneline2/admin_list/feature/Page1_Todo/views/todo_screen.dart';
 import 'package:oneline2/admin_list/feature/Page5_Memo/views/memo_screen.dart';
+import 'package:oneline2/admin_list/feature/page10_EOS_Management/views/eosl_list_page.dart';
 import 'package:oneline2/admin_list/feature/page3_Group/views/groupscreen.dart';
 import 'package:oneline2/admin_list/feature/page4_CDC_table/views/cdctable.dart';
 import 'package:oneline2/admin_list/feature/page6_Pluto_Table/views/plutotable.dart';
@@ -29,6 +30,7 @@ class ScreenRoutes {
   static const String cdc = '/cdc';
   static const String calendar = '/calendar';
   static const String contact = '/contact';
+  static const String eosl = '/eosl';
 }
 
 class AppRouteGenerate {
@@ -72,7 +74,8 @@ class AppRouteGenerate {
           builder: (ctx) =>
               ContactListScreen(contactRepository: contactRepository),
         );
-
+      case ScreenRoutes.eosl:
+        return MaterialPageRoute(builder: (ctx) => const EoslListPage());
       default:
         return _errorRoute();
     }
