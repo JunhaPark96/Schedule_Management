@@ -1,0 +1,182 @@
+[
+    {
+        "eoslNo": "1",
+        "hostName": "server1",
+        "businessName": "ERP System",
+        "ipAddress": "192.168.1.1",
+        "platform": "Linux",
+        "olssVersion": "Ubuntu 20.04",
+        "eoslDate": "20231231"
+    },
+    {
+        "eoslNo": "2",
+        "hostName": "server2",
+        "businessName": "CRM System",
+        "ipAddress": "192.168.1.2",
+        "platform": "Windows",
+        "osVersion": "Windows Server 2019",
+        "eoslDate": "20231130"
+    },
+    {
+        "eoslNo": "3",
+        "hostName": "server3",
+        "businessName": "HR Management",
+        "ipAddress": "192.168.1.3",
+        "platform": "Linux",
+        "osVersion": "CentOS 8",
+        "eoslDate": "20231215"
+    },
+    {
+        "eoslNo": "4",
+        "hostName": "server4",
+        "businessName": "Email Server",
+        "ipAddress": "192.168.1.4",
+        "platform": "Linux",
+        "osVersion": "Red Hat Enterprise Linux 7",
+        "eoslDate": "20231001"
+    },
+    {
+        "eoslNo": "5",
+        "hostName": "server5",
+        "businessName": "File Storage",
+        "ipAddress": "192.168.1.5",
+        "platform": "Windows",
+        "osVersion": "Windows Server 2016",
+        "eoslDate": "20230930"
+    },
+    {
+        "eoslNo": "6",
+        "hostName": "server6",
+        "businessName": "Web Hosting",
+        "ipAddress": "192.168.1.6",
+        "platform": "Linux",
+        "osVersion": "Debian 10",
+        "eoslDate": "20231101"
+    },
+    {
+        "eoslNo": "7",
+        "hostName": "server7",
+        "businessName": "Database Server",
+        "ipAddress": "192.168.1.7",
+        "platform": "Linux",
+        "osVersion": "Oracle Linux 8",
+        "eoslDate": "20231201"
+    },
+    {
+        "eoslNo": "8",
+        "hostName": "server8",
+        "businessName": "Data Analytics",
+        "ipAddress": "192.168.1.8",
+        "platform": "Linux",
+        "osVersion": "SUSE Linux Enterprise 15",
+        "eoslDate": "20230915"
+    },
+    {
+        "eoslNo": "9",
+        "hostName": "server9",
+        "businessName": "Backup Server",
+        "ipAddress": "192.168.1.9",
+        "platform": "Windows",
+        "osVersion": "Windows Server 2012 R2",
+        "eoslDate": "20231225"
+    },
+    {
+        "eoslNo": "10",
+        "hostName": "server10",
+        "businessName": "Load Balancer",
+        "ipAddress": "192.168.1.10",
+        "platform": "Linux",
+        "osVersion": "Fedora 34",
+        "eoslDate": "20231015"
+    },
+    {
+        "eoslNo": "11",
+        "hostName": "server11",
+        "businessName": "Application Server",
+        "ipAddress": "192.168.1.11",
+        "platform": "Linux",
+        "osVersion": "Alpine Linux 3.13",
+        "eoslDate": "20231110"
+    },
+    {
+        "eoslNo": "12",
+        "hostName": "server12",
+        "businessName": "Web Proxy",
+        "ipAddress": "192.168.1.12",
+        "platform": "Linux",
+        "osVersion": "OpenSUSE Leap 15",
+        "eoslDate": "20230910"
+    },
+    {
+        "eoslNo": "13",
+        "hostName": "server13",
+        "businessName": "Security Gateway",
+        "ipAddress": "192.168.1.13",
+        "platform": "Linux",
+        "osVersion": "Arch Linux",
+        "eoslDate": "20231220"
+    },
+    {
+        "eoslNo": "14",
+        "hostName": "server14",
+        "businessName": "Virtualization Host",
+        "ipAddress": "192.168.1.14",
+        "platform": "Linux",
+        "osVersion": "Proxmox VE 6",
+        "eoslDate": "20231005"
+    },
+    {
+        "eoslNo": "15",
+        "hostName": "server15",
+        "businessName": "DevOps Server",
+        "ipAddress": "192.168.1.15",
+        "platform": "Linux",
+        "osVersion": "CentOS Stream 8",
+        "eoslDate": "20231205"
+    },
+    {
+        "eoslNo": "16",
+        "hostName": "server16",
+        "businessName": "Monitoring Server",
+        "ipAddress": "192.168.1.16",
+        "platform": "Linux",
+        "osVersion": "Ubuntu 18.04",
+        "eoslDate": "20230925"
+    },
+    {
+        "eoslNo": "17",
+        "hostName": "server17",
+        "businessName": "Chat Server",
+        "ipAddress": "192.168.1.17",
+        "platform": "Linux",
+        "osVersion": "Rocky Linux 8",
+        "eoslDate": "20231125"
+    },
+    {
+        "eoslNo": "18",
+        "hostName": "server18",
+        "businessName": "WebRTC Gateway",
+        "ipAddress": "192.168.1.18",
+        "platform": "Linux",
+        "osVersion": "Fedora 35",
+        "eoslDate": "20231210"
+    },
+    {
+        "eoslNo": "19",
+        "hostName": "server19",
+        "businessName": "Container Host",
+        "ipAddress": "192.168.1.19",
+        "platform": "Linux",
+        "osVersion": "Docker OS",
+        "eoslDate": "20231020"
+    },
+    {
+        "eoslNo": "20",
+        "hostName": "server20",
+        "businessName": "Development Server",
+        "ipAddress": "192.168.1.20",
+        "platform": "Linux",
+        "osVersion": "Manjaro 21",
+        "eoslDate": "20231105"
+    }
+]
