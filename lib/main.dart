@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:oneline2/admin_list/feature/page10_EOS_Management/view_models/eosl_bloc.dart';
 import 'package:oneline2/admin_list/feature/page10_EOS_Management/view_models/eosl_event.dart';
-import 'package:provider/provider.dart'; 
+import 'package:provider/provider.dart';
 import 'package:oneline2/admin_list/feature/Page1_Todo/repos/todo_repos.dart';
 import 'package:oneline2/admin_list/feature/Page1_Todo/view_models/todo_bloc.dart';
 import 'package:oneline2/admin_list/feature/Page1_Todo/view_models/todo_event.dart';

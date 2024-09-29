@@ -59,9 +59,8 @@ class ApiService {
   }
 
   // eosl 데이터 추가
-  Future<void> addEoslData(Map<String, dynamic> newData) async {
-    final Uri url =
-        Uri.parse('$baseUrl/eosl-add'); // Assuming the endpoint is '/eosl-add'
+  Future<void> insertEoslData(Map<String, dynamic> newData) async {
+    final Uri url = Uri.parse('$baseUrl/eosl-list-insert');
     try {
       final response = await http.post(
         url,
@@ -78,6 +77,38 @@ class ApiService {
     } catch (e) {
       print('Error adding EOSL data: $e');
       throw Exception('Error adding EOSL data: $e');
+    }
+  }
+
+  // EOSL 데이터 업데이트
+  Future<void> updateEoslData(Map<String, dynamic> updatedData) async {
+    final Uri url = Uri.parse('$baseUrl/eosl-update'); // Assuming the endpoint
+    try {
+      final response = await http.post(
+        url,
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode(updatedData),
+      );
+
+      if (response.statusCode != 200) {
+        throw Exception('Failed to update EOSL data');
+      }
+    } catch (e) {
+      throw Exception('Error updating EOSL data: $e');
+    }
+  }
+
+  // EOSL 리스트 삭제
+  Future<void> deleteEoslData(String eoslNo) async {
+    final Uri url = Uri.parse('$baseUrl/eosl-delete/$eoslNo');
+    try {
+      final response = await http.delete(url);
+
+      if (response.statusCode != 200) {
+        throw Exception('Failed to delete EOSL data');
+      }
+    } catch (e) {
+      throw Exception('Error deleting EOSL data: $e');
     }
   }
 

@@ -4,7 +4,7 @@ import 'package:oneline2/admin_list/feature/page8_Calendar/models/event_model.da
 import 'package:oneline2/admin_list/feature/page8_Calendar/view_models/event_provider.dart';
 
 class AddEventPage extends StatefulWidget {
-  const AddEventPage({Key? key}) : super(key: key);
+  const AddEventPage({super.key});
 
   @override
   _AddEventPageState createState() => _AddEventPageState();
@@ -138,8 +138,8 @@ class _AddEventPageState extends State<AddEventPage> {
                       title: _title,
                       description: _description,
                       startTime: _startTime ?? DateTime.now(),
-                      endTime:
-                          _endTime ?? DateTime.now().add(Duration(hours: 1)),
+                      endTime: _endTime ??
+                          DateTime.now().add(const Duration(hours: 1)),
                       type: _type,
                     );
 
