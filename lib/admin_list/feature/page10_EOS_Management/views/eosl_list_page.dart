@@ -119,7 +119,7 @@ class _EoslListPageState extends State<EoslListPage> {
                         field: 'select',
                         type: PlutoColumnType.text(),
                         enableRowChecked: true, // 체크박스만 보이게 함
-                        width: 50, // 체크박스 열의 너비 조정
+                        width: 40, // 체크박스 열의 너비 조정
                       ),
                       ...state.columns, // 나머지 열 추가
                     ],
@@ -145,15 +145,11 @@ class _EoslListPageState extends State<EoslListPage> {
                               'tag': PlutoCell(value: eosl.tag ?? ''),
                             }))
                         .toList(),
-                    // onLoaded: (PlutoGridOnLoadedEvent event) {
-                    //   stateManager = event.stateManager;
-                    //   setFilterRows(searchTerm); // 필터 적용
-                    // },
                     onLoaded: (PlutoGridOnLoadedEvent event) {
                       stateManager = event.stateManager;
 
                       // 행 선택 모드 설정
-                      stateManager.setSelectingMode(PlutoGridSelectingMode.row);
+                      // stateManager.setSelectingMode(PlutoGridSelectingMode.row);
 
                       // 체크박스 또는 행이 선택될 때 배타적으로 하나의 행만 선택되도록 설정
                       stateManager.addListener(() {
@@ -163,20 +159,25 @@ class _EoslListPageState extends State<EoslListPage> {
                         if (selectedRows.isNotEmpty) {
                           // 여러 개의 행이 선택되었을 경우 첫 번째 행을 제외하고 모두 해제
                           if (selectedRows.length > 1) {
-                            for (var i = 1; i < selectedRows.length; i++) {
+                            for (var i = 0; i < selectedRows.length; i++) {
                               stateManager.setRowChecked(
                                   selectedRows[i], false);
                             }
                           }
-
+                          // 마지막으로 선택된 행을 가져와 처리 (항상 하나만 남도록 설정)
+                          final selectedRow = selectedRows.last;
                           // 최종 선택된 행을 가져와 처리
                           setState(() {
-                            selectedRow = selectedRows.first;
+                            this.selectedRow = selectedRow;
                             showActionButtons = true; // 버튼 표시
                           });
+
+                          // 선택된 행 정보 콘솔에 출력
+                          print('Selected row: ${selectedRow.cells}');
+
                           context
                               .read<EoslBloc>()
-                              .add(ConvertPlutoRowToEoslModel(selectedRow!));
+                              .add(ConvertPlutoRowToEoslModel(selectedRow));
                         } else {
                           setState(() {
                             showActionButtons = false; // 체크된 행이 없으면 버튼 숨김
@@ -184,14 +185,27 @@ class _EoslListPageState extends State<EoslListPage> {
                         }
                       });
                     },
-
                     onChanged: (PlutoGridOnChangedEvent event) {
                       // 체크박스 선택 시 그 행을 BLoC에 전달
                       if (event.column.field == 'select') {
                         final selectedRow = event.row;
+
+                        // 이전에 선택된 행 해제
+                        if (stateManager.checkedRows.isNotEmpty) {
+                          for (var row in stateManager.checkedRows) {
+                            stateManager.setRowChecked(row, false);
+                          }
+                        }
+
+                        // 현재 클릭된 행 선택
+                        stateManager.setRowChecked(selectedRow, true);
+
+                        // 선택된 행 BLOC에 전달
                         context.read<EoslBloc>().add(
                               ConvertPlutoRowToEoslModel(selectedRow),
                             );
+                        // 선택된 행 정보 콘솔에 출력
+                        print('Selected row: ${selectedRow.cells}');
                       }
                     },
                     onRowDoubleTap: (PlutoGridOnRowDoubleTapEvent event) {
@@ -553,7 +567,7 @@ class _EoslListPageState extends State<EoslListPage> {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      backgroundColor: Colors.teal[50], // 모달 배경색 설정
+      backgroundColor: Colors.teal[50],
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
@@ -687,7 +701,7 @@ class _EoslListPageState extends State<EoslListPage> {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      backgroundColor: Colors.teal[50],
+      backgroundColor: Colors.teal[50], // 배경색 설정
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
@@ -696,42 +710,99 @@ class _EoslListPageState extends State<EoslListPage> {
           padding: EdgeInsets.only(
             bottom: MediaQuery.of(context).viewInsets.bottom,
           ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const SizedBox(height: 20),
-              const Icon(Icons.warning, color: Colors.red, size: 60),
-              const SizedBox(height: 10),
-              const Text(
-                '정말로 삭제하시겠습니까?',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () {
-                  context
-                      .read<EoslBloc>()
-                      .add(DeleteEosl(row.cells['eosl_no']?.value));
-                  Navigator.of(context).pop();
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.red,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(24.0),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const SizedBox(height: 20),
+                  const Icon(
+                    Icons.warning_amber_rounded,
+                    color: Colors.red,
+                    size: 80,
                   ),
-                ),
-                child: const Text('Delete'),
+                  const SizedBox(height: 20),
+                  const Text(
+                    '정말로 삭제 하시겠습니까?',
+                    style: TextStyle(
+                      fontSize: 22,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.redAccent,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  const Text(
+                    'This action cannot be undone. Do you really want to delete this item?',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.black87,
+                    ),
+                  ),
+                  const SizedBox(height: 40),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      // Cancel 버튼 디자인
+                      OutlinedButton(
+                        onPressed: () {
+                          Navigator.of(context).pop(); // 다이얼로그 닫기
+                        },
+                        style: OutlinedButton.styleFrom(
+                          side: const BorderSide(
+                              color: Colors.teal, width: 2), // 테두리 설정
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 32,
+                            vertical: 16,
+                          ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10), // 둥근 테두리
+                          ),
+                        ),
+                        child: const Text(
+                          '취소',
+                          style: TextStyle(
+                            color: Colors.teal,
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                      // Delete 버튼 디자인
+                      ElevatedButton(
+                        onPressed: () {
+                          context
+                              .read<EoslBloc>()
+                              .add(DeleteEosl(row.cells['eosl_no']?.value));
+                          Navigator.of(context).pop(); // 다이얼로그 닫기
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.red, // 버튼 배경색
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 32,
+                            vertical: 16,
+                          ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10), // 둥근 테두리
+                          ),
+                          elevation: 5, // 그림자 효과
+                        ),
+                        child: const Text(
+                          '삭제',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 20),
+                ],
               ),
-              const SizedBox(height: 20),
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child:
-                    const Text('Cancel', style: TextStyle(color: Colors.grey)),
-              ),
-              const SizedBox(height: 20),
-            ],
+            ),
           ),
         );
       },
