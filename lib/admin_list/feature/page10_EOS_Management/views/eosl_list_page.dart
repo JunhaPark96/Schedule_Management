@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:oneline2/admin_list/feature/page10_EOS_Management/view_models/eosl_state.dart';
+import 'package:oneline2/admin_list/feature/page10_EOS_Management/widgets/text_field.dart';
 import 'package:oneline2/admin_list/feature/page8_Calendar/views/add_event_page.dart';
 import 'package:pluto_grid/pluto_grid.dart';
 import 'package:oneline2/admin_list/feature/page10_EOS_Management/models/eosl_model.dart';
@@ -20,6 +21,7 @@ class _EoslListPageState extends State<EoslListPage> {
   PlutoRow? selectedRow;
   late PlutoGridStateManager stateManager;
   String searchTerm = '';
+  bool showActionButtons = false;
 
   @override
   void initState() {
@@ -93,7 +95,7 @@ class _EoslListPageState extends State<EoslListPage> {
                 ),
                 const SizedBox(width: 10),
                 ElevatedButton(
-                  onPressed: _showAddEoslDialog,
+                  onPressed: () => _showAddEoslDialog(context),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.teal,
                   ),
@@ -168,32 +170,20 @@ class _EoslListPageState extends State<EoslListPage> {
                           }
 
                           // 최종 선택된 행을 가져와 처리
-                          selectedRow = selectedRows.first;
+                          setState(() {
+                            selectedRow = selectedRows.first;
+                            showActionButtons = true; // 버튼 표시
+                          });
                           context
                               .read<EoslBloc>()
                               .add(ConvertPlutoRowToEoslModel(selectedRow!));
+                        } else {
+                          setState(() {
+                            showActionButtons = false; // 체크된 행이 없으면 버튼 숨김
+                          });
                         }
                       });
                     },
-
-                    // onLoaded: (PlutoGridOnLoadedEvent event) {
-                    //   stateManager = event.stateManager;
-                    //   // Attach a listener to row check status
-                    //   stateManager.setSelectingMode(PlutoGridSelectingMode.row);
-
-                    //   // When a row checkbox is checked, update the selected row
-                    //   stateManager.addListener(() {
-                    //     final selectedRows =
-                    //         stateManager.checkedRows; // Get all checked rows
-                    //     if (selectedRows.isNotEmpty) {
-                    //       // If at least one row is selected
-                    //       final selectedRow = selectedRows.first;
-                    //       context
-                    //           .read<EoslBloc>()
-                    //           .add(ConvertPlutoRowToEoslModel(selectedRow));
-                    //     }
-                    //   });
-                    // },
 
                     onChanged: (PlutoGridOnChangedEvent event) {
                       // 체크박스 선택 시 그 행을 BLoC에 전달
@@ -242,45 +232,84 @@ class _EoslListPageState extends State<EoslListPage> {
         ],
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          ElevatedButton(
-            onPressed: () {
-              if (selectedRow != null) {
-                _showUpdateModal(context, selectedRow!);
-              } else {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('업데이트할 행을 선택하세요')),
-                );
-              }
-            },
-            style: ElevatedButton.styleFrom(backgroundColor: Colors.teal),
-            child: const Text('Update'),
-          ),
-          const SizedBox(width: 20),
-          ElevatedButton(
-            onPressed: () {
-              if (selectedRow != null) {
-                _showDeleteModal(context, selectedRow!);
-              } else {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('삭제할 행을 선택하세요')),
-                );
-              }
-            },
-            style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-            child: const Text('Delete'),
-          ),
-        ],
-      ),
+      floatingActionButton: showActionButtons
+          ? Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ElevatedButton(
+                  onPressed: () {
+                    if (selectedRow != null) {
+                      _showUpdateModal(context, selectedRow!);
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('업데이트할 행을 선택하세요')),
+                      );
+                    }
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.teal,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 24,
+                      vertical: 12,
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    elevation: 5,
+                  ),
+                  child: const Text(
+                    '업데이트',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 20),
+                ElevatedButton(
+                  onPressed: () {
+                    if (selectedRow != null) {
+                      _showDeleteModal(context, selectedRow!);
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('삭제할 행을 선택하세요')),
+                      );
+                    }
+                  },
+                  style: OutlinedButton.styleFrom(
+                    side:
+                        const BorderSide(color: Colors.red, width: 2), // 테두리 설정
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 24,
+                      vertical: 12,
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20), // 둥근 테두리
+                    ),
+                    elevation: 5,
+                  ),
+                  child: const Text(
+                    '삭제',
+                    style: TextStyle(
+                      color: Colors.red,
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ],
+            )
+          : null,
     );
   }
 
   // 추가 모달을 표시하는 함수
-  void _showAddEoslDialog() {
+  void _showAddEoslDialog(BuildContext context) {
     showDialog(
       context: context,
+      barrierDismissible: true,
+      barrierColor: Colors.black54,
       builder: (BuildContext context) {
         String? businessGroup;
         String? hostName;
@@ -292,6 +321,7 @@ class _EoslListPageState extends State<EoslListPage> {
         String selectedTag = '';
         bool isCustomTag = false;
         String customTag = ''; // 새로운 태그를 저장할 변수
+        // 태그가 있는 것에서 선택 가능
         List<String> existingTags = context
             .read<EoslBloc>()
             .state
@@ -307,80 +337,107 @@ class _EoslListPageState extends State<EoslListPage> {
         return StatefulBuilder(
           builder: (context, setState) {
             return AlertDialog(
-              title: const Text('Add New EOSL Data'),
-              content: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    TextField(
-                      onChanged: (value) => hostName = value,
-                      decoration: const InputDecoration(labelText: '호스트 이름'),
-                    ),
-                    TextField(
-                      onChanged: (value) => businessName = value,
-                      decoration: const InputDecoration(labelText: '업무 명'),
-                    ),
-                    TextField(
-                      onChanged: (value) => ipAddress = value,
-                      decoration: const InputDecoration(labelText: 'IP 주소'),
-                    ),
-                    TextField(
-                      onChanged: (value) => platform = value,
-                      decoration: const InputDecoration(labelText: '플랫폼'),
-                    ),
-                    TextField(
-                      onChanged: (value) => osVersion = value,
-                      decoration:
-                          const InputDecoration(labelText: 'OS 이름 및 버전'),
-                    ),
-                    TextField(
-                      onChanged: (value) => eoslDate = value,
-                      decoration: const InputDecoration(
-                          labelText: 'EOSL 날짜 (yyyy-mm-dd)'),
-                    ),
-                    TextField(
-                      onChanged: (value) => businessGroup = value,
-                      decoration: const InputDecoration(labelText: '업무 그룹'),
-                    ),
-                    const SizedBox(height: 16),
-                    Row(
-                      children: [
-                        Checkbox(
-                          value: isCustomTag,
+              title: const Text('새로운 EOSL 등록'),
+              backgroundColor: Colors.teal[50],
+              content: Container(
+                width: MediaQuery.of(context).size.width * 0.65,
+                height: 550,
+                // color: Colors.teal[50],
+                padding: const EdgeInsets.only(
+                    left: 50, right: 50, top: 20, bottom: 50),
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      TextFieldWidget(
+                        label: '업무 그룹',
+                        initialValue: businessGroup,
+                        onChanged: (value) {
+                          businessGroup = value;
+                        },
+                      ),
+                      TextFieldWidget(
+                        label: '업무 명',
+                        initialValue: businessName,
+                        onChanged: (value) {
+                          businessName = value;
+                        },
+                      ),
+                      TextFieldWidget(
+                        label: '호스트 이름',
+                        initialValue: hostName,
+                        onChanged: (value) {
+                          hostName = value;
+                        },
+                      ),
+                      TextFieldWidget(
+                        label: 'IP 주소',
+                        initialValue: ipAddress,
+                        onChanged: (value) {
+                          ipAddress = value;
+                        },
+                      ),
+                      TextFieldWidget(
+                        label: '플랫폼',
+                        initialValue: platform,
+                        onChanged: (value) {
+                          platform = value;
+                        },
+                      ),
+                      TextFieldWidget(
+                        label: 'OS 이름 및 버전',
+                        initialValue: osVersion,
+                        onChanged: (value) {
+                          osVersion = value;
+                        },
+                      ),
+                      TextFieldWidget(
+                        label: 'EOSL 날짜 (yyyy-mm-dd)',
+                        initialValue: eoslDate,
+                        onChanged: (value) {
+                          eoslDate = value;
+                        },
+                      ),
+                      const SizedBox(height: 16),
+                      Row(
+                        children: [
+                          Checkbox(
+                            value: isCustomTag,
+                            onChanged: (value) {
+                              setState(() {
+                                isCustomTag = value ?? false;
+                              });
+                            },
+                          ),
+                          const Text('Custom Tag'),
+                        ],
+                      ),
+                      if (isCustomTag) ...[
+                        TextFieldWidget(
+                          label: 'New Tag',
+                          initialValue: customTag,
                           onChanged: (value) {
+                            customTag = value;
+                          },
+                        ),
+                      ] else ...[
+                        DropdownButtonFormField<String>(
+                          decoration: const InputDecoration(labelText: '태그'),
+                          value: selectedTag,
+                          items: existingTags.map((String value) {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: Text(value),
+                            );
+                          }).toList(),
+                          onChanged: (String? newValue) {
                             setState(() {
-                              isCustomTag = value ?? false;
+                              selectedTag = newValue!;
                             });
                           },
                         ),
-                        const Text('Custom Tag'),
                       ],
-                    ),
-                    if (isCustomTag) ...[
-                      TextField(
-                        onChanged: (value) => customTag = value,
-                        decoration: const InputDecoration(
-                          labelText: 'New Tag',
-                          hintText: 'Enter new tag',
-                        ),
-                      ),
-                    ] else ...[
-                      DropdownButtonFormField<String>(
-                        decoration: const InputDecoration(labelText: '태그'),
-                        value: selectedTag,
-                        items: existingTags.map((String value) {
-                          return DropdownMenuItem<String>(
-                            value: value,
-                            child: Text(value),
-                          );
-                        }).toList(),
-                        onChanged: (String? newValue) {
-                          setState(() {
-                            selectedTag = newValue!;
-                          });
-                        },
-                      ),
                     ],
-                  ],
+                  ),
                 ),
               ),
               actions: [
@@ -432,13 +489,45 @@ class _EoslListPageState extends State<EoslListPage> {
                       );
                     }
                   },
-                  child: const Text('Add'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.teal, // 버튼 배경색
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 24, vertical: 12),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20), // 둥근 테두리
+                    ),
+                    elevation: 5, // 그림자 효과
+                  ),
+                  child: const Text(
+                    'Add',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                 ),
-                TextButton(
+                OutlinedButton(
                   onPressed: () {
                     Navigator.of(context).pop(); // 다이얼로그 닫기
                   },
-                  child: const Text('Cancel'),
+                  style: OutlinedButton.styleFrom(
+                    side: const BorderSide(
+                        color: Colors.teal, width: 2), // 테두리 설정
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 24, vertical: 12),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20), // 둥근 테두리
+                    ),
+                  ),
+                  child: const Text(
+                    'Cancel',
+                    style: TextStyle(
+                      color: Colors.teal,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                 ),
               ],
             );
@@ -483,27 +572,55 @@ class _EoslListPageState extends State<EoslListPage> {
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 16),
-                _buildTextField('업무 그룹', businessGroup, (value) {
-                  businessGroup = value;
-                }),
-                _buildTextField('호스트 이름', hostName, (value) {
-                  hostName = value;
-                }),
-                _buildTextField('업무 명', businessName, (value) {
-                  businessName = value;
-                }),
-                _buildTextField('IP 주소', ipAddress, (value) {
-                  ipAddress = value;
-                }),
-                _buildTextField('플랫폼', platform, (value) {
-                  platform = value;
-                }),
-                _buildTextField('OS 이름 및 버전', osVersion, (value) {
-                  osVersion = value;
-                }),
-                _buildTextField('EOSL 날짜 (yyyy-mm-dd)', eoslDate, (value) {
-                  eoslDate = value;
-                }),
+                TextFieldWidget(
+                  label: '업무 그룹',
+                  initialValue: businessGroup,
+                  onChanged: (value) {
+                    businessGroup = value;
+                  },
+                ),
+                TextFieldWidget(
+                  label: '호스트 이름',
+                  initialValue: hostName,
+                  onChanged: (value) {
+                    hostName = value;
+                  },
+                ),
+                TextFieldWidget(
+                  label: '업무 명',
+                  initialValue: businessName,
+                  onChanged: (value) {
+                    businessName = value;
+                  },
+                ),
+                TextFieldWidget(
+                  label: 'IP 주소',
+                  initialValue: ipAddress,
+                  onChanged: (value) {
+                    ipAddress = value;
+                  },
+                ),
+                TextFieldWidget(
+                  label: '플랫폼',
+                  initialValue: platform,
+                  onChanged: (value) {
+                    platform = value;
+                  },
+                ),
+                TextFieldWidget(
+                  label: 'OS 이름 및 버전',
+                  initialValue: osVersion,
+                  onChanged: (value) {
+                    osVersion = value;
+                  },
+                ),
+                TextFieldWidget(
+                  label: 'EOSL 날짜 (yyyy-mm-dd)',
+                  initialValue: eoslDate,
+                  onChanged: (value) {
+                    eoslDate = value;
+                  },
+                ),
                 const SizedBox(height: 10),
                 DropdownButtonFormField<bool>(
                   value: isEosl,
@@ -524,9 +641,13 @@ class _EoslListPageState extends State<EoslListPage> {
                   ),
                 ),
                 const SizedBox(height: 10),
-                _buildTextField('태그', tag, (value) {
-                  tag = value;
-                }),
+                TextFieldWidget(
+                  label: '태그',
+                  initialValue: tag,
+                  onChanged: (value) {
+                    tag = value;
+                  },
+                ),
                 const SizedBox(height: 20),
                 ElevatedButton(
                   onPressed: () {
@@ -582,7 +703,7 @@ class _EoslListPageState extends State<EoslListPage> {
               const Icon(Icons.warning, color: Colors.red, size: 60),
               const SizedBox(height: 10),
               const Text(
-                'Are you sure you want to delete this item?',
+                '정말로 삭제하시겠습니까?',
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 20),
@@ -614,26 +735,6 @@ class _EoslListPageState extends State<EoslListPage> {
           ),
         );
       },
-    );
-  }
-
-// 공통으로 사용하는 텍스트 필드 생성 함수
-  Widget _buildTextField(
-      String label, String? initialValue, ValueChanged<String> onChanged) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: TextField(
-        onChanged: onChanged,
-        controller: TextEditingController(text: initialValue),
-        decoration: InputDecoration(
-          labelText: label,
-          filled: true,
-          fillColor: Colors.white,
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
-        ),
-      ),
     );
   }
 }
