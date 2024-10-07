@@ -19,12 +19,13 @@ class EoslBloc extends Bloc<EoslEvent, EoslState> {
           loading: true,
         )) {
     on<FetchEoslList>(_onFetchEoslList);
-    on<FetchLocalEoslList>(_onFetchLocalEoslList);
+    // on<FetchLocalEoslList>(_onFetchLocalEoslList);
     on<ConvertPlutoRowToEoslModel>(_onConvertPlutoRowToEoslModel);
     on<InsertEosl>(_onInsertEosl);
     on<UpdateEosl>(_onUpdateEosl);
     on<DeleteEosl>(_onDeleteEosl);
     // on<FetchEoslDetailList>(_onFetchEoslDetailList);
+
     on<FetchEoslMaintenanceList>(_onFetchEoslMaintenanceList);
     on<AddTaskToEoslDetail>(_onAddTaskToEoslDetail);
     on<FetchEoslDetail>(_onFetchEoslDetail);
@@ -53,6 +54,7 @@ class EoslBloc extends Bloc<EoslEvent, EoslState> {
     );
   }
 
+  // pluto column 생성
   List<PlutoColumn> createColumns() {
     return [
       PlutoColumn(
@@ -135,29 +137,30 @@ class EoslBloc extends Bloc<EoslEvent, EoslState> {
     }
   }
 
-  Future<void> _onFetchLocalEoslList(
-      FetchLocalEoslList event, Emitter<EoslState> emit) async {
-    try {
-      emit(state.copyWith(loading: true, error: ''));
-      List<EoslModel> eoslList = await apiService.fetchLocalEoslList();
-      print(
-          'Fetched Local EOSL List: ${eoslList.length} items'); // 로컬 데이터 로드 확인
-      emit(state.copyWith(eoslList: eoslList, loading: false));
-    } catch (e) {
-      print('Error fetching Local EOSL List: $e'); // 에러 로그
-      emit(state.copyWith(loading: false, error: e.toString()));
-    }
-  }
+  // Future<void> _onFetchLocalEoslList(
+  //     FetchLocalEoslList event, Emitter<EoslState> emit) async {
+  //   try {
+  //     emit(state.copyWith(loading: true, error: ''));
+  //     List<EoslModel> eoslList = await apiService.fetchLocalEoslList();
+  //     print(
+  //         'Fetched Local EOSL List: ${eoslList.length} items'); // 로컬 데이터 로드 확인
+  //     emit(state.copyWith(eoslList: eoslList, loading: false));
+  //   } catch (e) {
+  //     print('Error fetching Local EOSL List: $e'); // 에러 로그
+  //     emit(state.copyWith(loading: false, error: e.toString()));
+  //   }
+  // }
 
   Future<void> _onInsertEosl(InsertEosl event, Emitter<EoslState> emit) async {
     try {
       emit(state.copyWith(loading: true, error: ''));
-      
+
       // API로 새 데이터 전송
       await apiService.insertEoslData(event.newEosl.toJson());
-      
+
       // 추가한 데이터 포함하여 리스트를 새로고침
-      List<EoslModel> updatedList = List.from(state.eoslList)..add(event.newEosl);
+      List<EoslModel> updatedList = List.from(state.eoslList)
+        ..add(event.newEosl);
 
       emit(state.copyWith(eoslList: updatedList, loading: false));
     } catch (e) {
@@ -219,6 +222,9 @@ class EoslBloc extends Bloc<EoslEvent, EoslState> {
   //   }
   // }
 
+  // ---------------------------eosl_list page method end-------------------------------------
+  // ---------------------------eosl_detail page method start-------------------------------------
+
   Future<void> _onFetchEoslDetail(
       FetchEoslDetail event, Emitter<EoslState> emit) async {
     try {
@@ -233,7 +239,8 @@ class EoslBloc extends Bloc<EoslEvent, EoslState> {
 
       emit(state.copyWith(
         eoslDetailList: [eoslDetail],
-        eoslMaintenanceList: maintenanceList,
+        // 유지보수 데이터가 없을 때 빈 리스트로 처리
+        eoslMaintenanceList: maintenanceList.isNotEmpty ? maintenanceList : [],
         loading: false,
       ));
     } catch (e) {

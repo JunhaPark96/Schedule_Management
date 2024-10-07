@@ -14,7 +14,7 @@ class EoslState {
 
   EoslState({
     required this.eoslList,
-    required this.columns, // 초기화 시 columns 필드 추가
+    required this.columns, 
     this.selectedEoslModel, // 기본값 null
     required this.eoslDetailList,
     required this.eoslMaintenanceList,
@@ -24,7 +24,7 @@ class EoslState {
 
   EoslState copyWith({
     List<EoslModel>? eoslList,
-    List<PlutoColumn>? columns, // columns 필드 복사
+    List<PlutoColumn>? columns, 
     EoslModel? selectedEoslModel,
     List<EoslDetailModel>? eoslDetailList,
     List<EoslMaintenance>? eoslMaintenanceList,

@@ -1,32 +1,61 @@
 {
-    "eoslDetail": {
-        "hostName": "server1",
-        "field": "Server",
-        "quantity": "2",
-        "note": "Regular maintenance required",
-        "supplier": "Supplier A",
-        "eoslDate": "20230901"
-    },
-    "maintenances": [
+  "eoslDetail": {
+    "hostName": "server1",
+    "field": "Detail1",
+    "quantity": "10",
+    "note": "Note1",
+    "supplier": "Supplier1",
+    "eoslDate": "2024-01-01"
+  },
+  "maintenances": [
+    {
+      "maintenanceNo": "001",
+      "tasks": [
         {
-            "maintenanceNo": "001",
-            "hostName": "server1",
-            "tasks": [
-                {
-                    "date": "2024-08-13",
-                    "content": "Check disk space"
-                }
-            ]
+          "taskName": "Task1 for server1",
+          "description": "Details about Task1"
         },
         {
-            "maintenanceNo": "002",
-            "hostName": "server1",
-            "tasks": [
-                {
-                    "date": "2024-09-15",
-                    "content": "Update firmware"
-                }
-            ]
+          "taskName": "Task2 for server1",
+          "description": "Details about Task2"
         }
-    ]
+      ]
+    },
+    {
+      "maintenanceNo": "021",
+      "tasks": [
+        {
+          "taskName": "Task1 for server1 - Part2",
+          "description": "Details about Task1"
+        }
+      ]
+    },
+    {
+      "maintenanceNo": "041",
+      "tasks": [
+        {
+          "taskName": "Task1 for server1 - Part3",
+          "description": "Details about Task1"
+        }
+      ]
+    },
+    {
+      "maintenanceNo": "061",
+      "tasks": [
+        {
+          "taskName": "Task1 for server1 - Part4",
+          "description": "Details about Task1"
+        }
+      ]
+    },
+    {
+      "maintenanceNo": "081",
+      "tasks": [
+        {
+          "taskName": "Task1 for server1 - Part5",
+          "description": "Details about Task1"
+        }
+      ]
+    }
+  ]
 }

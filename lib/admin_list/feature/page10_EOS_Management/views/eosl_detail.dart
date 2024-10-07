@@ -28,7 +28,7 @@ class _EoslDetailPageState extends State<EoslDetailPage> {
   int itemsPerPage = 10; // 한 페이지에 보여줄 아이템 수
   int currentPage = 1; // 현재 페이지 번호
   DateTimeRange selectedDateRange = DateTimeRange(
-    start: DateTime.now().subtract(const Duration(days: 30)),
+    start: DateTime.now().subtract(const Duration(days: 1000)),
     end: DateTime.now().add(const Duration(days: 7)),
   ); // 기본 기간 설정 (현재 날짜부터 한달 전까지)
   String searchQuery = ""; // 검색할 텍스트

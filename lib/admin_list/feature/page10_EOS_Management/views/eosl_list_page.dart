@@ -398,7 +398,7 @@ class _EoslListPageState extends State<EoslListPage> {
                         },
                       ),
                       TextFieldWidget(
-                        label: 'OS 이름 및 버전',
+                        label: '이름 및 버전',
                         initialValue: osVersion,
                         onChanged: (value) {
                           osVersion = value;

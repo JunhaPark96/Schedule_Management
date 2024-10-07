@@ -37,7 +37,7 @@ class EoslInfoWidget extends StatelessWidget {
           _buildInfoRow('호스트 네임:', eoslDetailModel.hostName ?? '없음'),
           _buildInfoRow('구분:', eoslDetailModel.field ?? '없음'),
           _buildInfoRow('상세:', eoslDetailModel.note ?? '없음'),
-          _buildInfoRow('수량:', eoslDetailModel.quantity ?? '없음'),
+          _buildInfoRow('유지보수 횟수:', eoslDetailModel.quantity ?? '없음'),
           _buildSupplierRow(context, '납품업체:', eoslDetailModel.supplier ?? '없음'),
           _buildEosDateRow(context, eoslDetailModel.eoslDate ?? '없음'),
         ],
