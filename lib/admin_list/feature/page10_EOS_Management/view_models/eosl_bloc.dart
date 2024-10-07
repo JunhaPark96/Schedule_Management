@@ -225,6 +225,43 @@ class EoslBloc extends Bloc<EoslEvent, EoslState> {
   // ---------------------------eosl_list page method end-------------------------------------
   // ---------------------------eosl_detail page method start-------------------------------------
 
+  // Future<void> _onFetchEoslDetail(
+  //     FetchEoslDetail event, Emitter<EoslState> emit) async {
+  //   try {
+  //     emit(state.copyWith(loading: true, error: ''));
+  //     final result =
+  //         await apiService.fetchEoslDetailWithMaintenance(event.hostName);
+
+  //     print('Fetched EoslDetail and Maintenance: $result'); // 데이터 로드 출력
+
+  //     final eoslDetail = result['eoslDetail'] as EoslDetailModel;
+  //     final maintenanceList = result['maintenances'] as List<EoslMaintenance>;
+
+  //     emit(state.copyWith(
+  //       eoslDetailList: [eoslDetail],
+  //       // 유지보수 데이터가 없을 때 빈 리스트로 처리
+  //       eoslMaintenanceList: maintenanceList.isNotEmpty ? maintenanceList : [],
+  //       loading: false,
+  //     ));
+  //   } catch (e) {
+  //     print('Error fetching EoslDetail and Maintenance: $e'); // 에러 출력
+  //     emit(state.copyWith(loading: false, error: e.toString()));
+  //   }
+  // }
+
+  // Future<void> _onFetchEoslMaintenanceList(
+  //     FetchEoslMaintenanceList event, Emitter<EoslState> emit) async {
+  //   try {
+  //     emit(state.copyWith(loading: true, error: ''));
+  //     List<EoslMaintenance> maintenanceList = await apiService
+  //         .fetchEoslMaintenanceList(event.hostName, event.maintenanceNo);
+  //     emit(
+  //         state.copyWith(eoslMaintenanceList: maintenanceList, loading: false));
+  //   } catch (e) {
+  //     emit(state.copyWith(loading: false, error: e.toString()));
+  //   }
+  // }
+  // EoslDetail 호출 API 메소드
   Future<void> _onFetchEoslDetail(
       FetchEoslDetail event, Emitter<EoslState> emit) async {
     try {
@@ -232,23 +269,20 @@ class EoslBloc extends Bloc<EoslEvent, EoslState> {
       final result =
           await apiService.fetchEoslDetailWithMaintenance(event.hostName);
 
-      print('Fetched EoslDetail and Maintenance: $result'); // 데이터 로드 출력
-
       final eoslDetail = result['eoslDetail'] as EoslDetailModel;
       final maintenanceList = result['maintenances'] as List<EoslMaintenance>;
 
       emit(state.copyWith(
         eoslDetailList: [eoslDetail],
-        // 유지보수 데이터가 없을 때 빈 리스트로 처리
         eoslMaintenanceList: maintenanceList.isNotEmpty ? maintenanceList : [],
         loading: false,
       ));
     } catch (e) {
-      print('Error fetching EoslDetail and Maintenance: $e'); // 에러 출력
       emit(state.copyWith(loading: false, error: e.toString()));
     }
   }
 
+  // 유지보수 리스트 호출 API
   Future<void> _onFetchEoslMaintenanceList(
       FetchEoslMaintenanceList event, Emitter<EoslState> emit) async {
     try {
