@@ -1,11 +1,13 @@
 class EoslMaintenance {
   final String maintenanceNo;
   final String hostName;
+  final String maintenanceDate;
   final List<Map<String, dynamic>> tasks;
 
   EoslMaintenance({
     required this.maintenanceNo,
     required this.hostName,
+    required this.maintenanceDate,
     required this.tasks,
   });
 
@@ -14,6 +16,7 @@ class EoslMaintenance {
     return EoslMaintenance(
       maintenanceNo: json['maintenanceNo'] ?? '', // null-safe 처리
       hostName: json['hostName'] ?? '', // null-safe 처리
+      maintenanceDate: json['maintenanceDate'] ?? '',
       tasks: List<Map<String, dynamic>>.from(
         (json['tasks'] ?? []).map((task) => Map<String, dynamic>.from(task)),
       ),
@@ -25,6 +28,7 @@ class EoslMaintenance {
     return {
       'maintenanceNo': maintenanceNo,
       'hostName': hostName,
+      'maintenanceDate': maintenanceDate,
       'tasks': tasks,
     };
   }

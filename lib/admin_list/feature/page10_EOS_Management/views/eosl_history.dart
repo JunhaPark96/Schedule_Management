@@ -6,6 +6,7 @@ import 'package:oneline2/admin_list/feature/page10_EOS_Management/models/eosl_ma
 import 'package:oneline2/admin_list/feature/page10_EOS_Management/view_models/eosl_bloc.dart';
 import 'package:oneline2/admin_list/feature/page10_EOS_Management/view_models/eosl_event.dart';
 import 'package:oneline2/admin_list/feature/page10_EOS_Management/view_models/eosl_state.dart';
+import 'package:oneline2/admin_list/feature/page10_EOS_Management/widgets/html_editor.dart';
 
 class EoslHistoryPage extends StatefulWidget {
   final String hostName;
@@ -47,13 +48,14 @@ class _EoslHistoryPageState extends State<EoslHistoryPage> {
         orElse: () => EoslMaintenance(
           maintenanceNo: widget.maintenanceNo,
           hostName: widget.hostName,
+          maintenanceDate: DateTime.now().toIso8601String(),
           tasks: [],
         ),
       );
       if (maintenance.tasks.isNotEmpty) {
         final task = maintenance.tasks.first; // 첫 번째 작업을 로드
-        taskController.text = task['content'] ?? '';
-        specialNotesController.text = task['notes'] ?? '';
+        taskController.text = task['title'] ?? '';
+        specialNotesController.text = task['content'] ?? '';
       }
     } else {
       taskController.text = '';
@@ -65,12 +67,15 @@ class _EoslHistoryPageState extends State<EoslHistoryPage> {
 
   void _saveTask() {
     final eoslBloc = context.read<EoslBloc>();
+    final maintenanceDate = DateTime.now().toIso8601String();
     final newTask = {
       'date': DateTime.now().toIso8601String(),
-      'content': taskController.text,
-      'notes': specialNotesController.text,
+      'title': taskController.text,
+      'content': specialNotesController.text,
     };
-    eoslBloc.add(AddTaskToEoslDetail(widget.hostName, newTask));
+
+    eoslBloc
+        .add(AddTaskToEoslDetail(widget.hostName, newTask, maintenanceDate));
     Navigator.of(context).pop(); // 저장 후 페이지를 닫음
   }
 
@@ -150,6 +155,9 @@ class _EoslHistoryPageState extends State<EoslHistoryPage> {
                     ),
                   ),
                   _buildTaskInformationSection(),
+                  // const Expanded(
+                  //   child: QuillEditor(), // QuillEditor 추가
+                  // ),
                   const SizedBox(height: 16),
                   _buildAttachmentSection(),
                   const SizedBox(height: 16),
@@ -233,24 +241,37 @@ class _EoslHistoryPageState extends State<EoslHistoryPage> {
                 controller: taskController,
                 maxLines: null,
                 decoration: const InputDecoration(
-                  hintText: '작업 내용을 입력하세요',
+                  hintText: '제목을 입력하세요',
                   border: OutlineInputBorder(),
                 ),
               )
             else
-              const Text('작업 내용: 점검 내용 및 특이사항 작성'),
+              Text(
+                taskController.text.isNotEmpty
+                    ? '제목: ${taskController.text}' // 기존 작업 내용 표시
+                    : '제목 작성', // 기본 메시지
+                style: const TextStyle(fontSize: 16), // 기본 스타일
+              ),
             const SizedBox(height: 8),
             if (isEditing)
-              TextField(
-                controller: specialNotesController,
-                maxLines: null,
-                decoration: const InputDecoration(
-                  hintText: '특이사항 및 권고사항 입력',
-                  border: OutlineInputBorder(),
+              SizedBox(
+                height: 300, // isEditing일 때 높이 증가
+                child: TextField(
+                  controller: specialNotesController,
+                  maxLines: null,
+                  decoration: const InputDecoration(
+                    hintText: '특이사항 및 권고사항 입력',
+                    border: OutlineInputBorder(),
+                  ),
                 ),
               )
             else
-              const Text('특이사항 및 권고사항'),
+              Text(
+                specialNotesController.text.isNotEmpty
+                    ? '특이사항: ${specialNotesController.text}' // 기존 특이사항 표시
+                    : '특이사항 및 권고사항', // 기본 메시지
+                style: const TextStyle(fontSize: 16),
+              ),
           ],
         ),
       ),

@@ -19,22 +19,24 @@
   ],
   "maintenanceList": [
     {
-      "maintenanceNo": "001",
+      "maintenanceNo": "1",
       "hostName": "server1",
+      "maintenanceDate": "2024-10-01",
       "tasks": [
         {
-          "date": "2024-08-13",
-          "content": "Check disk space"
+          "title": "Disk Space Check",
+          "content": "The disk space was checked to ensure there is sufficient storage for upcoming system updates and log files."
         }
       ]
     },
     {
-      "maintenanceNo": "002",
-      "hostName": "server2",
+      "maintenanceNo": "2",
+      "hostName": "server1",
+      "maintenanceDate": "2023-07-20",
       "tasks": [
         {
-          "date": "2024-09-15",
-          "content": "Update firmware"
+          "title": "Cooling System Inspection",
+          "content": "The cooling system was inspected to ensure optimal airflow and prevent overheating issues. All fans and filters were cleaned."
         }
       ]
     }
