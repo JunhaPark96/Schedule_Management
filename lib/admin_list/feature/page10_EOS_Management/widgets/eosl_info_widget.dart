@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:oneline2/admin_list/feature/page10_EOS_Management/models/eosl_detail_model.dart'; // go_router 패키지를 사용해 페이지 간 이동 처리
+import 'package:oneline2/admin_list/feature/page10_EOS_Management/models/eosl_detail_model.dart';
+import 'package:oneline2/admin_list/feature/page8_Calendar/views/add_event_page.dart'; // go_router 패키지를 사용해 페이지 간 이동 처리
 
 class EoslInfoWidget extends StatelessWidget {
   final EoslDetailModel eoslDetailModel;
@@ -37,9 +38,10 @@ class EoslInfoWidget extends StatelessWidget {
           _buildInfoRow('호스트 네임:', eoslDetailModel.hostName ?? '없음'),
           _buildInfoRow('구분:', eoslDetailModel.field ?? '없음'),
           _buildInfoRow('상세:', eoslDetailModel.note ?? '없음'),
-          _buildInfoRow('수량:', eoslDetailModel.quantity ?? '없음'),
+          _buildInfoRow('유지보수 횟수:', eoslDetailModel.quantity ?? '없음'),
           _buildSupplierRow(context, '납품업체:', eoslDetailModel.supplier ?? '없음'),
-          _buildEosDateRow(context, eoslDetailModel.eoslDate ?? '없음'),
+          _buildEosDateRow(
+              context, eoslDetailModel.eoslDate ?? '없음', eoslDetailModel),
         ],
       ),
     );
@@ -84,7 +86,8 @@ class EoslInfoWidget extends StatelessWidget {
   }
 
   // EOS 날짜 등록 버튼이 포함된 Row
-  Widget _buildEosDateRow(BuildContext context, String eoslDate) {
+  Widget _buildEosDateRow(
+      BuildContext context, String eoslDate, EoslDetailModel eoslDetailModel) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 8.0),
       child: Row(
@@ -108,7 +111,15 @@ class EoslInfoWidget extends StatelessWidget {
           ),
           ElevatedButton(
             onPressed: () {
-              // EOS 날짜 등록 로직
+              // EOS 날짜 등록 로직 ==> add_event_page로 이동
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => AddEventPage(
+                    eoslDetailModel: eoslDetailModel, // EoslDetailModel을 전달
+                  ),
+                ),
+              );
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.teal.shade600,

@@ -53,10 +53,20 @@ class EventBloc extends Bloc<EventEvent, EventState> {
     }
   }
 
+  // void _onRemoveEvent(RemoveEvent event, Emitter<EventState> emit) async {
+  //   emit(EventLoadInProgress());
+  //   try {
+  //     await repository.removeEvent(event.event); // Repository 사용
+  //     final allEvents = await repository.getAllEvents(); // 업데이트된 모든 이벤트 가져오기
+  //     emit(EventLoadSuccess(allEvents));
+  //   } catch (e) {
+  //     emit(EventLoadFailure(e.toString()));
+  //   }
+  // }
   void _onRemoveEvent(RemoveEvent event, Emitter<EventState> emit) async {
     emit(EventLoadInProgress());
     try {
-      await repository.removeEvent(event.event); // Repository 사용
+      await repository.removeEvent(event.eventId); // eventId 사용
       final allEvents = await repository.getAllEvents(); // 업데이트된 모든 이벤트 가져오기
       emit(EventLoadSuccess(allEvents));
     } catch (e) {

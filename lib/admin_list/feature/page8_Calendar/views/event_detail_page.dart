@@ -33,7 +33,7 @@ class EventDetailPage extends StatelessWidget {
                   if (updatedEvent != null && updatedEvent is Event) {
                     context
                         .read<EventBloc>()
-                        .add(RemoveEvent(event)); // eventProvider -> Bloc 사용
+                        .add(RemoveEvent(event.id)); // eventProvider -> Bloc 사용
                     context.read<EventBloc>().add(
                         AddEvent(updatedEvent)); // eventProvider -> Bloc 사용
                     Navigator.pop(context, updatedEvent);
@@ -57,8 +57,8 @@ class EventDetailPage extends StatelessWidget {
                         ),
                         TextButton(
                           onPressed: () {
-                            context.read<EventBloc>().add(
-                                RemoveEvent(event)); // eventProvider -> Bloc 사용
+                            context.read<EventBloc>().add(RemoveEvent(
+                                event.id)); // eventProvider -> Bloc 사용
                             Navigator.pop(context); // Close the dialog
                             Navigator.pop(context); // Close the EventDetailPage
                           },

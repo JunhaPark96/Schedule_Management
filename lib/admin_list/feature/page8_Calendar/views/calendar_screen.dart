@@ -33,7 +33,6 @@ class _CalendarScreenState extends State<CalendarScreen> {
       });
     });
 
-    // Load all events initially
     context.read<EventBloc>().add(LoadEvents());
   }
 
@@ -294,7 +293,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                               onPressed: () {
                                 context
                                     .read<EventBloc>()
-                                    .add(RemoveEvent(event));
+                                    .add(RemoveEvent(event.id));
                               },
                             ),
                             onTap: () async {

@@ -2,12 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:oneline2/admin_list/feature/page8_Calendar/view_models/calendar_bloc.dart';
 import 'package:oneline2/admin_list/feature/page8_Calendar/models/event_model.dart';
-import 'package:oneline2/admin_list/feature/page8_Calendar/view_models/calendar_event.dart'; // EventBloc으로 변경
+import 'package:oneline2/admin_list/feature/page8_Calendar/view_models/calendar_event.dart';
 import 'package:oneline2/admin_list/feature/page8_Calendar/view_models/calendar_state.dart';
-import 'package:oneline2/admin_list/feature/page8_Calendar/models/event_model.dart';
+import 'package:oneline2/admin_list/feature/page10_EOS_Management/models/eosl_detail_model.dart';
+import 'package:intl/intl.dart';
 
 class AddEventPage extends StatefulWidget {
-  const AddEventPage({Key? key}) : super(key: key);
+  final EoslDetailModel? eoslDetailModel;
+
+  const AddEventPage({Key? key, this.eoslDetailModel}) : super(key: key);
 
   @override
   _AddEventPageState createState() => _AddEventPageState();
@@ -15,12 +18,29 @@ class AddEventPage extends StatefulWidget {
 
 class _AddEventPageState extends State<AddEventPage> {
   final _formKey = GlobalKey<FormState>();
-  int _id = 3;
-  late String _title;
-  late String _description;
-  DateTime? _startTime;
-  DateTime? _endTime;
-  String _type = 'todo'; // 기본값 설정
+  int _id = 100; // 이벤트 ID 초기값
+  late String _title = ''; // 타이틀 초기화
+  late String _description = ''; // 설명 초기화
+  DateTime? _startTime; // 시작 시간
+  DateTime? _endTime; // 종료 시간
+  String _type = 'todo'; // 기본 타입 설정
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.eoslDetailModel != null) {
+      _title = '${widget.eoslDetailModel!.hostName} 만료일자';
+      _description =
+          ' - ${widget.eoslDetailModel!.field}\n - ${widget.eoslDetailModel!.note}\n - ${widget.eoslDetailModel!.supplier}';
+      _type = 'eos';
+
+      DateTime eoslDate = DateTime.parse(widget.eoslDetailModel!.eoslDate!);
+      _startTime =
+          DateTime(eoslDate.year, eoslDate.month, eoslDate.day, 0, 0); // 00:00
+      _endTime = DateTime(
+          eoslDate.year, eoslDate.month, eoslDate.day, 23, 59); // 23:59
+    }
+  }
 
   Future<void> _selectDateTime(BuildContext context, bool isStart) async {
     DateTime initialDate =
@@ -63,6 +83,7 @@ class _AddEventPageState extends State<AddEventPage> {
           child: Column(
             children: [
               TextFormField(
+                initialValue: _title, // 초기값 설정
                 decoration: const InputDecoration(labelText: 'Title'),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
@@ -97,7 +118,7 @@ class _AddEventPageState extends State<AddEventPage> {
                       child: Text(
                         _startTime == null
                             ? 'Select Start Time'
-                            : 'Start: ${_startTime!.toLocal()}',
+                            : 'Start: ${DateFormat('yyyy-MM-dd HH:mm').format(_startTime!)}',
                       ),
                     ),
                   ),
@@ -108,7 +129,7 @@ class _AddEventPageState extends State<AddEventPage> {
                       child: Text(
                         _endTime == null
                             ? 'Select End Time'
-                            : 'End: ${_endTime!.toLocal()}',
+                            : 'End: ${DateFormat('yyyy-MM-dd HH:mm').format(_endTime!)}',
                       ),
                     ),
                   ),
@@ -117,15 +138,21 @@ class _AddEventPageState extends State<AddEventPage> {
               const SizedBox(height: 8.0),
               Expanded(
                 child: TextFormField(
+                  initialValue: _description, // 초기값 설정
                   decoration: const InputDecoration(
                     labelText: 'Description',
-                    border: OutlineInputBorder(), // 테두리 추가
-                    floatingLabelBehavior:
-                        FloatingLabelBehavior.always, // 레이블을 항상 위에 고정
+                    border: OutlineInputBorder(),
+                    floatingLabelBehavior: FloatingLabelBehavior.always,
                   ),
-                  maxLines: null, // 여러 줄 입력 가능
-                  expands: true, // TextFormField가 남는 공간을 모두 채움
-                  textAlignVertical: TextAlignVertical.top, // 입력 내용이 상단에서 시작
+                  maxLines: null,
+                  expands: true,
+                  textAlignVertical: TextAlignVertical.top,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter a description';
+                    }
+                    return null;
+                  },
                   onSaved: (value) {
                     _description = value!;
                   },

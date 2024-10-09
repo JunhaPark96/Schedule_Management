@@ -29,12 +29,12 @@ class AddEvent extends EventEvent {
 }
 
 class RemoveEvent extends EventEvent {
-  final Event event;
+  final int eventId;
 
-  RemoveEvent(this.event);
+  RemoveEvent(this.eventId);
 
   @override
-  List<Object> get props => [event];
+  List<Object> get props => [eventId];
 }
 
 class UpdateEvent extends EventEvent {

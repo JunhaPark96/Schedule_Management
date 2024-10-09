@@ -6,6 +6,9 @@ class EoslModel {
   final String? platform;
   final String? osVersion;
   final String? eoslDate;
+  final String? businessGroup;
+  final String? tag;
+  final bool? isEosl;
 
   EoslModel({
     this.eoslNo,
@@ -15,6 +18,9 @@ class EoslModel {
     this.platform,
     this.osVersion,
     this.eoslDate,
+    this.businessGroup,
+    this.tag,
+    this.isEosl,
   });
 
   // JSON 데이터를 EoslModel 객체로 변환하는 팩토리 생성자
@@ -27,6 +33,9 @@ class EoslModel {
       platform: json['platform'],
       osVersion: json['osVersion'],
       eoslDate: json['eoslDate'],
+      businessGroup: json['businessGroup'],
+      tag: json['tag'],
+      isEosl: json['isEosl'],
     );
   }
 
@@ -40,6 +49,9 @@ class EoslModel {
       'platform': platform,
       'osVersion': osVersion,
       'eoslDate': eoslDate,
+      'businessGroup': businessGroup,
+      'tag': tag,
+      'isEosl': isEosl,
     };
   }
 }
