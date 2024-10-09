@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:oneline2/admin_list/feature/page10_EOS_Management/models/eosl_detail_model.dart';
 import 'package:provider/provider.dart';
 import 'package:oneline2/admin_list/feature/page8_Calendar/models/event_model.dart';
 import 'package:oneline2/admin_list/feature/page8_Calendar/view_models/event_provider.dart';
 
 class AddEventPage extends StatefulWidget {
-  const AddEventPage({super.key});
+  const AddEventPage({
+    super.key,
+  });
 
   @override
   _AddEventPageState createState() => _AddEventPageState();

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:oneline2/admin_list/feature/page10_EOS_Management/models/eosl_detail_model.dart'; // go_router 패키지를 사용해 페이지 간 이동 처리
+import 'package:oneline2/admin_list/feature/page10_EOS_Management/models/eosl_detail_model.dart';
+import 'package:oneline2/admin_list/feature/page8_Calendar/views/add_event_page.dart'; // go_router 패키지를 사용해 페이지 간 이동 처리
 
 class EoslInfoWidget extends StatelessWidget {
   final EoslDetailModel eoslDetailModel;
@@ -108,7 +109,14 @@ class EoslInfoWidget extends StatelessWidget {
           ),
           ElevatedButton(
             onPressed: () {
-              // EOS 날짜 등록 로직
+              // EOS 날짜 등록 로직 ==> add_event_page로 이동
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const AddEventPage(),
+                  settings: RouteSettings(arguments: eoslDetailModel),
+                ),
+              );
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.teal.shade600,

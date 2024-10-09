@@ -1,11 +1,11 @@
 {
   "eoslDetail": {
     "hostName": "server1",
-    "field": "Server",
+    "field": "OS",
     "quantity": "2",
     "note": "Regular maintenance required",
     "supplier": "Supplier A",
-    "eoslDate": "20230901"
+    "eoslDate": "20241015"
   },
   "maintenances": [
     {

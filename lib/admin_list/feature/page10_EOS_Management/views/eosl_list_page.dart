@@ -52,17 +52,17 @@ class _EoslListPageState extends State<EoslListPage> {
   }
 
   // AddEventPage로 데이터를 전달하고 네비게이트하는 메서드
-  void _navigateToAddEventPage(BuildContext context, EoslModel eoslData) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => const AddEventPage(), // 수정 없이 사용
-        settings: RouteSettings(
-          arguments: eoslData, // 전달할 eoslData
-        ),
-      ),
-    );
-  }
+  // void _navigateToAddEventPage(BuildContext context, EoslModel eoslData) {
+  //   Navigator.push(
+  //     context,
+  //     MaterialPageRoute(
+  //       builder: (context) => const AddEventPage(), // 수정 없이 사용
+  //       settings: RouteSettings(
+  //         arguments: eoslData, // 전달할 eoslData
+  //       ),
+  //     ),
+  //   );
+  // }
 
   @override
   Widget build(BuildContext context) {
