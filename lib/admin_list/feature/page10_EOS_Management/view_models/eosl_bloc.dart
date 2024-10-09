@@ -283,6 +283,8 @@ class EoslBloc extends Bloc<EoslEvent, EoslState> {
     }
   }
 
+
+
   Future<void> _onFetchEoslHistory(
       FetchEoslHistory event, Emitter<EoslState> emit) async {
     try {
@@ -294,6 +296,7 @@ class EoslBloc extends Bloc<EoslEvent, EoslState> {
           orElse: () => EoslMaintenance(
                 maintenanceNo: '',
                 hostName: event.hostName,
+                maintenanceDate: event.maintenanceDate,
                 tasks: [],
               ));
       emit(state.copyWith(eoslMaintenanceList: [history], loading: false));
@@ -302,20 +305,48 @@ class EoslBloc extends Bloc<EoslEvent, EoslState> {
     }
   }
 
+  // void _onAddTaskToEoslDetail(
+  //     AddTaskToEoslDetail event, Emitter<EoslState> emit) {
+  //   final maintenance = state.eoslMaintenanceList.firstWhere(
+  //     (item) => item.hostName == event.hostName,
+  //     orElse: () => EoslMaintenance(
+  //       maintenanceNo: 'new_maintenance_no',
+  //       hostName: event.hostName,
+  //       tasks: [],
+  //     ),
+  //   );
+
+  //   maintenance.tasks.add(event.task);
+  //   List<EoslMaintenance> updatedList = List.from(state.eoslMaintenanceList)
+  //     ..add(maintenance);
+  //   emit(state.copyWith(eoslMaintenanceList: updatedList));
+  // }
+  // 새로운 태스크를 추가하는 로직
   void _onAddTaskToEoslDetail(
       AddTaskToEoslDetail event, Emitter<EoslState> emit) {
-    final maintenance = state.eoslMaintenanceList.firstWhere(
-      (item) => item.hostName == event.hostName,
+    final List<EoslMaintenance> maintenanceList = List.from(state.eoslMaintenanceList);
+    
+    final existingMaintenance = maintenanceList.firstWhere(
+      (maintenance) => maintenance.hostName == event.hostName,
       orElse: () => EoslMaintenance(
-        maintenanceNo: 'new_maintenance_no',
+        maintenanceNo: '1',
         hostName: event.hostName,
+        maintenanceDate: event.maintenanceDate,
         tasks: [],
       ),
     );
 
-    maintenance.tasks.add(event.task);
-    List<EoslMaintenance> updatedList = List.from(state.eoslMaintenanceList)
-      ..add(maintenance);
-    emit(state.copyWith(eoslMaintenanceList: updatedList));
+    if (existingMaintenance.tasks.isEmpty) {
+      maintenanceList.add(existingMaintenance);
+    }
+
+    // 태스크 추가
+    existingMaintenance.tasks.add(event.task);
+
+    // 새로운 태스크 저장
+    emit(state.copyWith(eoslMaintenanceList: maintenanceList));
+
+    // JSON에 저장하는 로직
+    // apiService.saveTaskToLocalFile(maintenanceList);
   }
 }

@@ -31,7 +31,6 @@ class DeleteEosl extends EoslEvent {
   DeleteEosl(this.eoslNo);
 }
 
-
 class FetchEoslDetailList extends EoslEvent {}
 
 class FetchEoslDetail extends EoslEvent {
@@ -46,16 +45,25 @@ class FetchEoslMaintenanceList extends EoslEvent {
   FetchEoslMaintenanceList(this.hostName, this.maintenanceNo);
 }
 
+// class AddTaskToEoslDetail extends EoslEvent {
+//   final String hostName;
+//   final Map<String, String> task;
+
+//   AddTaskToEoslDetail(this.hostName, this.task);
+// }
+
 class AddTaskToEoslDetail extends EoslEvent {
   final String hostName;
   final Map<String, String> task;
+  final String maintenanceDate;
 
-  AddTaskToEoslDetail(this.hostName, this.task);
+  AddTaskToEoslDetail(this.hostName, this.task, this.maintenanceDate);
 }
 
 class FetchEoslHistory extends EoslEvent {
   final String hostName;
   final String maintenanceNo;
+  final String maintenanceDate;
 
-  FetchEoslHistory(this.hostName, this.maintenanceNo);
+  FetchEoslHistory(this.hostName, this.maintenanceNo, this.maintenanceDate);
 }

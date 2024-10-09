@@ -6,6 +6,8 @@ import 'package:oneline2/admin_list/feature/page10_EOS_Management/models/eosl_ma
 import 'package:oneline2/admin_list/feature/page10_EOS_Management/view_models/eosl_bloc.dart';
 import 'package:oneline2/admin_list/feature/page10_EOS_Management/view_models/eosl_event.dart';
 import 'package:oneline2/admin_list/feature/page10_EOS_Management/view_models/eosl_state.dart';
+import 'package:oneline2/admin_list/feature/page10_EOS_Management/widgets/html_editor.dart';
+import 'package:intl/intl.dart';
 
 class EoslHistoryPage extends StatefulWidget {
   final String hostName;
@@ -27,6 +29,7 @@ class _EoslHistoryPageState extends State<EoslHistoryPage> {
       TextEditingController(); // 작업 내용 입력 컨트롤러
   TextEditingController specialNotesController =
       TextEditingController(); // 특이사항 입력 컨트롤러
+  TextEditingController dateController = TextEditingController(); // 날짜 입력 컨트롤러
   List<PlatformFile> attachedFiles = []; // 첨부된 파일 목록
 
   @override
@@ -47,30 +50,53 @@ class _EoslHistoryPageState extends State<EoslHistoryPage> {
         orElse: () => EoslMaintenance(
           maintenanceNo: widget.maintenanceNo,
           hostName: widget.hostName,
+          maintenanceDate: DateTime.now().toIso8601String(),
           tasks: [],
         ),
       );
       if (maintenance.tasks.isNotEmpty) {
         final task = maintenance.tasks.first; // 첫 번째 작업을 로드
-        taskController.text = task['content'] ?? '';
-        specialNotesController.text = task['notes'] ?? '';
+        taskController.text = task['title'] ?? '';
+        specialNotesController.text = task['content'] ?? '';
+        dateController.text = maintenance.maintenanceDate != null
+            ? DateFormat('yyyy-MM-dd')
+                .format(DateTime.parse(maintenance.maintenanceDate))
+            : DateFormat('yyyy-MM-dd').format(DateTime.now());
       }
     } else {
       taskController.text = '';
       specialNotesController.text = '';
+      dateController.text = DateFormat('yyyy-MM-dd').format(DateTime.now());
       print(
           'EoslHistoryPage: 데이터 조회 실패 - 호스트 이름: ${widget.hostName}, 유지보수 번호: ${widget.maintenanceNo}');
+    }
+  }
+
+  Future<void> _pickDate(BuildContext context) async {
+    final DateTime? pickedDate = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2101),
+    );
+
+    if (pickedDate != null) {
+      setState(() {
+        dateController.text = DateFormat('yyyy-MM-dd').format(pickedDate);
+      });
     }
   }
 
   void _saveTask() {
     final eoslBloc = context.read<EoslBloc>();
     final newTask = {
-      'date': DateTime.now().toIso8601String(),
-      'content': taskController.text,
-      'notes': specialNotesController.text,
+      'date': dateController.text,
+      'title': taskController.text,
+      'content': specialNotesController.text,
     };
-    eoslBloc.add(AddTaskToEoslDetail(widget.hostName, newTask));
+
+    eoslBloc.add(
+        AddTaskToEoslDetail(widget.hostName, newTask, dateController.text));
     Navigator.of(context).pop(); // 저장 후 페이지를 닫음
   }
 
@@ -229,28 +255,63 @@ class _EoslHistoryPageState extends State<EoslHistoryPage> {
             ),
             const SizedBox(height: 10),
             if (isEditing)
+              InkWell(
+                onTap: () => _pickDate(context),
+                child: IgnorePointer(
+                  child: TextField(
+                    controller: dateController,
+                    decoration: const InputDecoration(
+                      hintText: '날짜를 선택하세요',
+                      border: OutlineInputBorder(),
+                      suffixIcon: Icon(Icons.calendar_today),
+                    ),
+                  ),
+                ),
+              )
+            else
+              Text(
+                dateController.text.isNotEmpty
+                    ? '날짜: ${dateController.text}' // 기존 날짜 표시
+                    : '날짜: ${DateFormat('yyyy-MM-dd').format(DateTime.now())}', // 새로운 태스크일 경우 오늘 날짜 표시
+                style: const TextStyle(fontSize: 16),
+              ),
+            const SizedBox(height: 8),
+            if (isEditing)
               TextField(
                 controller: taskController,
                 maxLines: null,
                 decoration: const InputDecoration(
-                  hintText: '작업 내용을 입력하세요',
+                  hintText: '제목을 입력하세요',
                   border: OutlineInputBorder(),
                 ),
               )
             else
-              const Text('작업 내용: 점검 내용 및 특이사항 작성'),
+              Text(
+                taskController.text.isNotEmpty
+                    ? '제목: ${taskController.text}'
+                    : '제목 작성',
+                style: const TextStyle(fontSize: 16),
+              ),
             const SizedBox(height: 8),
             if (isEditing)
-              TextField(
-                controller: specialNotesController,
-                maxLines: null,
-                decoration: const InputDecoration(
-                  hintText: '특이사항 및 권고사항 입력',
-                  border: OutlineInputBorder(),
+              SizedBox(
+                height: 300, // isEditing일 때 높이 증가
+                child: TextField(
+                  controller: specialNotesController,
+                  maxLines: null,
+                  decoration: const InputDecoration(
+                    hintText: '특이사항 및 권고사항 입력',
+                    border: OutlineInputBorder(),
+                  ),
                 ),
               )
             else
-              const Text('특이사항 및 권고사항'),
+              Text(
+                specialNotesController.text.isNotEmpty
+                    ? '특이사항: ${specialNotesController.text}'
+                    : '특이사항 및 권고사항',
+                style: const TextStyle(fontSize: 16),
+              ),
           ],
         ),
       ),

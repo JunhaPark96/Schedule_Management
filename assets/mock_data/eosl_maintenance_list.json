@@ -1,213 +1,116 @@
 [
     {
-        "maintenanceNo": "001",
+        "maintenanceNo": "1",
         "hostName": "server1",
+        "maintenanceDate": "2024-10-01",
         "tasks": [
             {
-                "date": "2023-08-01",
-                "content": "Check disk space"
-            },
-            {
-                "date": "2023-08-10",
-                "content": "Update software"
+                "title": "Disk Space Check",
+                "content": "The disk space was checked to ensure there is sufficient storage for upcoming system updates and log files."
             }
         ]
     },
     {
-        "maintenanceNo": "002",
+        "maintenanceNo": "2",
         "hostName": "server2",
+        "maintenanceDate": "2023-08-05",
         "tasks": [
             {
-                "date": "2023-08-05",
-                "content": "Replace network cable"
+                "title": "Network Cable Replacement",
+                "content": "A faulty network cable was identified and replaced, improving network stability and reducing packet loss."
             }
         ]
     },
     {
-        "maintenanceNo": "003",
+        "maintenanceNo": "3",
         "hostName": "server3",
+        "maintenanceDate": "2023-07-20",
         "tasks": [
             {
-                "date": "2023-07-20",
-                "content": "Inspect cooling system"
-            },
-            {
-                "date": "2023-08-15",
-                "content": "Clean hardware components"
+                "title": "Cooling System Inspection",
+                "content": "The cooling system was inspected to ensure optimal airflow and prevent overheating issues. All fans and filters were cleaned."
             }
+
         ]
     },
     {
-        "maintenanceNo": "004",
+        "maintenanceNo": "4",
         "hostName": "server4",
+        "maintenanceDate": "2023-08-01",
         "tasks": [
             {
-                "date": "2023-08-01",
-                "content": "Backup configuration files"
+                "title": "Configuration Backup",
+                "content": "Backup of all configuration files was performed to secure the current system setup and prepare for potential restoration if needed."
             }
         ]
     },
     {
-        "maintenanceNo": "005",
+        "maintenanceNo": "5",
         "hostName": "server5",
+        "maintenanceDate": "2023-08-11",
         "tasks": [
             {
-                "date": "2023-08-11",
-                "content": "Upgrade firmware"
+                "title": "Firmware Upgrade",
+                "content": "The firmware was upgraded to the latest version, enhancing hardware compatibility and addressing known bugs."
             }
         ]
     },
     {
-        "maintenanceNo": "006",
+        "maintenanceNo": "6",
         "hostName": "server6",
+        "maintenanceDate": "2023-08-02",
         "tasks": [
             {
-                "date": "2023-08-02",
-                "content": "Check error logs"
+                "title": "Error Log Check",
+                "content": "System error logs were reviewed for potential issues. No critical errors were found, and minor warnings were addressed."
             }
         ]
     },
     {
-        "maintenanceNo": "007",
+        "maintenanceNo": "7",
         "hostName": "server7",
+        "maintenanceDate": "2023-08-01",
         "tasks": [
             {
-                "date": "2023-08-01",
-                "content": "Check security updates"
+                "title": "Security Update Check",
+                "content": "The system was checked for any pending security updates. All updates were installed to ensure system security."
             },
             {
-                "date": "2023-08-12",
-                "content": "Restart services"
+                "title": "Service Restart",
+                "content": "All critical services were restarted to apply configuration changes and improve overall system performance."
             }
         ]
     },
     {
-        "maintenanceNo": "008",
+        "maintenanceNo": "8",
         "hostName": "server8",
+        "maintenanceDate": "2023-08-07",
         "tasks": [
             {
-                "date": "2023-08-07",
-                "content": "Run diagnostic tests"
+                "title": "Diagnostic Tests",
+                "content": "System diagnostic tests were run to identify potential hardware or software issues. All systems passed without errors."
             }
         ]
     },
     {
-        "maintenanceNo": "009",
+        "maintenanceNo": "9",
         "hostName": "server9",
+        "maintenanceDate": "2023-08-09",
         "tasks": [
             {
-                "date": "2023-08-09",
-                "content": "Replace faulty parts"
+                "title": "Faulty Part Replacement",
+                "content": "A faulty hardware part was replaced to restore system functionality and prevent further degradation in performance."
             }
         ]
     },
     {
-        "maintenanceNo": "010",
+        "maintenanceNo": "10",
         "hostName": "server10",
+        "maintenanceDate": "2023-08-13",
         "tasks": [
             {
-                "date": "2023-08-13",
-                "content": "Optimize performance"
-            }
-        ]
-    },
-    {
-        "maintenanceNo": "011",
-        "hostName": "server11",
-        "tasks": [
-            {
-                "date": "2023-08-14",
-                "content": "Update drivers"
-            }
-        ]
-    },
-    {
-        "maintenanceNo": "012",
-        "hostName": "server12",
-        "tasks": [
-            {
-                "date": "2023-08-16",
-                "content": "Configure backup system"
-            }
-        ]
-    },
-    {
-        "maintenanceNo": "013",
-        "hostName": "server13",
-        "tasks": [
-            {
-                "date": "2023-08-03",
-                "content": "Check power supply"
-            }
-        ]
-    },
-    {
-        "maintenanceNo": "014",
-        "hostName": "server14",
-        "tasks": [
-            {
-                "date": "2023-08-04",
-                "content": "Review security protocols"
-            }
-        ]
-    },
-    {
-        "maintenanceNo": "015",
-        "hostName": "server15",
-        "tasks": [
-            {
-                "date": "2023-08-18",
-                "content": "Replace battery"
-            }
-        ]
-    },
-    {
-        "maintenanceNo": "016",
-        "hostName": "server16",
-        "tasks": [
-            {
-                "date": "2023-08-19",
-                "content": "Check network performance"
-            }
-        ]
-    },
-    {
-        "maintenanceNo": "017",
-        "hostName": "server17",
-        "tasks": [
-            {
-                "date": "2023-08-20",
-                "content": "Clean air filters"
-            }
-        ]
-    },
-    {
-        "maintenanceNo": "018",
-        "hostName": "server18",
-        "tasks": [
-            {
-                "date": "2023-08-21",
-                "content": "Inspect server rack"
-            }
-        ]
-    },
-    {
-        "maintenanceNo": "019",
-        "hostName": "server19",
-        "tasks": [
-            {
-                "date": "2023-08-22",
-                "content": "Run system diagnostics"
-            }
-        ]
-    },
-    {
-        "maintenanceNo": "020",
-        "hostName": "server20",
-        "tasks": [
-            {
-                "date": "2023-08-23",
-                "content": "Check software licenses"
+                "title": "Performance Optimization",
+                "content": "System settings were optimized to improve performance, especially in handling high workloads and reducing latency."
             }
         ]
     }

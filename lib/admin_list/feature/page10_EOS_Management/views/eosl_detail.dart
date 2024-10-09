@@ -50,17 +50,25 @@ class _EoslDetailPageState extends State<EoslDetailPage> {
   // 필터를 적용하는 메서드
   void _applyFilters() {
     final filteredMaintenances = maintenances.where((maintenance) {
-      final tasks = maintenance.tasks;
-      return tasks.any((task) {
-        final taskDate =
-            task['date'] != null ? DateTime.tryParse(task['date']) : null;
+      final maintenanceDate = maintenance.maintenanceDate != null
+          ? DateTime.tryParse(maintenance.maintenanceDate)
+          : null;
+
+      // 유지보수 날짜 필터링
+      final isWithinDateRange = maintenanceDate == null ||
+          (maintenanceDate.isAfter(selectedDateRange.start) &&
+              maintenanceDate.isBefore(selectedDateRange.end));
+
+      // 각 태스크의 title과 content에 대한 검색 필터링
+      final taskMatchesSearchQuery = maintenance.tasks.any((task) {
+        final taskTitle = task['title']?.toLowerCase() ?? '';
         final taskContent = task['content']?.toLowerCase() ?? '';
 
-        return (taskDate == null ||
-                (taskDate.isAfter(selectedDateRange.start) &&
-                    taskDate.isBefore(selectedDateRange.end))) &&
+        return taskTitle.contains(searchQuery) ||
             taskContent.contains(searchQuery);
       });
+
+      return isWithinDateRange && taskMatchesSearchQuery;
     }).toList();
 
     // 빌드 단계 이후에 상태 업데이트
