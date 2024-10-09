@@ -111,12 +111,16 @@ class EoslInfoWidget extends StatelessWidget {
             onPressed: () {
               // EOS 날짜 등록 로직 ==> add_event_page로 이동
               Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const AddEventPage(),
-                  settings: RouteSettings(arguments: eoslDetailModel),
-                ),
-              );
+                  context,
+                  // MaterialPageRoute(
+                  //   builder: (context) => const AddEventPage(),
+                  //   settings: RouteSettings(arguments: eoslDetailModel),
+                  // ),
+                  MaterialPageRoute(
+                    builder: (context) => AddEventPage(
+                      eoslDetailModel: eoslDetailModel, // EoslDetailModel을 전달
+                    ),
+                  ));
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.teal.shade600,

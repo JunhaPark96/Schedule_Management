@@ -28,6 +28,7 @@ class _AddEventPageState extends State<AddEventPage> {
   @override
   void initState() {
     super.initState();
+    
     if (widget.eoslDetailModel != null) {
       _title = '${widget.eoslDetailModel!.hostName} 만료일자';
       _description =
