@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_bloc/flutter_bloc.dart'; // BlocBuilder를 사용하기 위해 추가
+import 'package:oneline2/admin_list/feature/page8_Calendar/view_models/calendar_bloc.dart';
 import 'package:oneline2/admin_list/feature/page8_Calendar/models/event_model.dart';
-import 'package:oneline2/admin_list/feature/page8_Calendar/view_models/event_provider.dart';
+import 'package:oneline2/admin_list/feature/page8_Calendar/view_models/calendar_event.dart'; // EventBloc으로 변경
+import 'package:oneline2/admin_list/feature/page8_Calendar/view_models/calendar_state.dart';
 import 'edit_event_page.dart';
 import 'package:intl/intl.dart';
 
@@ -12,8 +14,9 @@ class EventDetailPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<EventProvider>(
-      builder: (context, eventProvider, child) {
+    return BlocBuilder<EventBloc, EventState>(
+      // BlocBuilder로 변경
+      builder: (context, state) {
         return Scaffold(
           appBar: AppBar(
             title: const Text('Event Details'),
@@ -28,8 +31,11 @@ class EventDetailPage extends StatelessWidget {
                     ),
                   );
                   if (updatedEvent != null && updatedEvent is Event) {
-                    eventProvider.removeEvent(event);
-                    eventProvider.addEvent(updatedEvent);
+                    context
+                        .read<EventBloc>()
+                        .add(RemoveEvent(event.id)); // eventProvider -> Bloc 사용
+                    context.read<EventBloc>().add(
+                        AddEvent(updatedEvent)); // eventProvider -> Bloc 사용
                     Navigator.pop(context, updatedEvent);
                   }
                 },
@@ -51,7 +57,8 @@ class EventDetailPage extends StatelessWidget {
                         ),
                         TextButton(
                           onPressed: () {
-                            eventProvider.removeEvent(event);
+                            context.read<EventBloc>().add(RemoveEvent(
+                                event.id)); // eventProvider -> Bloc 사용
                             Navigator.pop(context); // Close the dialog
                             Navigator.pop(context); // Close the EventDetailPage
                           },

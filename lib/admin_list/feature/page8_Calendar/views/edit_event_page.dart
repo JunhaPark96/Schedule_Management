@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart'; // BlocBuilder를 사용하기 위해 추가
 import 'package:oneline2/admin_list/feature/page8_Calendar/models/event_model.dart';
+import 'package:oneline2/admin_list/feature/page8_Calendar/view_models/calendar_bloc.dart';
+import 'package:oneline2/admin_list/feature/page8_Calendar/models/event_model.dart';
+import 'package:oneline2/admin_list/feature/page8_Calendar/view_models/calendar_event.dart'; // EventBloc으로 변경
+import 'package:oneline2/admin_list/feature/page8_Calendar/view_models/calendar_state.dart'; // EventBloc을 import
 import 'package:intl/intl.dart';
 
 class EditEventPage extends StatefulWidget {
@@ -71,6 +76,8 @@ class _EditEventPageState extends State<EditEventPage> {
                 endTime: _endTime ?? widget.event.endTime,
               );
 
+              // EventBloc에 업데이트된 이벤트를 추가
+              context.read<EventBloc>().add(UpdateEvent(updatedEvent));
               Navigator.pop(context, updatedEvent);
             },
           ),

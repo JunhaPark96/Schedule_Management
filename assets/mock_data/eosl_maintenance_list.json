@@ -1,521 +1,213 @@
 [
     {
-        "maintenanceNo": "1",
+        "maintenanceNo": "001",
         "hostName": "server1",
         "tasks": [
             {
-                "taskName": "Task1 for server1 - Part1",
-                "description": "Details about Task1"
+                "date": "2023-08-01",
+                "content": "Check disk space"
+            },
+            {
+                "date": "2023-08-10",
+                "content": "Update software"
             }
         ]
     },
     {
-        "maintenanceNo": "2",
+        "maintenanceNo": "002",
         "hostName": "server2",
         "tasks": [
             {
-                "taskName": "Task1 for server2 - Part1",
-                "description": "Details about Task1"
+                "date": "2023-08-05",
+                "content": "Replace network cable"
             }
         ]
     },
     {
-        "maintenanceNo": "3",
+        "maintenanceNo": "003",
         "hostName": "server3",
         "tasks": [
             {
-                "taskName": "Task1 for server3 - Part1",
-                "description": "Details about Task1"
+                "date": "2023-07-20",
+                "content": "Inspect cooling system"
             },
             {
-                "taskName": "Task2 for server3 - Part1",
-                "description": "Details about Task2"
+                "date": "2023-08-15",
+                "content": "Clean hardware components"
             }
         ]
     },
     {
-        "maintenanceNo": "4",
+        "maintenanceNo": "004",
         "hostName": "server4",
         "tasks": [
             {
-                "taskName": "Task1 for server4 - Part1",
-                "description": "Details about Task1"
+                "date": "2023-08-01",
+                "content": "Backup configuration files"
             }
         ]
     },
     {
-        "maintenanceNo": "5",
+        "maintenanceNo": "005",
         "hostName": "server5",
         "tasks": [
             {
-                "taskName": "Task1 for server5 - Part1",
-                "description": "Details about Task1"
+                "date": "2023-08-11",
+                "content": "Upgrade firmware"
             }
         ]
     },
     {
-        "maintenanceNo": "6",
+        "maintenanceNo": "006",
         "hostName": "server6",
         "tasks": [
             {
-                "taskName": "Task1 for server6 - Part1",
-                "description": "Details about Task1"
-            },
-            {
-                "taskName": "Task2 for server6 - Part1",
-                "description": "Details about Task2"
+                "date": "2023-08-02",
+                "content": "Check error logs"
             }
         ]
     },
     {
-        "maintenanceNo": "7",
+        "maintenanceNo": "007",
         "hostName": "server7",
         "tasks": [
             {
-                "taskName": "Task1 for server7 - Part1",
-                "description": "Details about Task1"
+                "date": "2023-08-01",
+                "content": "Check security updates"
+            },
+            {
+                "date": "2023-08-12",
+                "content": "Restart services"
             }
         ]
     },
     {
-        "maintenanceNo": "8",
+        "maintenanceNo": "008",
         "hostName": "server8",
         "tasks": [
             {
-                "taskName": "Task1 for server8 - Part1",
-                "description": "Details about Task1"
+                "date": "2023-08-07",
+                "content": "Run diagnostic tests"
             }
         ]
     },
     {
-        "maintenanceNo": "9",
+        "maintenanceNo": "009",
         "hostName": "server9",
         "tasks": [
             {
-                "taskName": "Task1 for server9 - Part1",
-                "description": "Details about Task1"
-            },
-            {
-                "taskName": "Task2 for server9 - Part1",
-                "description": "Details about Task2"
+                "date": "2023-08-09",
+                "content": "Replace faulty parts"
             }
         ]
     },
     {
-        "maintenanceNo": "10",
+        "maintenanceNo": "010",
         "hostName": "server10",
         "tasks": [
             {
-                "taskName": "Task1 for server10 - Part1",
-                "description": "Details about Task1"
+                "date": "2023-08-13",
+                "content": "Optimize performance"
             }
         ]
     },
     {
-        "maintenanceNo": "11",
+        "maintenanceNo": "011",
         "hostName": "server11",
         "tasks": [
             {
-                "taskName": "Task1 for server11 - Part1",
-                "description": "Details about Task1"
+                "date": "2023-08-14",
+                "content": "Update drivers"
             }
         ]
     },
     {
-        "maintenanceNo": "12",
+        "maintenanceNo": "012",
         "hostName": "server12",
         "tasks": [
             {
-                "taskName": "Task1 for server12 - Part1",
-                "description": "Details about Task1"
-            },
-            {
-                "taskName": "Task2 for server12 - Part1",
-                "description": "Details about Task2"
+                "date": "2023-08-16",
+                "content": "Configure backup system"
             }
         ]
     },
     {
-        "maintenanceNo": "13",
+        "maintenanceNo": "013",
         "hostName": "server13",
         "tasks": [
             {
-                "taskName": "Task1 for server13 - Part1",
-                "description": "Details about Task1"
+                "date": "2023-08-03",
+                "content": "Check power supply"
             }
         ]
     },
     {
-        "maintenanceNo": "14",
+        "maintenanceNo": "014",
         "hostName": "server14",
         "tasks": [
             {
-                "taskName": "Task1 for server14 - Part1",
-                "description": "Details about Task1"
+                "date": "2023-08-04",
+                "content": "Review security protocols"
             }
         ]
     },
     {
-        "maintenanceNo": "15",
+        "maintenanceNo": "015",
         "hostName": "server15",
         "tasks": [
             {
-                "taskName": "Task1 for server15 - Part1",
-                "description": "Details about Task1"
+                "date": "2023-08-18",
+                "content": "Replace battery"
             }
         ]
     },
     {
-        "maintenanceNo": "16",
+        "maintenanceNo": "016",
         "hostName": "server16",
         "tasks": [
             {
-                "taskName": "Task1 for server16 - Part1",
-                "description": "Details about Task1"
+                "date": "2023-08-19",
+                "content": "Check network performance"
             }
         ]
     },
     {
-        "maintenanceNo": "17",
+        "maintenanceNo": "017",
         "hostName": "server17",
         "tasks": [
             {
-                "taskName": "Task1 for server17 - Part1",
-                "description": "Details about Task1"
+                "date": "2023-08-20",
+                "content": "Clean air filters"
             }
         ]
     },
     {
-        "maintenanceNo": "18",
+        "maintenanceNo": "018",
         "hostName": "server18",
         "tasks": [
             {
-                "taskName": "Task1 for server18 - Part1",
-                "description": "Details about Task1"
+                "date": "2023-08-21",
+                "content": "Inspect server rack"
             }
         ]
     },
     {
-        "maintenanceNo": "19",
+        "maintenanceNo": "019",
         "hostName": "server19",
         "tasks": [
             {
-                "taskName": "Task1 for server19 - Part1",
-                "description": "Details about Task1"
+                "date": "2023-08-22",
+                "content": "Run system diagnostics"
             }
         ]
     },
     {
-        "maintenanceNo": "20",
+        "maintenanceNo": "020",
         "hostName": "server20",
         "tasks": [
             {
-                "taskName": "Task1 for server20 - Part1",
-                "description": "Details about Task1"
-            }
-        ]
-    },
-    {
-        "maintenanceNo": "21",
-        "hostName": "server1",
-        "tasks": [
-            {
-                "taskName": "Task2 for server1 - Part2",
-                "description": "Details about Task2"
-            },
-            {
-                "taskName": "Task3 for server1 - Part2",
-                "description": "Details about Task3"
-            }
-        ]
-    },
-    {
-        "maintenanceNo": "22",
-        "hostName": "server2",
-        "tasks": [
-            {
-                "taskName": "Task2 for server2 - Part2",
-                "description": "Details about Task2"
-            }
-        ]
-    },
-    {
-        "maintenanceNo": "23",
-        "hostName": "server3",
-        "tasks": [
-            {
-                "taskName": "Task3 for server3 - Part3",
-                "description": "Details about Task3"
-            }
-        ]
-    },
-    {
-        "maintenanceNo": "24",
-        "hostName": "server4",
-        "tasks": [
-            {
-                "taskName": "Task2 for server4 - Part2",
-                "description": "Details about Task2"
-            }
-        ]
-    },
-    {
-        "maintenanceNo": "25",
-        "hostName": "server5",
-        "tasks": [
-            {
-                "taskName": "Task2 for server5 - Part2",
-                "description": "Details about Task2"
-            }
-        ]
-    },
-    {
-        "maintenanceNo": "26",
-        "hostName": "server6",
-        "tasks": [
-            {
-                "taskName": "Task3 for server6 - Part3",
-                "description": "Details about Task3"
-            }
-        ]
-    },
-    {
-        "maintenanceNo": "27",
-        "hostName": "server7",
-        "tasks": [
-            {
-                "taskName": "Task2 for server7 - Part2",
-                "description": "Details about Task2"
-            }
-        ]
-    },
-    {
-        "maintenanceNo": "28",
-        "hostName": "server8",
-        "tasks": [
-            {
-                "taskName": "Task2 for server8 - Part2",
-                "description": "Details about Task2"
-            }
-        ]
-    },
-    {
-        "maintenanceNo": "29",
-        "hostName": "server9",
-        "tasks": [
-            {
-                "taskName": "Task3 for server9 - Part3",
-                "description": "Details about Task3"
-            }
-        ]
-    },
-    {
-        "maintenanceNo": "30",
-        "hostName": "server10",
-        "tasks": [
-            {
-                "taskName": "Task2 for server10 - Part2",
-                "description": "Details about Task2"
-            }
-        ]
-    },
-    {
-        "maintenanceNo": "31",
-        "hostName": "server11",
-        "tasks": [
-            {
-                "taskName": "Task2 for server11 - Part2",
-                "description": "Details about Task2"
-            }
-        ]
-    },
-    {
-        "maintenanceNo": "32",
-        "hostName": "server12",
-        "tasks": [
-            {
-                "taskName": "Task3 for server12 - Part3",
-                "description": "Details about Task3"
-            }
-        ]
-    },
-    {
-        "maintenanceNo": "33",
-        "hostName": "server13",
-        "tasks": [
-            {
-                "taskName": "Task2 for server13 - Part2",
-                "description": "Details about Task2"
-            }
-        ]
-    },
-    {
-        "maintenanceNo": "34",
-        "hostName": "server14",
-        "tasks": [
-            {
-                "taskName": "Task2 for server14 - Part2",
-                "description": "Details about Task2"
-            }
-        ]
-    },
-    {
-        "maintenanceNo": "35",
-        "hostName": "server15",
-        "tasks": [
-            {
-                "taskName": "Task2 for server15 - Part2",
-                "description": "Details about Task2"
-            }
-        ]
-    },
-    {
-        "maintenanceNo": "36",
-        "hostName": "server16",
-        "tasks": [
-            {
-                "taskName": "Task2 for server16 - Part2",
-                "description": "Details about Task2"
-            }
-        ]
-    },
-    {
-        "maintenanceNo": "37",
-        "hostName": "server17",
-        "tasks": [
-            {
-                "taskName": "Task2 for server17 - Part2",
-                "description": "Details about Task2"
-            }
-        ]
-    },
-    {
-        "maintenanceNo": "38",
-        "hostName": "server18",
-        "tasks": [
-            {
-                "taskName": "Task2 for server18 - Part2",
-                "description": "Details about Task2"
-            }
-        ]
-    },
-    {
-        "maintenanceNo": "39",
-        "hostName": "server19",
-        "tasks": [
-            {
-                "taskName": "Task2 for server19 - Part2",
-                "description": "Details about Task2"
-            }
-        ]
-    },
-    {
-        "maintenanceNo": "40",
-        "hostName": "server20",
-        "tasks": [
-            {
-                "taskName": "Task2 for server20 - Part2",
-                "description": "Details about Task2"
-            }
-        ]
-    },
-    {
-        "maintenanceNo": "41",
-        "hostName": "server1",
-        "tasks": [
-            {
-                "taskName": "Task3 for server1 - Part3",
-                "description": "Details about Task3"
-            }
-        ]
-    },
-    {
-        "maintenanceNo": "42",
-        "hostName": "server2",
-        "tasks": [
-            {
-                "taskName": "Task3 for server2 - Part3",
-                "description": "Details about Task3"
-            }
-        ]
-    },
-    {
-        "maintenanceNo": "43",
-        "hostName": "server3",
-        "tasks": [
-            {
-                "taskName": "Task4 for server3 - Part4",
-                "description": "Details about Task4"
-            }
-        ]
-    },
-    {
-        "maintenanceNo": "44",
-        "hostName": "server4",
-        "tasks": [
-            {
-                "taskName": "Task3 for server4 - Part3",
-                "description": "Details about Task3"
-            }
-        ]
-    },
-    {
-        "maintenanceNo": "45",
-        "hostName": "server5",
-        "tasks": [
-            {
-                "taskName": "Task3 for server5 - Part3",
-                "description": "Details about Task3"
-            }
-        ]
-    },
-    {
-        "maintenanceNo": "46",
-        "hostName": "server6",
-        "tasks": [
-            {
-                "taskName": "Task4 for server6 - Part4",
-                "description": "Details about Task4"
-            }
-        ]
-    },
-    {
-        "maintenanceNo": "47",
-        "hostName": "server7",
-        "tasks": [
-            {
-                "taskName": "Task3 for server7 - Part3",
-                "description": "Details about Task3"
-            }
-        ]
-    },
-    {
-        "maintenanceNo": "48",
-        "hostName": "server8",
-        "tasks": [
-            {
-                "taskName": "Task3 for server8 - Part3",
-                "description": "Details about Task3"
-            }
-        ]
-    },
-    {
-        "maintenanceNo": "49",
-        "hostName": "server9",
-        "tasks": [
-            {
-                "taskName": "Task4 for server9 - Part4",
-                "description": "Details about Task4"
-            }
-        ]
-    },
-    {
-        "maintenanceNo": "50",
-        "hostName": "server10",
-        "tasks": [
-            {
-                "taskName": "Task3 for server10 - Part3",
-                "description": "Details about Task3"
+                "date": "2023-08-23",
+                "content": "Check software licenses"
             }
         ]
     }
