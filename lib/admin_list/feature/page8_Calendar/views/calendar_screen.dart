@@ -20,9 +20,9 @@ class _CalendarScreenState extends State<CalendarScreen> {
   CalendarFormat calendarFormat = CalendarFormat.month;
   DateTime _focusedDay = DateTime.now();
   DateTime _selectedDay = DateTime.now();
-  TextEditingController _searchController = TextEditingController();
+  final TextEditingController _searchController = TextEditingController();
   String _searchQuery = '';
-  Set<DateTime> _eventDays = {}; // 이벤트가 있는 날짜를 저장할 Set
+  final Set<DateTime> _eventDays = {}; // 이벤트가 있는 날짜를 저장할 Set
 
   @override
   void initState() {
@@ -100,7 +100,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                       child: Container(
                         width: 8.0,
                         height: 8.0,
-                        decoration: BoxDecoration(
+                        decoration: const BoxDecoration(
                           color: Colors.green,
                           shape: BoxShape.circle,
                         ),
@@ -157,9 +157,9 @@ class _CalendarScreenState extends State<CalendarScreen> {
 
                       // 이벤트가 선택된 날짜 범위와 겹치는지 확인
                       final isWithinRange = eventStart.isBefore(endOfSelectedDay
-                              .add(Duration(milliseconds: 1))) &&
+                              .add(const Duration(milliseconds: 1))) &&
                           eventEnd.isAfter(startOfSelectedDay
-                              .subtract(Duration(milliseconds: 1)));
+                              .subtract(const Duration(milliseconds: 1)));
 
                       print(
                           'Event: ${event.title}, Start: $eventStart, End: $eventEnd, Selected Day Start: $startOfSelectedDay, Selected Day End: $endOfSelectedDay, Is Within Range: $isWithinRange');
@@ -234,14 +234,14 @@ class _CalendarScreenState extends State<CalendarScreen> {
                         // 이벤트의 시작과 끝 시간이 선택된 날짜 범위와 겹치는지 확인
                         final isStartWithinRange = eventStart.isBefore(
                                 endOfSelectedDay
-                                    .add(Duration(milliseconds: 1))) &&
+                                    .add(const Duration(milliseconds: 1))) &&
                             eventStart.isAfter(startOfSelectedDay
-                                .subtract(Duration(milliseconds: 1)));
+                                .subtract(const Duration(milliseconds: 1)));
                         final isEndWithinRange = eventEnd.isAfter(
-                                startOfSelectedDay
-                                    .subtract(Duration(milliseconds: 1))) &&
+                                startOfSelectedDay.subtract(
+                                    const Duration(milliseconds: 1))) &&
                             eventEnd.isBefore(endOfSelectedDay
-                                .add(Duration(milliseconds: 1)));
+                                .add(const Duration(milliseconds: 1)));
 
                         // 로그 찍기: 이벤트 시작 및 끝 날짜
                         print('Event Start: $eventStart');
