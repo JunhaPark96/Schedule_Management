@@ -52,11 +52,15 @@ class ApiService {
       final String response =
           await rootBundle.loadString('assets/mock_data/eosl_list.json');
       final List<dynamic> eoslList = jsonDecode(response);
-      print(
-          'Fetched Local EOSL List: ${eoslList.length} items'); // 로컬 데이터 로드 확인
+
+      // 데이터가 비어 있는지 확인
+      if (eoslList.isEmpty) {
+        print('Local EOSL List is empty.');
+      }
+
       return eoslList.map((eosl) => EoslModel.fromJson(eosl)).toList();
     } catch (e) {
-      print('Error fetching Local EOSL List: $e'); // 에러 로그
+      print('Error fetching Local EOSL List: $e');
       throw Exception('Local EOSL data 로드 실패: $e');
     }
   }
@@ -151,10 +155,21 @@ class ApiService {
       // JSON 파싱 결과 출력
       print('Parsed JSON: $jsonResponse');
 
-      // EoslDetail과 EoslMaintenance 데이터를 추출
-      final eoslDetail = EoslDetailModel.fromJson(jsonResponse['eoslDetail']);
-      final maintenanceList = (jsonResponse['maintenances'] as List)
+      // EoslDetailList 중에서 특정 조건에 맞는 것을 선택 (예: 첫 번째 항목을 선택)
+      final List<EoslDetailModel> eoslDetailList =
+          (jsonResponse['eoslDetailList'] as List)
+              .map((detail) => EoslDetailModel.fromJson(detail))
+              .toList();
+
+      // 첫 번째 항목을 선택하거나 조건에 맞는 항목을 필터링하여 선택
+      final eoslDetail = eoslDetailList.firstWhere(
+        (detail) => detail.hostName == hostName,
+        orElse: () => EoslDetailModel(), // 없을 경우 빈 모델을 반환
+      );
+
+      final maintenanceList = (jsonResponse['maintenanceList'] as List)
           .map((m) => EoslMaintenance.fromJson(m))
+          .where((maintenance) => maintenance.hostName == hostName)
           .toList();
 
       // 데이터 추출 결과 출력
@@ -162,8 +177,8 @@ class ApiService {
       print('Extracted Maintenances: $maintenanceList');
 
       return {
-        'eoslDetail': eoslDetail,
-        'maintenances': maintenanceList,
+        'eoslDetail': eoslDetail, // 단일 객체로 전달
+        'maintenanceList': maintenanceList,
       };
     } catch (e) {
       print('Failed to load EOSL data: $e'); // 에러 출력

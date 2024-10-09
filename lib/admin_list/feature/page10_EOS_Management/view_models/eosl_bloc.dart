@@ -140,11 +140,15 @@ class EoslBloc extends Bloc<EoslEvent, EoslState> {
     try {
       emit(state.copyWith(loading: true, error: ''));
       List<EoslModel> eoslList = await apiService.fetchLocalEoslList();
-      print(
-          'Fetched Local EOSL List: ${eoslList.length} items'); // 로컬 데이터 로드 확인
-      emit(state.copyWith(eoslList: eoslList, loading: false));
+      print('Fetched Local EOSL List: ${eoslList.length} items');
+
+      // columns가 제대로 생성되고 있는지 확인
+      List<PlutoColumn> columns = createColumns();
+
+      emit(
+          state.copyWith(eoslList: eoslList, columns: columns, loading: false));
     } catch (e) {
-      print('Error fetching Local EOSL List: $e'); // 에러 로그
+      print('Error fetching Local EOSL List: $e');
       emit(state.copyWith(loading: false, error: e.toString()));
     }
   }
@@ -152,12 +156,13 @@ class EoslBloc extends Bloc<EoslEvent, EoslState> {
   Future<void> _onInsertEosl(InsertEosl event, Emitter<EoslState> emit) async {
     try {
       emit(state.copyWith(loading: true, error: ''));
-      
+
       // API로 새 데이터 전송
       await apiService.insertEoslData(event.newEosl.toJson());
-      
+
       // 추가한 데이터 포함하여 리스트를 새로고침
-      List<EoslModel> updatedList = List.from(state.eoslList)..add(event.newEosl);
+      List<EoslModel> updatedList = List.from(state.eoslList)
+        ..add(event.newEosl);
 
       emit(state.copyWith(eoslList: updatedList, loading: false));
     } catch (e) {
@@ -219,6 +224,28 @@ class EoslBloc extends Bloc<EoslEvent, EoslState> {
   //   }
   // }
 
+  // Future<void> _onFetchEoslDetail(
+  //     FetchEoslDetail event, Emitter<EoslState> emit) async {
+  //   try {
+  //     emit(state.copyWith(loading: true, error: ''));
+  //     final result =
+  //         await apiService.fetchEoslDetailWithMaintenance(event.hostName);
+
+  //     print('Fetched EoslDetail and Maintenance: $result'); // 데이터 로드 출력
+
+  //     final eoslDetail = result['eoslDetail'] as EoslDetailModel;
+  //     final maintenanceList = result['maintenances'] as List<EoslMaintenance>;
+
+  //     emit(state.copyWith(
+  //       eoslDetailList: [eoslDetail],
+  //       eoslMaintenanceList: maintenanceList,
+  //       loading: false,
+  //     ));
+  //   } catch (e) {
+  //     print('Error fetching EoslDetail and Maintenance: $e'); // 에러 출력
+  //     emit(state.copyWith(loading: false, error: e.toString()));
+  //   }
+  // }
   Future<void> _onFetchEoslDetail(
       FetchEoslDetail event, Emitter<EoslState> emit) async {
     try {
@@ -228,11 +255,12 @@ class EoslBloc extends Bloc<EoslEvent, EoslState> {
 
       print('Fetched EoslDetail and Maintenance: $result'); // 데이터 로드 출력
 
-      final eoslDetail = result['eoslDetail'] as EoslDetailModel;
-      final maintenanceList = result['maintenances'] as List<EoslMaintenance>;
+      final eoslDetail = result['eoslDetail'] as EoslDetailModel; // 단일 객체 처리
+      final List<EoslMaintenance> maintenanceList =
+          result['maintenanceList'] as List<EoslMaintenance>;
 
       emit(state.copyWith(
-        eoslDetailList: [eoslDetail],
+        eoslDetailList: [eoslDetail], // 단일 객체를 리스트에 넣어 상태 유지
         eoslMaintenanceList: maintenanceList,
         loading: false,
       ));

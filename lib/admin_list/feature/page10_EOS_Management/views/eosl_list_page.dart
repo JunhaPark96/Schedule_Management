@@ -110,7 +110,9 @@ class _EoslListPageState extends State<EoslListPage> {
                 if (state.loading) {
                   return const Center(child: CircularProgressIndicator());
                 } else if (state.error.isNotEmpty) {
-                  return Center(child: Text('Error: ${state.error}'));
+                  return Center(child: Text('에러: ${state.error}'));
+                } else if (state.eoslList.isEmpty) {
+                  return const Center(child: Text('데이터 호출 실패'));
                 } else {
                   return PlutoGrid(
                     columns: [

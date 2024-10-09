@@ -1,13 +1,23 @@
 {
-  "eoslDetail": {
-    "hostName": "server1",
-    "field": "OS",
-    "quantity": "2",
-    "note": "Regular maintenance required",
-    "supplier": "Supplier A",
-    "eoslDate": "20241015"
-  },
-  "maintenances": [
+  "eoslDetailList": [
+    {
+      "hostName": "server1",
+      "field": "OS",
+      "quantity": "2",
+      "note": "Regular maintenance required",
+      "supplier": "Supplier A",
+      "eoslDate": "20241015"
+    },
+    {
+      "hostName": "server2",
+      "field": "DB",
+      "quantity": "3",
+      "note": "Regular maintenance required",
+      "supplier": "Supplier B",
+      "eoslDate": "20241015"
+    }
+  ],
+  "maintenanceList": [
     {
       "maintenanceNo": "001",
       "hostName": "server1",
@@ -20,7 +30,7 @@
     },
     {
       "maintenanceNo": "002",
-      "hostName": "server1",
+      "hostName": "server2",
       "tasks": [
         {
           "date": "2024-09-15",
