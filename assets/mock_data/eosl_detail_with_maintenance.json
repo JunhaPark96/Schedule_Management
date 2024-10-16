@@ -22,23 +22,15 @@
       "maintenanceNo": "1",
       "hostName": "server1",
       "maintenanceDate": "2024-10-01",
-      "tasks": [
-        {
-          "title": "Disk Space Check",
-          "content": "The disk space was checked to ensure there is sufficient storage for upcoming system updates and log files."
-        }
-      ]
+      "maintenanceTitle": "Disk Space Check",
+      "maintenanceContent": "The disk space was checked to ensure there is sufficient storage for upcoming system updates and log files."
     },
     {
       "maintenanceNo": "2",
       "hostName": "server1",
       "maintenanceDate": "2023-07-20",
-      "tasks": [
-        {
-          "title": "Cooling System Inspection",
-          "content": "The cooling system was inspected to ensure optimal airflow and prevent overheating issues. All fans and filters were cleaned."
-        }
-      ]
+      "maintenanceTitle": "Cooling System Inspection",
+      "maintenanceContent": "The cooling system was inspected to ensure optimal airflow and prevent overheating issues. All fans and filters were cleaned."
     }
   ]
 }

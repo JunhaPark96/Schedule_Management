@@ -31,6 +31,8 @@ class DeleteEosl extends EoslEvent {
   DeleteEosl(this.eoslNo);
 }
 
+// ------------------------------------------------------------
+
 class FetchEoslDetailList extends EoslEvent {}
 
 class FetchEoslDetail extends EoslEvent {
@@ -40,30 +42,32 @@ class FetchEoslDetail extends EoslEvent {
 
 class FetchEoslMaintenanceList extends EoslEvent {
   final String hostName;
+  final String tag;
   final String maintenanceNo;
 
-  FetchEoslMaintenanceList(this.hostName, this.maintenanceNo);
+  FetchEoslMaintenanceList(this.hostName, this.tag, this.maintenanceNo);
 }
 
-// class AddTaskToEoslDetail extends EoslEvent {
-//   final String hostName;
-//   final Map<String, String> task;
-
-//   AddTaskToEoslDetail(this.hostName, this.task);
-// }
-
 class AddTaskToEoslDetail extends EoslEvent {
+  final String maintenanceNo;
   final String hostName;
-  final Map<String, String> task;
+  final String tag;
   final String maintenanceDate;
+  final String maintenanceTitle;
+  final String maintenanceContent;
 
-  AddTaskToEoslDetail(this.hostName, this.task, this.maintenanceDate);
+  AddTaskToEoslDetail(this.maintenanceNo, this.hostName, this.tag,
+      this.maintenanceDate, this.maintenanceTitle, this.maintenanceContent);
 }
 
 class FetchEoslHistory extends EoslEvent {
-  final String hostName;
   final String maintenanceNo;
+  final String hostName;
+  final String tag;
   final String maintenanceDate;
+  final String maintenanceTitle;
+  final String maintenanceContent;
 
-  FetchEoslHistory(this.hostName, this.maintenanceNo, this.maintenanceDate);
+  FetchEoslHistory(this.maintenanceNo, this.hostName, this.tag,
+      this.maintenanceDate, this.maintenanceTitle, this.maintenanceContent);
 }

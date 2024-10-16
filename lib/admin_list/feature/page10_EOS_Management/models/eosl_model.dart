@@ -4,7 +4,7 @@ class EoslModel {
   final String? businessName;
   final String? ipAddress;
   final String? platform;
-  final String? osVersion;
+  final String? version;
   final String? eoslDate;
   final String? businessGroup;
   final String? tag;
@@ -16,7 +16,7 @@ class EoslModel {
     this.businessName,
     this.ipAddress,
     this.platform,
-    this.osVersion,
+    this.version,
     this.eoslDate,
     this.businessGroup,
     this.tag,
@@ -31,7 +31,7 @@ class EoslModel {
       businessName: json['businessName'],
       ipAddress: json['ipAddress'],
       platform: json['platform'],
-      osVersion: json['osVersion'],
+      version: json['Version'],
       eoslDate: json['eoslDate'],
       businessGroup: json['businessGroup'],
       tag: json['tag'],
@@ -47,7 +47,7 @@ class EoslModel {
       'businessName': businessName,
       'ipAddress': ipAddress,
       'platform': platform,
-      'osVersion': osVersion,
+      'Version': version,
       'eoslDate': eoslDate,
       'businessGroup': businessGroup,
       'tag': tag,

@@ -46,7 +46,7 @@ class EoslBloc extends Bloc<EoslEvent, EoslState> {
       hostName: row.cells['host_name']?.value,
       ipAddress: row.cells['ip_address']?.value,
       platform: row.cells['platform']?.value,
-      osVersion: row.cells['os_version']?.value,
+      version: row.cells['version']?.value,
       eoslDate: row.cells['eosl_date']?.value,
       isEosl: row.cells['is_eosl']?.value == 'EOSL',
       tag: row.cells['tag']?.value,
@@ -82,7 +82,7 @@ class EoslBloc extends Bloc<EoslEvent, EoslState> {
       ),
       PlutoColumn(
         title: '버전',
-        field: 'os_version',
+        field: 'version',
         type: PlutoColumnType.text(),
       ),
       PlutoColumn(
@@ -113,7 +113,7 @@ class EoslBloc extends Bloc<EoslEvent, EoslState> {
           'host_name': PlutoCell(value: server.hostName ?? ''),
           'ip_address': PlutoCell(value: server.ipAddress ?? ''),
           'platform': PlutoCell(value: server.platform ?? ''),
-          'os_version': PlutoCell(value: server.osVersion ?? ''),
+          'version': PlutoCell(value: server.version ?? ''),
           'eosl_date': PlutoCell(value: server.eoslDate ?? ''),
           'is_eosl': PlutoCell(value: server.isEosl == true ? 'EOSL' : 'No'),
           'tag': PlutoCell(value: server.tag ?? ''),
@@ -283,8 +283,6 @@ class EoslBloc extends Bloc<EoslEvent, EoslState> {
     }
   }
 
-
-
   Future<void> _onFetchEoslHistory(
       FetchEoslHistory event, Emitter<EoslState> emit) async {
     try {
@@ -294,59 +292,50 @@ class EoslBloc extends Bloc<EoslEvent, EoslState> {
       final history = maintenanceList.firstWhere(
           (maintenance) => maintenance.maintenanceNo == event.maintenanceNo,
           orElse: () => EoslMaintenance(
-                maintenanceNo: '',
-                hostName: event.hostName,
-                maintenanceDate: event.maintenanceDate,
-                tasks: [],
-              ));
+              maintenanceNo: '',
+              hostName: event.hostName,
+              tag: event.tag,
+              maintenanceDate: event.maintenanceDate,
+              maintenanceTitle: event.maintenanceTitle,
+              maintenanceContent: event.maintenanceContent));
       emit(state.copyWith(eoslMaintenanceList: [history], loading: false));
     } catch (e) {
       emit(state.copyWith(loading: false, error: e.toString()));
     }
   }
 
-  // void _onAddTaskToEoslDetail(
-  //     AddTaskToEoslDetail event, Emitter<EoslState> emit) {
-  //   final maintenance = state.eoslMaintenanceList.firstWhere(
-  //     (item) => item.hostName == event.hostName,
-  //     orElse: () => EoslMaintenance(
-  //       maintenanceNo: 'new_maintenance_no',
-  //       hostName: event.hostName,
-  //       tasks: [],
-  //     ),
-  //   );
-
-  //   maintenance.tasks.add(event.task);
-  //   List<EoslMaintenance> updatedList = List.from(state.eoslMaintenanceList)
-  //     ..add(maintenance);
-  //   emit(state.copyWith(eoslMaintenanceList: updatedList));
-  // }
   // 새로운 태스크를 추가하는 로직
   void _onAddTaskToEoslDetail(
       AddTaskToEoslDetail event, Emitter<EoslState> emit) {
-    final List<EoslMaintenance> maintenanceList = List.from(state.eoslMaintenanceList);
-    
-    final existingMaintenance = maintenanceList.firstWhere(
-      (maintenance) => maintenance.hostName == event.hostName,
-      orElse: () => EoslMaintenance(
-        maintenanceNo: '1',
-        hostName: event.hostName,
-        maintenanceDate: event.maintenanceDate,
-        tasks: [],
-      ),
+    final List<EoslMaintenance> maintenanceList =
+        List.from(state.eoslMaintenanceList);
+
+    // 새 유지보수 번호 설정: 기존 리스트의 유지보수 번호에서 가장 큰 값을 가져와 1을 더함
+    final newMaintenanceNo = (maintenanceList.isNotEmpty
+            ? (int.tryParse(maintenanceList.map((m) => m.maintenanceNo).reduce(
+                        (a, b) => int.parse(a) > int.parse(b) ? a : b)) ??
+                    0) +
+                1
+            : 1)
+        .toString();
+
+    // 새로운 유지보수 내역 생성
+    final newMaintenance = EoslMaintenance(
+      maintenanceNo: newMaintenanceNo, // 새로 생성된 maintenanceNo
+      hostName: event.hostName, // event에서 받은 hostName
+      tag: event.tag, // event에서 받은 tag
+      maintenanceDate: event.maintenanceDate, // 사용자 입력 날짜
+      maintenanceTitle: event.maintenanceTitle, // 사용자 입력 제목
+      maintenanceContent: event.maintenanceContent, // 사용자 입력 내용
     );
 
-    if (existingMaintenance.tasks.isEmpty) {
-      maintenanceList.add(existingMaintenance);
-    }
+    // 새로 입력된 유지보수 내역을 리스트에 추가
+    maintenanceList.add(newMaintenance);
 
-    // 태스크 추가
-    existingMaintenance.tasks.add(event.task);
-
-    // 새로운 태스크 저장
+    // 상태 업데이트
     emit(state.copyWith(eoslMaintenanceList: maintenanceList));
 
-    // JSON에 저장하는 로직
+    // JSON에 저장하는 로직 (필요시 추가)
     // apiService.saveTaskToLocalFile(maintenanceList);
   }
 }

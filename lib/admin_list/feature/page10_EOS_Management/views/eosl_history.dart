@@ -50,19 +50,20 @@ class _EoslHistoryPageState extends State<EoslHistoryPage> {
         orElse: () => EoslMaintenance(
           maintenanceNo: widget.maintenanceNo,
           hostName: widget.hostName,
+          tag: '', // 기본값 추가
           maintenanceDate: DateTime.now().toIso8601String(),
-          tasks: [],
+          maintenanceTitle: '',
+          maintenanceContent: '',
         ),
       );
-      if (maintenance.tasks.isNotEmpty) {
-        final task = maintenance.tasks.first; // 첫 번째 작업을 로드
-        taskController.text = task['title'] ?? '';
-        specialNotesController.text = task['content'] ?? '';
-        dateController.text = maintenance.maintenanceDate != null
-            ? DateFormat('yyyy-MM-dd')
-                .format(DateTime.parse(maintenance.maintenanceDate))
-            : DateFormat('yyyy-MM-dd').format(DateTime.now());
-      }
+
+      // 유지보수 데이터 로드
+      taskController.text = maintenance.maintenanceTitle;
+      specialNotesController.text = maintenance.maintenanceContent;
+      dateController.text = maintenance.maintenanceDate.isNotEmpty
+          ? DateFormat('yyyy-MM-dd')
+              .format(DateTime.parse(maintenance.maintenanceDate))
+          : DateFormat('yyyy-MM-dd').format(DateTime.now());
     } else {
       taskController.text = '';
       specialNotesController.text = '';
@@ -89,18 +90,32 @@ class _EoslHistoryPageState extends State<EoslHistoryPage> {
 
   void _saveTask() {
     final eoslBloc = context.read<EoslBloc>();
-    final newTask = {
-      'date': dateController.text,
-      'title': taskController.text,
-      'content': specialNotesController.text,
-    };
 
+    // 새로운 유지보수 데이터를 생성
+    final newMaintenance = EoslMaintenance(
+      maintenanceNo: widget.maintenanceNo,
+      hostName: widget.hostName,
+      tag: '', // 태그는 다른 곳에서 설정되거나 기본값으로
+      maintenanceDate: dateController.text,
+      maintenanceTitle: taskController.text,
+      maintenanceContent: specialNotesController.text,
+    );
+
+    // 유지보수 데이터를 블록에 전송하여 저장
     eoslBloc.add(
-        AddTaskToEoslDetail(widget.hostName, newTask, dateController.text));
+      AddTaskToEoslDetail(
+        newMaintenance.maintenanceNo,
+        newMaintenance.hostName,
+        newMaintenance.tag,
+        newMaintenance.maintenanceDate,
+        newMaintenance.maintenanceTitle,
+        newMaintenance.maintenanceContent,
+      ),
+    );
     Navigator.of(context).pop(); // 저장 후 페이지를 닫음
   }
 
-  Future<void> _pickFiles() async {
+  Future<void> pickFiles() async {
     final result = await FilePicker.platform.pickFiles(
       allowMultiple: true,
     );
@@ -111,7 +126,7 @@ class _EoslHistoryPageState extends State<EoslHistoryPage> {
     }
   }
 
-  void _removeFile(int index) {
+  void removeFile(int index) {
     setState(() {
       attachedFiles.removeAt(index);
     });
@@ -156,7 +171,7 @@ class _EoslHistoryPageState extends State<EoslHistoryPage> {
                             Expanded(
                               child: Container(
                                 margin: const EdgeInsets.all(8),
-                                decoration: _boxDecoration(),
+                                decoration: boxDecoration(),
                                 padding: const EdgeInsets.all(16),
                                 constraints: const BoxConstraints(
                                   minHeight: maxHeight,
@@ -165,7 +180,7 @@ class _EoslHistoryPageState extends State<EoslHistoryPage> {
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    _buildEoslDetailTile(context, eoslDetail),
+                                    buildEoslDetailTile(context, eoslDetail),
                                   ],
                                 ),
                               ),
@@ -175,18 +190,18 @@ class _EoslHistoryPageState extends State<EoslHistoryPage> {
                       },
                     ),
                   ),
-                  _buildTaskInformationSection(),
+                  buildTaskInformationSection(),
                   const SizedBox(height: 16),
-                  _buildAttachmentSection(),
+                  buildAttachmentSection(),
                   const SizedBox(height: 16),
-                  _buildSubmitButton(context),
+                  buildSubmitButton(context),
                 ],
               ),
             ),
     );
   }
 
-  BoxDecoration _boxDecoration() {
+  BoxDecoration boxDecoration() {
     return BoxDecoration(
       borderRadius: BorderRadius.circular(10),
       color: Colors.white,
@@ -200,7 +215,7 @@ class _EoslHistoryPageState extends State<EoslHistoryPage> {
     );
   }
 
-  Widget _buildEoslDetailTile(BuildContext context, EoslDetailModel detail) {
+  Widget buildEoslDetailTile(BuildContext context, EoslDetailModel detail) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -225,12 +240,12 @@ class _EoslHistoryPageState extends State<EoslHistoryPage> {
     );
   }
 
-  Widget _buildTaskInformationSection() {
+  Widget buildTaskInformationSection() {
     return Container(
       width: double.infinity,
       height: 400,
       padding: const EdgeInsets.all(16),
-      decoration: _boxDecoration(),
+      decoration: boxDecoration(),
       child: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -242,15 +257,15 @@ class _EoslHistoryPageState extends State<EoslHistoryPage> {
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
                 const Spacer(),
-                if (!isEditing)
-                  IconButton(
-                    icon: const Icon(Icons.edit),
-                    onPressed: () {
-                      setState(() {
-                        isEditing = true;
-                      });
-                    },
-                  ),
+                IconButton(
+                  icon: Icon(isEditing ? Icons.check : Icons.edit),
+                  onPressed: () {
+                    setState(() {
+                      // 아이콘을 클릭할 때 수정 모드 상태를 토글
+                      isEditing = !isEditing;
+                    });
+                  },
+                ),
               ],
             ),
             const SizedBox(height: 10),
@@ -318,11 +333,11 @@ class _EoslHistoryPageState extends State<EoslHistoryPage> {
     );
   }
 
-  Widget _buildAttachmentSection() {
+  Widget buildAttachmentSection() {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(16),
-      decoration: _boxDecoration(),
+      decoration: boxDecoration(),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -332,7 +347,7 @@ class _EoslHistoryPageState extends State<EoslHistoryPage> {
           ),
           const SizedBox(height: 10),
           ElevatedButton.icon(
-            onPressed: _pickFiles,
+            onPressed: pickFiles,
             icon: const Icon(Icons.attach_file),
             label: const Text('파일 추가'),
             style: ElevatedButton.styleFrom(
@@ -350,7 +365,7 @@ class _EoslHistoryPageState extends State<EoslHistoryPage> {
               subtitle: Text('용량: ${(file.size / 1024).toStringAsFixed(2)} KB'),
               trailing: IconButton(
                 icon: const Icon(Icons.delete),
-                onPressed: () => _removeFile(attachedFiles.indexOf(file)),
+                onPressed: () => removeFile(attachedFiles.indexOf(file)),
               ),
             ),
           ),
@@ -359,7 +374,7 @@ class _EoslHistoryPageState extends State<EoslHistoryPage> {
     );
   }
 
-  Widget _buildSubmitButton(BuildContext context) {
+  Widget buildSubmitButton(BuildContext context) {
     return Center(
       child: ElevatedButton(
         onPressed: () {
