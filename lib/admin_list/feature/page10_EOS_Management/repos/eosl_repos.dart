@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -43,25 +45,6 @@ class ApiService {
     } catch (e) {
       print('Error fetching EOSL List: $e');
       throw Exception('EOSL data 로드 실패: $e');
-    }
-  }
-
-  // 로컬 EOSL 리스트를 로드하는 메서드
-  Future<List<EoslModel>> fetchLocalEoslList() async {
-    try {
-      final String response =
-          await rootBundle.loadString('assets/mock_data/eosl_list.json');
-      final List<dynamic> eoslList = jsonDecode(response);
-
-      // 데이터가 비어 있는지 확인
-      if (eoslList.isEmpty) {
-        print('Local EOSL List is empty.');
-      }
-
-      return eoslList.map((eosl) => EoslModel.fromJson(eosl)).toList();
-    } catch (e) {
-      print('Error fetching Local EOSL List: $e');
-      throw Exception('Local EOSL data 로드 실패: $e');
     }
   }
 
@@ -124,8 +107,10 @@ class ApiService {
 
   // ---------------------------eosl_detail page method start-------------------------------------
   // EOSL 상세 리스트 로드
-  Future<EoslDetailModel> fetchEoslDetail(String hostName) async {
-    final Uri url = Uri.parse('$baseUrl/eosl-list/eosl-detail/$hostName');
+  Future<EoslDetailModel> fetchEoslDetail(
+      String eoslNo, String hostName) async {
+    final Uri url =
+        Uri.parse('$baseUrl/eosl-list/eosl-detail/$eoslNo?hostname=$hostName');
     print('eosl_repos - EOSL Detail 주소: $url');
     try {
       final response = await http.get(url);
@@ -227,4 +212,78 @@ class ApiService {
   }
 
   // ---------------------------eosl_detail page method end-------------------------------------
+
+  // ---------------------------local eosl_list page method start-------------------------------------
+  // 로컬 EOSL 리스트를 로드하는 메서드
+  Future<List<EoslModel>> fetchLocalEoslList() async {
+    try {
+      final String response =
+          await rootBundle.loadString('assets/mock_data/eosl_list.json');
+      final List<dynamic> eoslList = jsonDecode(response);
+
+      // 데이터가 비어 있는지 확인
+      if (eoslList.isEmpty) {
+        print('Local EOSL List is empty.');
+      }
+
+      return eoslList.map((eosl) => EoslModel.fromJson(eosl)).toList();
+    } catch (e) {
+      print('Error fetching Local EOSL List: $e');
+      throw Exception('Local EOSL data 로드 실패: $e');
+    }
+  }
+
+  // 로컬 JSON 파일에 데이터를 저장하는 메서드
+  Future<void> _saveLocalEoslList(List<EoslModel> eoslList) async {
+    final file = File(eoslMockJsonPath);
+    final List<Map<String, dynamic>> jsonList =
+        eoslList.map((eosl) => eosl.toJson()).toList();
+    await file.writeAsString(jsonEncode({'data': jsonList}));
+  }
+
+  // 로컬 EOSL 데이터를 추가하는 메서드
+  Future<void> insertLocalEoslData(EoslModel newEosl) async {
+    try {
+      final eoslList = await fetchLocalEoslList();
+      eoslList.add(newEosl);
+      await _saveLocalEoslList(eoslList);
+      print('Successfully added new EOSL data to local file.');
+    } catch (e) {
+      print('Error adding EOSL data: $e');
+      throw Exception('Error adding EOSL data: $e');
+    }
+  }
+
+  // 로컬 EOSL 데이터를 업데이트하는 메서드
+  Future<void> updateLocalEoslData(EoslModel updatedEosl) async {
+    try {
+      final eoslList = await fetchLocalEoslList();
+      final index =
+          eoslList.indexWhere((eosl) => eosl.eoslNo == updatedEosl.eoslNo);
+      if (index != -1) {
+        eoslList[index] = updatedEosl;
+        await _saveLocalEoslList(eoslList);
+        print('Successfully updated EOSL data in local file.');
+      } else {
+        throw Exception('Eosl data not found.');
+      }
+    } catch (e) {
+      print('Error updating EOSL data: $e');
+      throw Exception('Error updating EOSL data: $e');
+    }
+  }
+
+  // 로컬 EOSL 데이터를 삭제하는 메서드
+  Future<void> deleteLocalEoslData(String eoslNo) async {
+    try {
+      final eoslList = await fetchLocalEoslList();
+      final updatedList =
+          eoslList.where((eosl) => eosl.eoslNo != eoslNo).toList();
+      await _saveLocalEoslList(updatedList);
+      print('Successfully deleted EOSL data from local file.');
+    } catch (e) {
+      print('Error deleting EOSL data: $e');
+      throw Exception('Error deleting EOSL data: $e');
+    }
+  }
 }
