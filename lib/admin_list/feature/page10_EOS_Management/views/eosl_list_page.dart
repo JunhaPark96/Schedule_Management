@@ -482,16 +482,35 @@ class _EoslListPageState extends State<EoslListPage> {
                         'isEosl': DateTime.parse(eoslDate!)
                             .isBefore(DateTime.now()), // EOSL 여부 계산
                       };
+                      // final newEoslModel = EoslModel(
+                      //   hostName: hostName!,
+                      //   businessName: businessName!,
+                      //   ipAddress: ipAddress!,
+                      //   platform: platform!,
+                      //   version: version!,
+                      //   eoslDate: eoslDate!,
+                      //   businessGroup: businessGroup!,
+                      //   tag: tagToSave,
+                      //   isEosl: DateTime.parse(eoslDate!)
+                      //       .isBefore(DateTime.now()), // EOSL 여부 계산
+                      // );
 
                       try {
                         // API를 통해 데이터를 삽입
+
                         await context
                             .read<EoslBloc>()
                             .apiService
                             .insertEoslData(newData);
+                        // await context
+                        //     .read<EoslBloc>()
+                        //     .apiService
+                        //     .insertLocalEoslData(
+                        //         newEoslModel); // 서버 대신 로컬 데이터에 추가
 
                         Navigator.of(context).pop(); // 다이얼로그 닫기
-                        loadEoslData(); // 데이터 새로고침
+                        // loadEoslData(); // 데이터 새로고침
+                        loadEoslData();
                       } catch (e) {
                         // 에러 처리
                         ScaffoldMessenger.of(context).showSnackBar(

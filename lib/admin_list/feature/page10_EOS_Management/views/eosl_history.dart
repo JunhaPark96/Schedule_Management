@@ -375,11 +375,13 @@ class _EoslHistoryPageState extends State<EoslHistoryPage> {
   }
 
   Widget buildSubmitButton(BuildContext context) {
+    final isNewTask = widget.maintenanceNo == 'new_task';
+
     return Center(
       child: ElevatedButton(
         onPressed: () {
           if (isEditing) {
-            _saveTask(); // Task 등록
+            _saveTask(); // Task 저장
           }
         },
         style: ElevatedButton.styleFrom(
@@ -388,7 +390,8 @@ class _EoslHistoryPageState extends State<EoslHistoryPage> {
             borderRadius: BorderRadius.circular(12),
           ),
         ),
-        child: const Text('작업 등록'),
+        // 새로운 작업일 경우 '새로운 작업 등록', 기존 작업일 경우 '작업 수정'
+        child: Text(isNewTask ? '새로운 작업 등록' : '작업 수정'),
       ),
     );
   }
