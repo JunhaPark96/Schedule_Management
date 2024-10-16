@@ -48,6 +48,29 @@ class _EoslDetailPageState extends State<EoslDetailPage> {
   }
 
   // 필터를 적용하는 메서드
+  // void _applyFilters() {
+  //   final filteredMaintenances = maintenances.where((maintenance) {
+  //     final maintenanceDate = maintenance.maintenanceDate != null
+  //         ? DateTime.tryParse(maintenance.maintenanceDate)
+  //         : null;
+
+  //     // 유지보수 날짜 필터링
+  //     final isWithinDateRange = maintenanceDate == null ||
+  //         (maintenanceDate.isAfter(selectedDateRange.start) &&
+  //             maintenanceDate.isBefore(selectedDateRange.end));
+
+  //     // 각 태스크의 title과 content에 대한 검색 필터링
+  //     final taskMatchesSearchQuery = maintenance.tasks.any((task) {
+  //       final taskTitle = task['title']?.toLowerCase() ?? '';
+  //       final taskContent = task['content']?.toLowerCase() ?? '';
+
+  //       return taskTitle.contains(searchQuery) ||
+  //           taskContent.contains(searchQuery);
+  //     });
+
+  //     return isWithinDateRange && taskMatchesSearchQuery;
+  //   }).toList();
+    // 필터를 적용하는 메서드
   void _applyFilters() {
     final filteredMaintenances = maintenances.where((maintenance) {
       final maintenanceDate = maintenance.maintenanceDate != null
@@ -59,16 +82,17 @@ class _EoslDetailPageState extends State<EoslDetailPage> {
           (maintenanceDate.isAfter(selectedDateRange.start) &&
               maintenanceDate.isBefore(selectedDateRange.end));
 
-      // 각 태스크의 title과 content에 대한 검색 필터링
-      final taskMatchesSearchQuery = maintenance.tasks.any((task) {
-        final taskTitle = task['title']?.toLowerCase() ?? '';
-        final taskContent = task['content']?.toLowerCase() ?? '';
+      // 유지보수 제목과 내용에 대한 검색 필터링
+      final titleMatchesSearchQuery = maintenance.maintenanceTitle
+          .toLowerCase()
+          .contains(searchQuery);
+      final contentMatchesSearchQuery = maintenance.maintenanceContent
+          .toLowerCase()
+          .contains(searchQuery);
 
-        return taskTitle.contains(searchQuery) ||
-            taskContent.contains(searchQuery);
-      });
-
-      return isWithinDateRange && taskMatchesSearchQuery;
+      // 검색어가 제목이나 내용에 일치하고, 날짜 범위 내에 있는지 확인
+      return isWithinDateRange &&
+          (titleMatchesSearchQuery || contentMatchesSearchQuery);
     }).toList();
 
     // 빌드 단계 이후에 상태 업데이트

@@ -1,25 +1,30 @@
+
 class EoslMaintenance {
   final String maintenanceNo;
   final String hostName;
+  final String tag;
   final String maintenanceDate;
-  final List<Map<String, dynamic>> tasks;
+  final String maintenanceTitle;
+  final String maintenanceContent;
 
   EoslMaintenance({
     required this.maintenanceNo,
     required this.hostName,
+    required this.tag,
     required this.maintenanceDate,
-    required this.tasks,
+    required this.maintenanceTitle,
+    required this.maintenanceContent,
   });
 
   // JSON 데이터를 EoslMaintenance 객체로 변환하는 팩토리 생성자
   factory EoslMaintenance.fromJson(Map<String, dynamic> json) {
     return EoslMaintenance(
-      maintenanceNo: json['maintenanceNo'] ?? '', // null-safe 처리
-      hostName: json['hostName'] ?? '', // null-safe 처리
+      maintenanceNo: json['maintenanceNo'] ?? '',
+      hostName: json['hostName'] ?? '',
+      tag: json['tag'] ?? '',
       maintenanceDate: json['maintenanceDate'] ?? '',
-      tasks: List<Map<String, dynamic>>.from(
-        (json['tasks'] ?? []).map((task) => Map<String, dynamic>.from(task)),
-      ),
+      maintenanceTitle: json['maintenanceTitle'] ?? '',
+      maintenanceContent: json['maintenanceContent'] ?? '',
     );
   }
 
@@ -28,8 +33,10 @@ class EoslMaintenance {
     return {
       'maintenanceNo': maintenanceNo,
       'hostName': hostName,
+      'tag': tag,
       'maintenanceDate': maintenanceDate,
-      'tasks': tasks,
+      'maintenanceTitle': maintenanceTitle,
+      'maintenanceContent': maintenanceContent,
     };
   }
 }

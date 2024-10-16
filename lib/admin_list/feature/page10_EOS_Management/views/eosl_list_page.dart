@@ -138,8 +138,7 @@ class _EoslListPageState extends State<EoslListPage> {
                               'ip_address':
                                   PlutoCell(value: eosl.ipAddress ?? ''),
                               'platform': PlutoCell(value: eosl.platform ?? ''),
-                              'os_version':
-                                  PlutoCell(value: eosl.osVersion ?? ''),
+                              'version': PlutoCell(value: eosl.version ?? ''),
                               'eosl_date':
                                   PlutoCell(value: eosl.eoslDate ?? ''),
                               'is_eosl': PlutoCell(
@@ -332,7 +331,7 @@ class _EoslListPageState extends State<EoslListPage> {
         String? businessName;
         String? ipAddress;
         String? platform;
-        String? osVersion;
+        String? version;
         String? eoslDate;
         String selectedTag = '';
         bool isCustomTag = false;
@@ -401,9 +400,9 @@ class _EoslListPageState extends State<EoslListPage> {
                       ),
                       TextFieldWidget(
                         label: '이름 및 버전',
-                        initialValue: osVersion,
+                        initialValue: version,
                         onChanged: (value) {
-                          osVersion = value;
+                          version = value;
                         },
                       ),
                       TextFieldWidget(
@@ -464,7 +463,7 @@ class _EoslListPageState extends State<EoslListPage> {
                       businessName,
                       ipAddress,
                       platform,
-                      osVersion,
+                      version,
                       eoslDate,
                       businessGroup
                     ].every(
@@ -476,7 +475,7 @@ class _EoslListPageState extends State<EoslListPage> {
                         'businessName': businessName,
                         'ipAddress': ipAddress,
                         'platform': platform,
-                        'osVersion': osVersion,
+                        'version': version,
                         'eoslDate': eoslDate,
                         'businessGroup': businessGroup,
                         'tag': tagToSave, // 선택된 태그 또는 새로 입력한 태그
@@ -561,7 +560,7 @@ class _EoslListPageState extends State<EoslListPage> {
     String? businessName = row.cells['business_name']?.value;
     String? ipAddress = row.cells['ip_address']?.value;
     String? platform = row.cells['platform']?.value;
-    String? osVersion = row.cells['os_version']?.value;
+    String? version = row.cells['version']?.value;
     String? eoslDate = row.cells['eosl_date']?.value;
     bool? isEosl = row.cells['is_eosl']?.value == 'EOSL';
     String? tag = row.cells['tag']?.value;
@@ -625,9 +624,9 @@ class _EoslListPageState extends State<EoslListPage> {
                 ),
                 TextFieldWidget(
                   label: 'OS 이름 및 버전',
-                  initialValue: osVersion,
+                  initialValue: version,
                   onChanged: (value) {
-                    osVersion = value;
+                    version = value;
                   },
                 ),
                 TextFieldWidget(
@@ -674,7 +673,7 @@ class _EoslListPageState extends State<EoslListPage> {
                       businessName: businessName,
                       ipAddress: ipAddress,
                       platform: platform,
-                      osVersion: osVersion,
+                      version: version,
                       eoslDate: eoslDate,
                       isEosl: isEosl,
                       tag: tag,
