@@ -112,7 +112,37 @@ class _EoslHistoryPageState extends State<EoslHistoryPage> {
         newMaintenance.maintenanceContent,
       ),
     );
-    Navigator.of(context).pop(); // 저장 후 페이지를 닫음
+    Navigator.of(context).pop(); // 저장 후 페이지를 닫
+  }
+
+  //  void _saveTask() {
+  //   final eoslBloc = context.read<EoslBloc>();
+
+  //   final newMaintenance = EoslMaintenance(
+  //     maintenanceNo: widget.maintenanceNo,
+  //     hostName: widget.hostName,
+  //     tag: '', // 태그는 다른 곳에서 설정되거나 기본값으로
+  //     maintenanceDate: dateController.text,
+  //     maintenanceTitle: taskController.text,
+  //     maintenanceContent: specialNotesController.text,
+  //   );
+
+  //   // 작업 저장
+  //   if (widget.maintenanceNo == 'new_task') {
+  //     eoslBloc.add(InsertEoslMaintenance(newMaintenance));
+  //   } else {
+  //     eoslBloc.add(UpdateEoslMaintenance(widget.maintenanceNo, newMaintenance));
+  //   }
+
+  //   Navigator.of(context).pop();
+  // }
+
+  void _deleteTask() {
+    final eoslBloc = context.read<EoslBloc>();
+
+    eoslBloc.add(DeleteEoslMaintenance(widget.maintenanceNo));
+
+    Navigator.of(context).pop();
   }
 
   Future<void> pickFiles() async {
@@ -377,22 +407,36 @@ class _EoslHistoryPageState extends State<EoslHistoryPage> {
   Widget buildSubmitButton(BuildContext context) {
     final isNewTask = widget.maintenanceNo == 'new_task';
 
-    return Center(
-      child: ElevatedButton(
-        onPressed: () {
-          if (isEditing) {
-            _saveTask(); // Task 저장
-          }
-        },
-        style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.teal,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        ElevatedButton(
+          onPressed: () {
+            _saveTask(); // **`isEditing`과 무관하게 저장 기능 동작**
+          },
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.teal,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
           ),
+          // 새 작업인 경우 '작업 등록', 기존 작업이면 '작업 수정' 버튼 표시
+          child: Text(isNewTask ? '작업 등록' : '작업 수정'),
         ),
-        // 새로운 작업일 경우 '새로운 작업 등록', 기존 작업일 경우 '작업 수정'
-        child: Text(isNewTask ? '새로운 작업 등록' : '작업 수정'),
-      ),
+        const SizedBox(width: 16),
+        // **작업 삭제 버튼** - `isEditing`과 상관없이 삭제 가능
+        if (!isNewTask)
+          ElevatedButton(
+            onPressed: _deleteTask,
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.red,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+            ),
+            child: const Text('작업 삭제'),
+          ),
+      ],
     );
   }
 }
