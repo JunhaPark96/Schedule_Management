@@ -28,6 +28,7 @@ class _AddContactPageState extends State<AddContactPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Add Contact'),
+        backgroundColor: Colors.green,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -35,47 +36,23 @@ class _AddContactPageState extends State<AddContactPage> {
           key: _formKey,
           child: ListView(
             children: <Widget>[
-              TextFormField(
-                decoration: const InputDecoration(labelText: 'Name'),
-                onSaved: (value) => _name = value!,
-                validator: (value) => value!.isEmpty ? 'Enter a name' : null,
-              ),
-              TextFormField(
-                decoration: const InputDecoration(labelText: 'Phone Number'),
-                onSaved: (value) => _phoneNumber = value!,
-                validator: (value) =>
-                    value!.isEmpty ? 'Enter a phone number' : null,
-              ),
-              TextFormField(
-                decoration: const InputDecoration(labelText: 'Fax Number'),
-                onSaved: (value) => _faxNumber = value!,
-              ),
-              TextFormField(
-                decoration: const InputDecoration(labelText: 'Email'),
-                onSaved: (value) => _email = value!,
-              ),
-              TextFormField(
-                decoration: const InputDecoration(labelText: 'Address'),
-                onSaved: (value) => _address = value!,
-              ),
-              TextFormField(
-                decoration: const InputDecoration(labelText: 'Organization'),
-                onSaved: (value) => _organization = value!,
-              ),
-              TextFormField(
-                decoration: const InputDecoration(labelText: 'Title'),
-                onSaved: (value) => _title = value!,
-              ),
-              TextFormField(
-                decoration: const InputDecoration(labelText: 'Role'),
-                onSaved: (value) => _role = value!,
-              ),
-              TextFormField(
-                decoration: const InputDecoration(labelText: 'Memo'),
-                onSaved: (value) => _memo = value!,
-              ),
+              _buildTextFormField('Name', (value) => _name = value!),
+              _buildTextFormField(
+                  'Phone Number', (value) => _phoneNumber = value!),
+              _buildTextFormField('Fax Number', (value) => _faxNumber = value!),
+              _buildTextFormField('Email', (value) => _email = value!),
+              _buildTextFormField('Address', (value) => _address = value!),
+              _buildTextFormField(
+                  'Organization', (value) => _organization = value!),
+              _buildTextFormField('Title', (value) => _title = value!),
+              _buildTextFormField('Role', (value) => _role = value!),
+              _buildTextFormField('Memo', (value) => _memo = value!),
               const SizedBox(height: 20),
               ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                ),
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {
                     _formKey.currentState!.save();
@@ -98,10 +75,35 @@ class _AddContactPageState extends State<AddContactPage> {
                     Navigator.pop(context);
                   }
                 },
-                child: const Text('Add Contact'),
+                child: const Text(
+                  'Add Contact',
+                  style: TextStyle(fontSize: 16),
+                ),
               ),
             ],
           ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTextFormField(String label, Function(String?) onSave) {
+    return Card(
+      color: Colors.lightGreen[100],
+      margin: const EdgeInsets.symmetric(vertical: 8.0),
+      child: Padding(
+        padding: const EdgeInsets.all(12.0),
+        child: TextFormField(
+          decoration: InputDecoration(
+            labelText: label,
+            labelStyle: const TextStyle(color: Colors.green),
+            border: const OutlineInputBorder(),
+            focusedBorder: const OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.green),
+            ),
+          ),
+          onSaved: onSave,
+          validator: (value) => value!.isEmpty ? 'Enter $label' : null,
         ),
       ),
     );

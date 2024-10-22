@@ -316,7 +316,11 @@ class ContactRepository {
 
   Future<List<Contact>> fetchContacts() async {
     await Future.delayed(const Duration(seconds: 1));
-    return _contacts;
+    List<Map<String, dynamic>> jsonContacts =
+        _contacts.map((contact) => contact.toJson()).toList();
+    List<Contact> contactsFromJson =
+        jsonContacts.map((json) => Contact.fromJson(json)).toList();
+    return contactsFromJson;
   }
 
   Future<void> addContact(Contact contact) async {
@@ -332,5 +336,9 @@ class ContactRepository {
     if (index != -1) {
       _contacts[index] = updatedContact;
     }
+  }
+
+  List<Map<String, dynamic>> contactsToJson() {
+    return _contacts.map((contact) => contact.toJson()).toList();
   }
 }

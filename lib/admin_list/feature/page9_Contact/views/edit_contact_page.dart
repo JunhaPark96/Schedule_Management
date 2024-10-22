@@ -54,21 +54,29 @@ class _EditContactPageState extends State<EditContactPage> {
           key: _formKey,
           child: ListView(
             children: <Widget>[
-              TextFormField(
-                initialValue: _name,
-                decoration: const InputDecoration(labelText: 'Name'),
-                onSaved: (value) => _name = value!,
-              ),
-              TextFormField(
-                initialValue: _phoneNumber,
-                decoration: const InputDecoration(labelText: 'Phone Number'),
-                onSaved: (value) => _phoneNumber = value!,
-              ),
+              _buildTextFormField('Name', _name, (value) => _name = value!),
+              _buildTextFormField('Phone Number', _phoneNumber,
+                  (value) => _phoneNumber = value!),
+              _buildTextFormField(
+                  'Fax Number', _faxNumber, (value) => _faxNumber = value!),
+              _buildTextFormField('Email', _email, (value) => _email = value!),
+              _buildTextFormField(
+                  'Address', _address, (value) => _address = value!),
+              _buildTextFormField('Organization', _organization,
+                  (value) => _organization = value!),
+              _buildTextFormField('Title', _title, (value) => _title = value!),
+              _buildTextFormField('Role', _role, (value) => _role = value!),
+              _buildTextFormField('Memo', _memo, (value) => _memo = value!),
+              const SizedBox(height: 20),
               ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                ),
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {
                     _formKey.currentState!.save();
-                    widget.contactRepository.addContact(
+                    widget.contactRepository.updateContact(
                       Contact(
                         id: widget.contact.id,
                         name: _name,
@@ -87,10 +95,37 @@ class _EditContactPageState extends State<EditContactPage> {
                     Navigator.pop(context);
                   }
                 },
-                child: const Text('Save'),
+                child: const Text(
+                  'Save',
+                  style: TextStyle(fontSize: 16),
+                ),
               ),
             ],
           ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTextFormField(
+      String label, String initialValue, Function(String?) onSave) {
+    return Card(
+      color: Colors.lightGreen[100],
+      margin: const EdgeInsets.symmetric(vertical: 8.0),
+      child: Padding(
+        padding: const EdgeInsets.all(12.0),
+        child: TextFormField(
+          initialValue: initialValue,
+          decoration: InputDecoration(
+            labelText: label,
+            labelStyle: const TextStyle(color: Colors.green),
+            border: const OutlineInputBorder(),
+            focusedBorder: const OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.green),
+            ),
+          ),
+          onSaved: onSave,
+          validator: (value) => value!.isEmpty ? 'Enter $label' : null,
         ),
       ),
     );
