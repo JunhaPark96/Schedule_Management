@@ -17,8 +17,11 @@ import 'package:oneline2/admin_list/feature/page6_Pluto_Table/views/plutotable.d
 import 'package:oneline2/admin_list/feature/page7_EOS/view_models/eos_bloc.dart';
 import 'package:oneline2/admin_list/feature/page7_EOS/view_models/eos_event.dart';
 import 'package:oneline2/admin_list/feature/page7_EOS/views/eos_screen.dart';
-import 'package:oneline2/admin_list/feature/page8_Calendar/view_models/event_provider.dart'; // EventProvider 추가
 
+import 'package:oneline2/admin_list/feature/page8_Calendar/view_models/calendar_bloc.dart';
+import 'package:oneline2/admin_list/feature/page8_Calendar/repos/calendar_repos.dart';
+import 'package:oneline2/admin_list/feature/page10_EOS_Management/view_models/eosl_bloc.dart';
+import 'package:oneline2/admin_list/feature/page10_EOS_Management/view_models/eosl_event.dart';
 import 'package:oneline2/admin_list/intro/login_screen/auth/auth_bloc.dart';
 import 'package:oneline2/admin_list/intro/login_screen/auth/login_api.dart';
 import 'package:oneline2/admin_list/intro/login_screen/login_screen.dart';
@@ -35,8 +38,6 @@ Future<void> main() async {
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider(
-            create: (context) => EventProvider()), // EventProvider 추가
         BlocProvider(create: (context) => getIt<SplashScreenCubit>()),
         BlocProvider(create: (context) => AuthBloc(LoginApi())),
         BlocProvider(create: (context) => TodoBloc()..add(FetchTodos())),
@@ -44,6 +45,10 @@ Future<void> main() async {
         BlocProvider(create: (context) => EOSBloc()..add(FetchEOS())),
         BlocProvider(create: (context) => LicenseBloc()..add(FetchLicense())),
         BlocProvider(create: (context) => CdcBloc()..add(FetchCdc())),
+        BlocProvider(
+            create: (context) => EventBloc(getIt<CalendarRepository>())),
+        BlocProvider(
+            create: (context) => EoslBloc()..add(FetchEoslList())), // 박준하 bloc
       ],
       child: MyApp(
         appRouteGenerate: AppRouteGenerate(),
@@ -59,14 +64,15 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        debugShowCheckedModeBanner: false,
-        onGenerateRoute: appRouteGenerate.onGenerateRoute,
-        title: "One Line",
-        theme: ThemeData(
-          fontFamily: 'OpenSans',
-          scaffoldBackgroundColor: Colors.white,
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-          useMaterial3: true,
-        ));
+      debugShowCheckedModeBanner: false,
+      onGenerateRoute: appRouteGenerate.onGenerateRoute,
+      title: "One Line",
+      theme: ThemeData(
+        fontFamily: 'OpenSans',
+        scaffoldBackgroundColor: Colors.white,
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        useMaterial3: true,
+      ),
+    );
   }
 }
