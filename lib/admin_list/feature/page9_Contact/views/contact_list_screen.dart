@@ -6,8 +6,11 @@ import 'contact_detail_page.dart';
 
 class ContactListScreen extends StatefulWidget {
   final ContactRepository contactRepository;
+  final String?
+      initialSearchQuery; // eosl_info_widget - _buildSupplierRow에서 가져온 스트링
 
-  const ContactListScreen({super.key, required this.contactRepository});
+  const ContactListScreen(
+      {super.key, required this.contactRepository, this.initialSearchQuery});
 
   @override
   _ContactListScreenState createState() => _ContactListScreenState();
@@ -16,6 +19,16 @@ class ContactListScreen extends StatefulWidget {
 class _ContactListScreenState extends State<ContactListScreen> {
   int? _hoveredIndex;
   String _searchQuery = "";
+
+  // 박준하 수정
+  @override
+  void initState() {
+    super.initState();
+    // 초기 검색어가 있다면 해당 검색어를 설정
+    if (widget.initialSearchQuery != null) {
+      _searchQuery = widget.initialSearchQuery!.toLowerCase();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -54,6 +67,8 @@ class _ContactListScreenState extends State<ContactListScreen> {
                     _searchQuery = query.toLowerCase();
                   });
                 },
+                // 박준하 수정
+                controller: TextEditingController(text: _searchQuery),
               ),
             ),
             Expanded(
