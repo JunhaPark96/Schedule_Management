@@ -11,7 +11,7 @@ class ContactRepository {
       faxNumber: '0311234567',
       email: 'abc123@gmail.com',
       address: '서울시 강남구 역삼동 123-45',
-      organization: '씨아이솔루션',
+      organization: 'Supplier A',
       title: '주임',
       role: 'DB',
       memo: '김철수의 메모',
@@ -277,7 +277,7 @@ class ContactRepository {
       faxNumber: '02-123-4567',
       email: 'abc123@google.com',
       address: '서울시 강남구',
-      organization: '하나금융티아이',
+      organization: 'supplier A',
       title: '사원',
       role: '개발자',
       memo: '김재영 짱짱',
@@ -291,7 +291,7 @@ class ContactRepository {
       faxNumber: '02-234-5678',
       email: 'abc456@google.com',
       address: '서울시 서초구',
-      organization: '하나금융티아이',
+      organization: 'supplier b',
       title: '사원',
       role: '디자이너',
       memo: '박준하 짱짱',
@@ -305,7 +305,7 @@ class ContactRepository {
       faxNumber: '02-345-6789',
       email: 'abc789@google.com',
       address: '서울시 종로구',
-      organization: '하나금융티아이',
+      organization: 'supplier B',
       title: '사원',
       role: 'PM',
       memo: '김관중 짱짱',
@@ -316,7 +316,11 @@ class ContactRepository {
 
   Future<List<Contact>> fetchContacts() async {
     await Future.delayed(const Duration(seconds: 1));
-    return _contacts;
+    List<Map<String, dynamic>> jsonContacts =
+        _contacts.map((contact) => contact.toJson()).toList();
+    List<Contact> contactsFromJson =
+        jsonContacts.map((json) => Contact.fromJson(json)).toList();
+    return contactsFromJson;
   }
 
   Future<void> addContact(Contact contact) async {
@@ -332,5 +336,9 @@ class ContactRepository {
     if (index != -1) {
       _contacts[index] = updatedContact;
     }
+  }
+
+  List<Map<String, dynamic>> contactsToJson() {
+    return _contacts.map((contact) => contact.toJson()).toList();
   }
 }

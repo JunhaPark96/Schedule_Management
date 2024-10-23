@@ -1,5 +1,3 @@
-import 'package:flutter/material.dart';
-
 class Contact {
   final int id;
   final String name;
@@ -57,5 +55,39 @@ class Contact {
       createdAt: createdAt ?? this.createdAt,
       modifiedAt: modifiedAt ?? this.modifiedAt,
     );
+  }
+
+  factory Contact.fromJson(Map<String, dynamic> json) {
+    return Contact(
+      id: json['id'],
+      name: json['name'],
+      phoneNumber: json['phoneNumber'],
+      faxNumber: json['faxNumber'],
+      email: json['email'],
+      address: json['address'],
+      organization: json['organization'],
+      title: json['title'],
+      role: json['role'],
+      memo: json['memo'],
+      createdAt: DateTime.parse(json['createdAt']),
+      modifiedAt: DateTime.parse(json['modifiedAt']),
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'name': name,
+      'phoneNumber': phoneNumber,
+      'faxNumber': faxNumber,
+      'email': email,
+      'address': address,
+      'organization': organization,
+      'title': title,
+      'role': role,
+      'memo': memo,
+      'createdAt': createdAt.toIso8601String(),
+      'modifiedAt': modifiedAt.toIso8601String(),
+    };
   }
 }

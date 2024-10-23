@@ -33,13 +33,10 @@ class ApiService {
         // JSON 응답을 파싱하여 객체로 처리
         final Map<String, dynamic> jsonResponse = jsonDecode(response.body);
 
-        // 리스트가 포함된 키에 접근 (예: 'data' 키가 있다고 가정)
         final List<dynamic> eoslList = jsonResponse['data'];
 
-        // print('eosl_repos: 불러온 EOSL List: ${eoslList.length}개');
         return eoslList.map((eosl) => EoslModel.fromJson(eosl)).toList();
       } else {
-        // print('eosl_repos: EOSL List 로드 실패, status code: ${response.statusCode}');
         throw Exception('EOSL data 로드 실패!: ${response.statusCode}');
       }
     } catch (e) {
@@ -140,7 +137,6 @@ class ApiService {
       // JSON 파싱 결과 출력
       print('Parsed JSON: $jsonResponse');
 
-      // EoslDetailList 중에서 특정 조건에 맞는 것을 선택 (예: 첫 번째 항목을 선택)
       final List<EoslDetailModel> eoslDetailList =
           (jsonResponse['eoslDetailList'] as List)
               .map((detail) => EoslDetailModel.fromJson(detail))
@@ -162,11 +158,11 @@ class ApiService {
       print('Extracted Maintenances: $maintenanceList');
 
       return {
-        'eoslDetail': eoslDetail, // 단일 객체로 전달
+        'eoslDetail': eoslDetail,
         'maintenanceList': maintenanceList,
       };
     } catch (e) {
-      print('Failed to load EOSL data: $e'); // 에러 출력
+      print('Failed to load EOSL data: $e');
       throw Exception('Failed to load EOSL data: $e');
     }
   }
@@ -190,8 +186,7 @@ class ApiService {
     }
 
     // 2. 웹 서버에서 데이터 불러오기
-    final Uri url = Uri.parse(
-        '$baseUrl/eosl-list/eosl-detail/$hostName/eosl-maintenance/$maintenanceNo');
+    final Uri url = Uri.parse('$baseUrl/eosl-maintenance/$maintenanceNo');
     try {
       final response = await http.get(url);
 
@@ -208,6 +203,75 @@ class ApiService {
       print(
           'Failed to load EOSL maintenance data from server: $e'); // 서버 데이터 로드 실패 로그
       throw Exception('Failed to load EOSL maintenance data: $e');
+    }
+  }
+
+  // EOSL 유지보수 데이터를 추가하는 메서드
+  Future<void> insertEoslMaintenanceData(
+      Map<String, dynamic> newMaintenanceData) async {
+    final Uri url = Uri.parse('$baseUrl/eosl-maintenance-insert');
+    try {
+      final response = await http.post(
+        url,
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode(newMaintenanceData),
+      );
+
+      if (response.statusCode == 200) {
+        print('Successfully added new maintenance data.');
+      } else {
+        print('Failed to add new maintenance data: ${response.statusCode}');
+        throw Exception(
+            'Failed to add maintenance data: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error adding maintenance data: $e');
+      throw Exception('Error adding maintenance data: $e');
+    }
+  }
+
+  // EOSL 유지보수 데이터를 업데이트하는 메서드
+  Future<void> updateEoslMaintenanceData(
+      String maintenanceNo, Map<String, dynamic> updatedMaintenanceData) async {
+    final Uri url =
+        Uri.parse('$baseUrl/eosl-maintenance-update/$maintenanceNo');
+    try {
+      final response = await http.put(
+        url,
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode(updatedMaintenanceData),
+      );
+
+      if (response.statusCode == 200) {
+        print('Successfully updated maintenance data.');
+      } else {
+        print('Failed to update maintenance data: ${response.statusCode}');
+        throw Exception(
+            'Failed to update maintenance data: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error updating maintenance data: $e');
+      throw Exception('Error updating maintenance data: $e');
+    }
+  }
+
+  // EOSL 유지보수 데이터를 삭제하는 메서드
+  Future<void> deleteEoslMaintenanceData(String maintenanceNo) async {
+    final Uri url =
+        Uri.parse('$baseUrl/eosl-maintenance-delete/$maintenanceNo');
+    try {
+      final response = await http.delete(url);
+
+      if (response.statusCode == 200) {
+        print('Successfully deleted maintenance data.');
+      } else {
+        print('Failed to delete maintenance data: ${response.statusCode}');
+        throw Exception(
+            'Failed to delete maintenance data: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error deleting maintenance data: $e');
+      throw Exception('Error deleting maintenance data: $e');
     }
   }
 

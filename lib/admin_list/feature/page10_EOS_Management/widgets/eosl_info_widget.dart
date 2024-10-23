@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:oneline2/admin_list/feature/page10_EOS_Management/models/eosl_detail_model.dart';
-import 'package:oneline2/admin_list/feature/page8_Calendar/views/add_event_page.dart'; // go_router 패키지를 사용해 페이지 간 이동 처리
+import 'package:oneline2/admin_list/feature/page8_Calendar/views/add_event_page.dart';
+import 'package:oneline2/admin_list/feature/page9_Contact/repos/contact_repository.dart';
+import 'package:oneline2/admin_list/feature/page9_Contact/views/contact_list_screen.dart'; // go_router 패키지를 사용해 페이지 간 이동 처리
 
 class EoslInfoWidget extends StatelessWidget {
   final EoslDetailModel eoslDetailModel;
@@ -40,7 +42,7 @@ class EoslInfoWidget extends StatelessWidget {
           _buildInfoRow('상세:', eoslDetailModel.note ?? '없음'),
           _buildInfoRow('유지보수 횟수:', eoslDetailModel.quantity ?? '없음'),
           _buildSupplierRow(context, '납품업체:', eoslDetailModel.supplier ?? '없음'),
-          _buildEosDateRow(context, eoslDetailModel.eoslDate ?? '없음'),
+          _buildEoslDateRow(context, eoslDetailModel.eoslDate ?? '없음'),
         ],
       ),
     );
@@ -64,8 +66,30 @@ class EoslInfoWidget extends StatelessWidget {
           const SizedBox(width: 8),
           Expanded(
             child: GestureDetector(
+              // onTap: () {
+              //   context.go('/eoslMaintenance'); // eoslMaintenance 페이지로 이동
+              // },
+
               onTap: () {
-                context.go('/eoslMaintenance'); // eoslMaintenance 페이지로 이동
+                // EOS 날짜 등록 로직 ==> add_event_page로 이동
+                Navigator.push(
+                  context,
+                  // MaterialPageRoute(
+                  //   builder: (context) => ContactListScreen(
+                  //     contactRepository: ContactRepository(),
+                  //   ),
+                  //   settings: RouteSettings(
+                  //     arguments: supplier, // supplier 이름을 arguments로 전달
+                  //   ),
+                  // ),
+                  MaterialPageRoute(
+                    builder: (context) => ContactListScreen(
+                        // ContactListScreen에 supplier를 검색어로 전달
+                        contactRepository: ContactRepository(),
+                        initialSearchQuery: supplier,
+                      ),
+                  ),
+                );
               },
               child: Text(
                 supplier,
@@ -85,7 +109,7 @@ class EoslInfoWidget extends StatelessWidget {
   }
 
   // EOS 날짜 등록 버튼이 포함된 Row
-  Widget _buildEosDateRow(BuildContext context, String eoslDate) {
+  Widget _buildEoslDateRow(BuildContext context, String eoslDate) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 8.0),
       child: Row(
@@ -111,16 +135,17 @@ class EoslInfoWidget extends StatelessWidget {
             onPressed: () {
               // EOS 날짜 등록 로직 ==> add_event_page로 이동
               Navigator.push(
-                  context,
-                  // MaterialPageRoute(
-                  //   builder: (context) => const AddEventPage(),
-                  //   settings: RouteSettings(arguments: eoslDetailModel),
-                  // ),
-                  MaterialPageRoute(
-                    builder: (context) => AddEventPage(
-                      eoslDetailModel: eoslDetailModel, // EoslDetailModel을 전달
-                    ),
-                  ));
+                context,
+                // MaterialPageRoute(
+                //   builder: (context) => const AddEventPage(),
+                //   settings: RouteSettings(arguments: eoslDetailModel),
+                // ),
+                MaterialPageRoute(
+                  builder: (context) => AddEventPage(
+                    eoslDetailModel: eoslDetailModel, // EoslDetailModel을 전달
+                  ),
+                ),
+              );
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.teal.shade600,

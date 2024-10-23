@@ -1,3 +1,4 @@
+import 'package:oneline2/admin_list/feature/page10_EOS_Management/models/eosl_maintenance_model.dart';
 import 'package:oneline2/admin_list/feature/page10_EOS_Management/models/eosl_model.dart';
 import 'package:pluto_grid/pluto_grid.dart';
 
@@ -70,4 +71,23 @@ class FetchEoslHistory extends EoslEvent {
 
   FetchEoslHistory(this.maintenanceNo, this.hostName, this.tag,
       this.maintenanceDate, this.maintenanceTitle, this.maintenanceContent);
+}
+
+// 유지보수 작업 등록 이벤트
+class InsertEoslMaintenance extends EoslEvent {
+  final EoslMaintenance newMaintenance;
+  InsertEoslMaintenance(this.newMaintenance);
+}
+
+// 유지보수 작업 업데이트 이벤트
+class UpdateEoslMaintenance extends EoslEvent {
+  final String maintenanceNo;
+  final EoslMaintenance updatedMaintenance;
+  UpdateEoslMaintenance(this.maintenanceNo, this.updatedMaintenance);
+}
+
+// 유지보수 작업 삭제 이벤트
+class DeleteEoslMaintenance extends EoslEvent {
+  final String maintenanceNo;
+  DeleteEoslMaintenance(this.maintenanceNo);
 }
