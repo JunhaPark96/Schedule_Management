@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:oneline2/admin_list/feature/page10_EOS_Management/models/eosl_detail_model.dart';
 import 'package:oneline2/admin_list/feature/page10_EOS_Management/view_models/eosl_state.dart';
 import 'package:oneline2/admin_list/feature/page10_EOS_Management/widgets/text_field.dart';
 import 'package:oneline2/admin_list/feature/page8_Calendar/views/add_event_page.dart';
@@ -484,6 +485,15 @@ class _EoslListPageState extends State<EoslListPage> {
                             .isBefore(DateTime.now()), // EOSL 여부 계산
                       };
 
+                      final newDetailData = EoslDetailModel(
+                        hostName: hostName!,
+                        field: tagToSave,
+                        eoslDate: formattedEoslDate,
+                        quantity: '',
+                        note: '',
+                        supplier: '',
+                      );
+
                       try {
                         // API를 통해 데이터를 삽입
 
@@ -491,6 +501,11 @@ class _EoslListPageState extends State<EoslListPage> {
                             .read<EoslBloc>()
                             .apiService
                             .insertEoslData(newData);
+
+                        await context
+                          .read<EoslBloc>()
+                          .apiService
+                          .insertEoslDetailData(newDetailData.toJson());
 
                         Navigator.of(context).pop(); // 다이얼로그 닫기
                         // loadEoslData(); // 데이터 새로고침
@@ -682,7 +697,9 @@ class _EoslListPageState extends State<EoslListPage> {
                       tag: tag,
                     );
                     context.read<EoslBloc>().add(UpdateEosl(updatedEosl));
-                    Navigator.of(context).pop();
+                    Navigator.of(context, rootNavigator: true).pop();
+
+                    loadEoslData();
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.teal,
@@ -775,11 +792,18 @@ class _EoslListPageState extends State<EoslListPage> {
                       ),
                       // Delete 버튼 디자인
                       ElevatedButton(
-                        onPressed: () {
-                          context
-                              .read<EoslBloc>()
-                              .add(DeleteEosl(row.cells['eosl_no']?.value));
-                          Navigator.of(context).pop(); // 다이얼로그 닫기
+                        onPressed: () async {
+                          try {
+                            context
+                                .read<EoslBloc>()
+                                .add(DeleteEosl(row.cells['eosl_no']?.value));
+                            Navigator.of(context).pop(); // 다이얼로그 닫기
+                            loadEoslData(); // 데이터 새로 불러오기
+                          } catch (e) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text('삭제 중 오류가 발생했습니다: $e')),
+                            );
+                          }
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.red, // 버튼 배경색

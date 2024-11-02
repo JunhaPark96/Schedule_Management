@@ -105,15 +105,77 @@ class ApiService {
   // EOSL 상세 리스트 로드
   Future<EoslDetailModel> fetchEoslDetail(
       String eoslNo, String hostName) async {
-    final Uri url =
-        Uri.parse('$baseUrl/eosl-list/eosl-detail/$eoslNo?hostname=$hostName');
-    print('eosl_repos - EOSL Detail 주소: $url');
+    final Uri url = Uri.parse(
+        '$baseUrl/eosl-list/eosl-detail-list/$eoslNo?hostname=$hostName');
+    try {
+      final response = await http.get(url);
+
+      if (response.statusCode == 200 && response.body.isNotEmpty) {
+        final Map<String, dynamic> eoslDetail = jsonDecode(response.body);
+        return EoslDetailModel.fromJson(eoslDetail);
+      } else {
+        // 데이터가 없을 때 빈 객체 반환
+        return EoslDetailModel(
+          hostName: hostName,
+          field: '정보 없음',
+          quantity: '정보 없음',
+          note: '정보 없음',
+          supplier: '정보 없음',
+          eoslDate: '정보 없음',
+        );
+      }
+    } catch (e) {
+      throw Exception('Failed to load EOSL detail data: $e');
+    }
+  }
+
+  Future<void> insertEoslDetailData(Map<String, dynamic> newDetailData) async {
+    final Uri url = Uri.parse('$baseUrl/eosl-detail-insert');
+    try {
+      final response = await http.post(
+        url,
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode(newDetailData),
+      );
+
+      if (response.statusCode == 200) {
+        print('Successfully added new EOSL detail data.');
+      } else {
+        print('Failed to add new EOSL detail data: ${response.statusCode}');
+        throw Exception(
+            'Failed to add EOSL detail data: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error adding EOSL detail data: $e');
+      throw Exception('Error adding EOSL detail data: $e');
+    }
+  }
+
+  // API에서 EoslDetail과 EoslMaintenance 데이터를 함께 가져오는 메서드
+  Future<Map<String, dynamic>> fetchEoslDetailWithMaintenance(
+      String eoslNo, String hostName) async {
+    final Uri url = Uri.parse(
+        '$baseUrl/eosl-list/eosl-detail-list/$eoslNo?hostname=$hostName');
     try {
       final response = await http.get(url);
 
       if (response.statusCode == 200) {
-        final Map<String, dynamic> eoslDetail = jsonDecode(response.body);
-        return EoslDetailModel.fromJson(eoslDetail);
+        final Map<String, dynamic> jsonResponse = jsonDecode(response.body);
+
+        // 데이터 파싱 및 출력
+        final List<EoslDetailModel> eoslDetailList =
+            (jsonResponse['eoslDetailList'] as List)
+                .map((detail) => EoslDetailModel.fromJson(detail))
+                .toList();
+
+        final maintenanceList = (jsonResponse['maintenanceList'] as List)
+            .map((m) => EoslMaintenance.fromJson(m))
+            .toList();
+
+        return {
+          'eoslDetail': eoslDetailList,
+          'maintenanceList': maintenanceList,
+        };
       } else {
         throw Exception(
             'Failed to load EOSL detail data: ${response.statusCode}');
@@ -124,47 +186,47 @@ class ApiService {
   }
 
   // EoslDetail과 EoslMaintenance 데이터를 함께 가져오는 메서드
-  Future<Map<String, dynamic>> fetchEoslDetailWithMaintenance(
-      String hostName) async {
-    try {
-      // 임시 로컬 JSON 파일 읽기
-      final String response = await rootBundle.loadString(mockJsonPath);
-      print('Loaded JSON from $mockJsonPath: $response'); // JSON 로드 확인
+  // Future<Map<String, dynamic>> fetchEoslDetailWithMaintenance(
+  //     String hostName) async {
+  //   try {
+  //     // 임시 로컬 JSON 파일 읽기
+  //     final String response = await rootBundle.loadString(mockJsonPath);
+  //     print('Loaded JSON from $mockJsonPath: $response'); // JSON 로드 확인
 
-      final Map<String, dynamic> jsonResponse = jsonDecode(response);
+  //     final Map<String, dynamic> jsonResponse = jsonDecode(response);
 
-      // JSON 파싱 결과 출력
-      print('Parsed JSON: $jsonResponse');
+  //     // JSON 파싱 결과 출력
+  //     print('Parsed JSON: $jsonResponse');
 
-      final List<EoslDetailModel> eoslDetailList =
-          (jsonResponse['eoslDetailList'] as List)
-              .map((detail) => EoslDetailModel.fromJson(detail))
-              .toList();
+  //     final List<EoslDetailModel> eoslDetailList =
+  //         (jsonResponse['eoslDetailList'] as List)
+  //             .map((detail) => EoslDetailModel.fromJson(detail))
+  //             .toList();
 
-      // 첫 번째 항목을 선택하거나 조건에 맞는 항목을 필터링하여 선택
-      final eoslDetail = eoslDetailList.firstWhere(
-        (detail) => detail.hostName == hostName,
-        orElse: () => EoslDetailModel(), // 없을 경우 빈 모델을 반환
-      );
+  //     // 첫 번째 항목을 선택하거나 조건에 맞는 항목을 필터링하여 선택
+  //     final eoslDetail = eoslDetailList.firstWhere(
+  //       (detail) => detail.hostName == hostName,
+  //       orElse: () => EoslDetailModel(), // 없을 경우 빈 모델을 반환
+  //     );
 
-      final maintenanceList = (jsonResponse['maintenanceList'] as List)
-          .map((m) => EoslMaintenance.fromJson(m))
-          .where((maintenance) => maintenance.hostName == hostName)
-          .toList();
+  //     final maintenanceList = (jsonResponse['maintenanceList'] as List)
+  //         .map((m) => EoslMaintenance.fromJson(m))
+  //         .where((maintenance) => maintenance.hostName == hostName)
+  //         .toList();
 
-      // 데이터 추출 결과 출력
-      print('Extracted EoslDetail: $eoslDetail');
-      print('Extracted Maintenances: $maintenanceList');
+  //     // 데이터 추출 결과 출력
+  //     print('Extracted EoslDetail: $eoslDetail');
+  //     print('Extracted Maintenances: $maintenanceList');
 
-      return {
-        'eoslDetail': eoslDetail,
-        'maintenanceList': maintenanceList,
-      };
-    } catch (e) {
-      print('Failed to load EOSL data: $e');
-      throw Exception('Failed to load EOSL data: $e');
-    }
-  }
+  //     return {
+  //       'eoslDetail': eoslDetail,
+  //       'maintenanceList': maintenanceList,
+  //     };
+  //   } catch (e) {
+  //     print('Failed to load EOSL data: $e');
+  //     throw Exception('Failed to load EOSL data: $e');
+  //   }
+  // }
 
   // EOSL 유지보수 리스트를 로드하는 메서드 (로컬 -> 웹서버)
   Future<List<EoslMaintenance>> fetchEoslMaintenanceList(

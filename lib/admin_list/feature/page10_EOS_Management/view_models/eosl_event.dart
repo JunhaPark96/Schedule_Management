@@ -1,3 +1,4 @@
+import 'package:oneline2/admin_list/feature/page10_EOS_Management/models/eosl_detail_model.dart';
 import 'package:oneline2/admin_list/feature/page10_EOS_Management/models/eosl_maintenance_model.dart';
 import 'package:oneline2/admin_list/feature/page10_EOS_Management/models/eosl_model.dart';
 import 'package:pluto_grid/pluto_grid.dart';
@@ -36,9 +37,21 @@ class DeleteEosl extends EoslEvent {
 
 class FetchEoslDetailList extends EoslEvent {}
 
+// class FetchEoslDetail extends EoslEvent {
+//   final String hostName;
+//   FetchEoslDetail(this.hostName);
+// }
+
 class FetchEoslDetail extends EoslEvent {
+  final String eoslNo;
   final String hostName;
-  FetchEoslDetail(this.hostName);
+  FetchEoslDetail(this.eoslNo, this.hostName);
+}
+
+
+class InsertEoslDetail extends EoslEvent {
+  final EoslDetailModel newEoslDetail;
+  InsertEoslDetail(this.newEoslDetail);
 }
 
 class FetchEoslMaintenanceList extends EoslEvent {

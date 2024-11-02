@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:oneline2/admin_list/feature/page10_EOS_Management/models/eosl_detail_model.dart';
+import 'package:oneline2/admin_list/feature/page10_EOS_Management/models/eosl_model.dart';
 import 'package:oneline2/admin_list/feature/page10_EOS_Management/view_models/eosl_bloc.dart';
 import 'package:oneline2/admin_list/feature/page10_EOS_Management/view_models/eosl_event.dart';
 import 'package:oneline2/admin_list/feature/page10_EOS_Management/view_models/eosl_state.dart';
@@ -42,9 +43,17 @@ class _EoslDetailPageState extends State<EoslDetailPage> {
   }
 
   // 데이터를 로드하는 메서드
+  // 데이터를 로드하는 메서드
   void _loadData() {
     final eoslBloc = context.read<EoslBloc>();
-    eoslBloc.add(FetchEoslDetail(widget.hostName)); // 특정 호스트의 상세 데이터를 로드
+
+    // state에서 가져온 현재 선택된 EoslModel의 eoslNo를 사용
+    final currentEosl = eoslBloc.state.eoslList.firstWhere(
+      (eosl) => eosl.hostName == widget.hostName,
+      orElse: () => EoslModel(eoslNo: '1'), // 기본 값 설정
+    );
+
+    eoslBloc.add(FetchEoslDetail(currentEosl.eoslNo ?? '1', widget.hostName));
   }
 
   // 필터 메소드
@@ -140,7 +149,9 @@ class _EoslDetailPageState extends State<EoslDetailPage> {
                   eoslDate: '정보 없음'),
             );
 
-            maintenances = state.eoslMaintenanceList; // Maintenance 리스트 로드
+            maintenances = state.eoslMaintenanceList.isNotEmpty
+                ? state.eoslMaintenanceList
+                : [];
             _applyFilters(); // 필터 적용
 
             return _buildDetailContent(context, eoslDetailModel);

@@ -41,7 +41,7 @@ class _EoslHistoryPageState extends State<EoslHistoryPage> {
   // 데이터 로드
   Future<void> _loadData() async {
     final eoslBloc = context.read<EoslBloc>();
-    eoslBloc.add(FetchEoslDetail(widget.hostName));
+    // eoslBloc.add(FetchEoslDetail(widget.hostName));
 
     final eoslState = eoslBloc.state;
     if (eoslState.eoslMaintenanceList.isNotEmpty) {
