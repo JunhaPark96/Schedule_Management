@@ -24,6 +24,8 @@ class EoslBloc extends Bloc<EoslEvent, EoslState> {
     on<InsertEosl>(_onInsertEosl);
     on<UpdateEosl>(_onUpdateEosl);
     on<DeleteEosl>(_onDeleteEosl);
+
+    on<InsertEoslDetail>(_onInsertEoslDetail);
     // on<FetchEoslDetailList>(_onFetchEoslDetailList);
     on<FetchEoslMaintenanceList>(_onFetchEoslMaintenanceList);
     on<AddTaskToEoslDetail>(_onAddTaskToEoslDetail);
@@ -191,20 +193,38 @@ class EoslBloc extends Bloc<EoslEvent, EoslState> {
   // Delete 이벤트 처리 로직
   Future<void> _onDeleteEosl(DeleteEosl event, Emitter<EoslState> emit) async {
     try {
+      // emit(state.copyWith(loading: true, error: '')); // 로딩 상태 설정
+
       await apiService.deleteEoslData(event.eoslNo);
 
       // 상태 갱신
       final updatedList =
           state.eoslList.where((eosl) => eosl.eoslNo != event.eoslNo).toList();
-
-      emit(state.copyWith(eoslList: updatedList));
+      emit(
+          state.copyWith(eoslList: updatedList, loading: false, success: true));
     } catch (e) {
-      emit(state.copyWith(error: e.toString()));
+      emit(state.copyWith(
+          loading: false, error: '삭제 중 오류가 발생했습니다: ${e.toString()}'));
     }
   }
 
   // ---------------------------eosl_list page method end-------------------------------------
 
+  Future<void> _onInsertEoslDetail(
+      InsertEoslDetail event, Emitter<EoslState> emit) async {
+    try {
+      emit(state.copyWith(loading: true, error: ''));
+      await apiService.insertEoslDetailData(event.newEoslDetail.toJson());
+
+      // 삽입 후 상태 업데이트
+      List<EoslDetailModel> updatedDetailList = List.from(state.eoslDetailList)
+        ..add(event.newEoslDetail);
+
+      emit(state.copyWith(eoslDetailList: updatedDetailList, loading: false));
+    } catch (e) {
+      emit(state.copyWith(loading: false, error: e.toString()));
+    }
+  }
   // Future<void> _onFetchEoslDetailList(
   //     FetchEoslDetailList event, Emitter<EoslState> emit) async {
   //   try {
@@ -251,29 +271,48 @@ class EoslBloc extends Bloc<EoslEvent, EoslState> {
   // }
 
   // ---------------------------eosl_detail page method start-------------------------------------
+  // Future<void> _onFetchEoslDetail(
+  //     FetchEoslDetail event, Emitter<EoslState> emit) async {
+  //   try {
+  //     emit(state.copyWith(loading: true, error: ''));
+  //     final result =
+  //         await apiService.fetchEoslDetailWithMaintenance(event.hostName);
+
+  //     print('Fetched EoslDetail and Maintenance: $result'); // 데이터 로드 출력
+
+  //     final eoslDetail = result['eoslDetail'] as EoslDetailModel; // 단일 객체 처리
+  //     final List<EoslMaintenance> maintenanceList =
+  //         result['maintenanceList'] as List<EoslMaintenance>;
+
+  //     emit(state.copyWith(
+  //       eoslDetailList: [eoslDetail], // 단일 객체를 리스트에 넣어 상태 유지
+  //       eoslMaintenanceList: maintenanceList,
+  //       loading: false,
+  //     ));
+  //   } catch (e) {
+  //     print('Error fetching EoslDetail and Maintenance: $e'); // 에러 출력
+  //     emit(state.copyWith(loading: false, error: e.toString()));
+  //   }
+  // }
   Future<void> _onFetchEoslDetail(
-      FetchEoslDetail event, Emitter<EoslState> emit) async {
-    try {
-      emit(state.copyWith(loading: true, error: ''));
-      final result =
-          await apiService.fetchEoslDetailWithMaintenance(event.hostName);
+    FetchEoslDetail event, Emitter<EoslState> emit) async {
+  try {
+    emit(state.copyWith(loading: true, error: ''));
+    final result = await apiService.fetchEoslDetailWithMaintenance(event.eoslNo, event.hostName);
 
-      print('Fetched EoslDetail and Maintenance: $result'); // 데이터 로드 출력
+    final List<EoslDetailModel> eoslDetailList = result['eoslDetail'] as List<EoslDetailModel>;
+    final List<EoslMaintenance> maintenanceList = result['maintenanceList'] as List<EoslMaintenance>;
 
-      final eoslDetail = result['eoslDetail'] as EoslDetailModel; // 단일 객체 처리
-      final List<EoslMaintenance> maintenanceList =
-          result['maintenanceList'] as List<EoslMaintenance>;
-
-      emit(state.copyWith(
-        eoslDetailList: [eoslDetail], // 단일 객체를 리스트에 넣어 상태 유지
-        eoslMaintenanceList: maintenanceList,
-        loading: false,
-      ));
-    } catch (e) {
-      print('Error fetching EoslDetail and Maintenance: $e'); // 에러 출력
-      emit(state.copyWith(loading: false, error: e.toString()));
-    }
+    emit(state.copyWith(
+      eoslDetailList: eoslDetailList,
+      eoslMaintenanceList: maintenanceList,
+      loading: false,
+    ));
+  } catch (e) {
+    emit(state.copyWith(loading: false, error: e.toString()));
   }
+}
+
 
   Future<void> _onFetchEoslMaintenanceList(
       FetchEoslMaintenanceList event, Emitter<EoslState> emit) async {

@@ -17,23 +17,23 @@ class EoslDetailModel {
 
   factory EoslDetailModel.fromJson(Map<String, dynamic> json) {
     return EoslDetailModel(
-      hostName: json['hostName'] ?? '', // null-safe 처리
+      hostName: json['hostname'] ?? '', // null-safe 처리
       field: json['field'] ?? '',
       quantity: json['quantity'] ?? '',
       note: json['note'] ?? '',
       supplier: json['supplier'] ?? '',
-      eoslDate: json['eoslDate'] ?? '',
+      eoslDate: json['eosl_date'] ?? '',
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      'hostName': hostName,
+      'hostname': hostName,
       'field': field,
       'quantity': quantity,
       'note': note,
       'supplier': supplier,
-      'eoslDate': eoslDate,
+      'eosl_date': eoslDate,
     };
   }
 }
