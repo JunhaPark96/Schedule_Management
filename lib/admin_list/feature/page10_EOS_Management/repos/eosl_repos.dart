@@ -107,6 +107,7 @@ class ApiService {
       String eoslNo, String hostName) async {
     final Uri url = Uri.parse(
         '$baseUrl/eosl-list/eosl-detail-list/$eoslNo?hostname=$hostName');
+
     try {
       final response = await http.get(url);
 
