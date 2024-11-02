@@ -133,8 +133,7 @@ class _EoslListPageState extends State<EoslListPage> {
                                   PlutoCell(value: eosl.businessGroup ?? ''),
                               'business_name':
                                   PlutoCell(value: eosl.businessName ?? ''),
-                              'host_name':
-                                  PlutoCell(value: eosl.hostName ?? ''),
+                              'hostname': PlutoCell(value: eosl.hostName ?? ''),
                               'ip_address':
                                   PlutoCell(value: eosl.ipAddress ?? ''),
                               'platform': PlutoCell(value: eosl.platform ?? ''),
@@ -470,30 +469,20 @@ class _EoslListPageState extends State<EoslListPage> {
                         (element) => element != null && element.isNotEmpty)) {
                       final tagToSave = isCustomTag ? customTag : selectedTag;
 
+                      final formattedEoslDate = eoslDate!.replaceAll('-', '');
+
                       final newData = {
-                        'hostName': hostName,
-                        'businessName': businessName,
-                        'ipAddress': ipAddress,
+                        'hostname': hostName,
+                        'business_name': businessName,
+                        'ip_address': ipAddress,
                         'platform': platform,
                         'version': version,
-                        'eoslDate': eoslDate,
-                        'businessGroup': businessGroup,
+                        'eosl_date': formattedEoslDate,
+                        'business_group': businessGroup,
                         'tag': tagToSave, // 선택된 태그 또는 새로 입력한 태그
-                        'isEosl': DateTime.parse(eoslDate!)
+                        'is_eosl': DateTime.parse(eoslDate!)
                             .isBefore(DateTime.now()), // EOSL 여부 계산
                       };
-                      // final newEoslModel = EoslModel(
-                      //   hostName: hostName!,
-                      //   businessName: businessName!,
-                      //   ipAddress: ipAddress!,
-                      //   platform: platform!,
-                      //   version: version!,
-                      //   eoslDate: eoslDate!,
-                      //   businessGroup: businessGroup!,
-                      //   tag: tagToSave,
-                      //   isEosl: DateTime.parse(eoslDate!)
-                      //       .isBefore(DateTime.now()), // EOSL 여부 계산
-                      // );
 
                       try {
                         // API를 통해 데이터를 삽입
@@ -502,11 +491,6 @@ class _EoslListPageState extends State<EoslListPage> {
                             .read<EoslBloc>()
                             .apiService
                             .insertEoslData(newData);
-                        // await context
-                        //     .read<EoslBloc>()
-                        //     .apiService
-                        //     .insertLocalEoslData(
-                        //         newEoslModel); // 서버 대신 로컬 데이터에 추가
 
                         Navigator.of(context).pop(); // 다이얼로그 닫기
                         // loadEoslData(); // 데이터 새로고침
@@ -575,7 +559,7 @@ class _EoslListPageState extends State<EoslListPage> {
   void _showUpdateModal(BuildContext context, PlutoRow row) {
     // 행의 기존 데이터를 추출
     String? businessGroup = row.cells['business_group']?.value;
-    String? hostName = row.cells['host_name']?.value;
+    String? hostName = row.cells['hostname']?.value;
     String? businessName = row.cells['business_name']?.value;
     String? ipAddress = row.cells['ip_address']?.value;
     String? platform = row.cells['platform']?.value;

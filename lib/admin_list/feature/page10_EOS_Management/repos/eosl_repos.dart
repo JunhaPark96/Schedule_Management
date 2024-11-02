@@ -69,10 +69,9 @@ class ApiService {
 
   // EOSL 데이터 업데이트
   Future<void> updateEoslData(Map<String, dynamic> updatedData) async {
-    final Uri url =
-        Uri.parse('$baseUrl/eosl-list-update'); // Assuming the endpoint
+    final Uri url = Uri.parse('$baseUrl/eosl-list-update');
     try {
-      final response = await http.post(
+      final response = await http.put(
         url,
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode(updatedData),
