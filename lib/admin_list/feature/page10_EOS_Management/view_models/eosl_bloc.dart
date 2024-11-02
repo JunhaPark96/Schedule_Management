@@ -38,13 +38,13 @@ class EoslBloc extends Bloc<EoslEvent, EoslState> {
     emit(state.copyWith(selectedEoslModel: eoslModel));
   }
 
-  // PlutoRow에서 EoslModel로 변환하는 함수
+  // PlutoRow에서 EoslModel로 변환하는 함수PO
   EoslModel _getEoslModelFromRow(PlutoRow row) {
     return EoslModel(
       eoslNo: row.cells['eosl_no']?.value,
       businessGroup: row.cells['business_group']?.value,
       businessName: row.cells['business_name']?.value,
-      hostName: row.cells['host_name']?.value,
+      hostName: row.cells['hostname']?.value,
       ipAddress: row.cells['ip_address']?.value,
       platform: row.cells['platform']?.value,
       version: row.cells['version']?.value,
@@ -68,7 +68,7 @@ class EoslBloc extends Bloc<EoslEvent, EoslState> {
       ),
       PlutoColumn(
         title: '호스트이름',
-        field: 'host_name',
+        field: 'hostname',
         type: PlutoColumnType.text(),
       ),
       PlutoColumn(
@@ -111,7 +111,7 @@ class EoslBloc extends Bloc<EoslEvent, EoslState> {
           'eosl_no': PlutoCell(value: server.eoslNo ?? ''),
           'business_group': PlutoCell(value: server.businessGroup ?? ''),
           'business_name': PlutoCell(value: server.businessName ?? ''),
-          'host_name': PlutoCell(value: server.hostName ?? ''),
+          'hostname': PlutoCell(value: server.hostName ?? ''),
           'ip_address': PlutoCell(value: server.ipAddress ?? ''),
           'platform': PlutoCell(value: server.platform ?? ''),
           'version': PlutoCell(value: server.version ?? ''),
@@ -182,9 +182,9 @@ class EoslBloc extends Bloc<EoslEvent, EoslState> {
             : eosl;
       }).toList();
 
-      emit(state.copyWith(eoslList: updatedList));
+      emit(state.copyWith(eoslList: updatedList, error: '', success: true));
     } catch (e) {
-      emit(state.copyWith(error: e.toString()));
+      emit(state.copyWith(error: '수정에 실패했습니다.', success: false));
     }
   }
 

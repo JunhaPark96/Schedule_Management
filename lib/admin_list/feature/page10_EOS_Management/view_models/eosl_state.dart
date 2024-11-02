@@ -11,25 +11,28 @@ class EoslState {
   final List<EoslMaintenance> eoslMaintenanceList;
   final bool loading;
   final String error;
+  final bool success;
 
   EoslState({
     required this.eoslList,
-    required this.columns, 
+    required this.columns,
     this.selectedEoslModel, // 기본값 null
     required this.eoslDetailList,
     required this.eoslMaintenanceList,
     this.loading = false,
     this.error = '',
+    this.success = false, // 기본값 false
   });
 
   EoslState copyWith({
     List<EoslModel>? eoslList,
-    List<PlutoColumn>? columns, 
+    List<PlutoColumn>? columns,
     EoslModel? selectedEoslModel,
     List<EoslDetailModel>? eoslDetailList,
     List<EoslMaintenance>? eoslMaintenanceList,
     bool? loading,
     String? error,
+    bool? success,
   }) {
     return EoslState(
       eoslList: eoslList ?? this.eoslList,
@@ -39,6 +42,7 @@ class EoslState {
       eoslMaintenanceList: eoslMaintenanceList ?? this.eoslMaintenanceList,
       loading: loading ?? this.loading,
       error: error ?? this.error,
+      success: success ?? this.success,
     );
   }
 }
