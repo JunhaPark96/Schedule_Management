@@ -39,10 +39,10 @@ class _EoslDetailPageState extends State<EoslDetailPage> {
   @override
   void initState() {
     super.initState();
+    print('Initializing EoslDetailPage with hostName: ${widget.hostName}');
     _loadData(); // 초기 데이터 로드
   }
 
-  // 데이터를 로드하는 메서드
   // 데이터를 로드하는 메서드
   void _loadData() {
     final eoslBloc = context.read<EoslBloc>();
@@ -53,6 +53,10 @@ class _EoslDetailPageState extends State<EoslDetailPage> {
       orElse: () => EoslModel(eoslNo: '1'), // 기본 값 설정
     );
 
+    // 로그 추가
+    print(
+        'Fetching data for eoslNo: ${currentEosl.eoslNo}, hostName: ${widget.hostName}');
+
     eoslBloc.add(FetchEoslDetail(currentEosl.eoslNo ?? '1', widget.hostName));
   }
 
@@ -60,19 +64,19 @@ class _EoslDetailPageState extends State<EoslDetailPage> {
   void _applyFilters() {
     final filteredMaintenances = maintenances.where((maintenance) {
       final maintenanceDate = maintenance.maintenanceDate != null
-          ? DateTime.tryParse(maintenance.maintenanceDate)
+          ? DateTime.tryParse(maintenance.maintenanceDate!)
           : null;
 
-      // 유지보수 날짜 필터링
       final isWithinDateRange = maintenanceDate == null ||
           (maintenanceDate.isAfter(selectedDateRange.start) &&
               maintenanceDate.isBefore(selectedDateRange.end));
 
-      // 유지보수 제목과 내용에 대한 검색 필터링
-      final titleMatchesSearchQuery =
-          maintenance.maintenanceTitle.toLowerCase().contains(searchQuery);
-      final contentMatchesSearchQuery =
-          maintenance.maintenanceContent.toLowerCase().contains(searchQuery);
+      final titleMatchesSearchQuery = (maintenance.maintenanceTitle ?? '')
+          .toLowerCase()
+          .contains(searchQuery);
+      final contentMatchesSearchQuery = (maintenance.maintenanceContent ?? '')
+          .toLowerCase()
+          .contains(searchQuery);
 
       // 검색어가 제목이나 내용에 일치하고, 날짜 범위 내에 있는지 확인
       return isWithinDateRange &&
@@ -260,8 +264,8 @@ class _EoslDetailPageState extends State<EoslDetailPage> {
                       MaterialPageRoute(
                         builder: (context) => EoslHistoryPage(
                           hostName: widget.hostName,
-                          maintenanceNo:
-                              maintenance.maintenanceNo, // maintenanceNo 사용
+                          maintenanceNo: maintenance.maintenanceNo ??
+                              'N/A', // maintenanceNo 사용
                         ),
                       ),
                     );

@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:http/http.dart' as http;
+import 'package:logger/logger.dart';
 import 'dart:convert';
 import 'package:oneline2/admin_list/feature/page10_EOS_Management/models/eosl_model.dart';
 import 'package:oneline2/admin_list/feature/page10_EOS_Management/models/eosl_detail_model.dart';
@@ -105,16 +106,20 @@ class ApiService {
   // EOSL 상세 리스트 로드
   Future<EoslDetailModel> fetchEoslDetail(
       String eoslNo, String hostName) async {
-    final Uri url = Uri.parse(
-        '$baseUrl/eosl-list/eosl-detail-list/$eoslNo?hostname=$hostName');
+    // final Uri url = Uri.parse(
+    // '$baseUrl/eosl-list/eosl-detail-list/$eoslNo?hostname=$hostName');
 
+    final Uri url = Uri.parse(
+        '$baseUrl/eosl-list/eosl-detail-list?eosl_no=$eoslNo&hostname=$hostName');
     try {
       final response = await http.get(url);
 
       if (response.statusCode == 200 && response.body.isNotEmpty) {
         final Map<String, dynamic> eoslDetail = jsonDecode(response.body);
+        // print('Response Data: $eoslDetail');
         return EoslDetailModel.fromJson(eoslDetail);
       } else {
+        // print('Error: ${response.statusCode}, ${response.body}');
         // 데이터가 없을 때 빈 객체 반환
         return EoslDetailModel(
           hostName: hostName,
@@ -155,33 +160,42 @@ class ApiService {
   // API에서 EoslDetail과 EoslMaintenance 데이터를 함께 가져오는 메서드
   Future<Map<String, dynamic>> fetchEoslDetailWithMaintenance(
       String eoslNo, String hostName) async {
+    final logger = Logger();
     final Uri url = Uri.parse(
-        '$baseUrl/eosl-list/eosl-detail-list/$eoslNo?hostname=$hostName');
+        '$baseUrl/eosl-list/eosl-detail-list?eosl_no=$eoslNo&hostname=$hostName');
     try {
       final response = await http.get(url);
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> jsonResponse = jsonDecode(response.body);
 
-        // 데이터 파싱 및 출력
-        final List<EoslDetailModel> eoslDetailList =
-            (jsonResponse['eoslDetailList'] as List)
-                .map((detail) => EoslDetailModel.fromJson(detail))
-                .toList();
+        // 응답 구조에서 'data' 키를 참조하여 데이터를 파싱
+        final List<dynamic> data = jsonResponse['data'] ?? [];
 
-        final maintenanceList = (jsonResponse['maintenanceList'] as List)
-            .map((m) => EoslMaintenance.fromJson(m))
+        if (data.isEmpty) {
+          logger.i('No data found in response.');
+          return {'eoslDetail': [], 'maintenanceList': []};
+        }
+
+        final List<Map<String, dynamic>> eoslDetailJsonList = data
+            .map((detail) =>
+                EoslDetailModel.fromJson(detail as Map<String, dynamic>)
+                    .toJson())
             .toList();
 
+        logger.i('Parsed EoslDetailList as JSON: $eoslDetailJsonList');
+
         return {
-          'eoslDetail': eoslDetailList,
-          'maintenanceList': maintenanceList,
+          'eoslDetail': eoslDetailJsonList,
+          'maintenanceList': [] // 유지보수 정보는 응답에 추가 로직이 필요할 수 있음
         };
       } else {
+        logger.e('Error: ${response.statusCode}, ${response.body}');
         throw Exception(
             'Failed to load EOSL detail data: ${response.statusCode}');
       }
     } catch (e) {
+      logger.e('Failed to load EOSL detail data: $e');
       throw Exception('Failed to load EOSL detail data: $e');
     }
   }

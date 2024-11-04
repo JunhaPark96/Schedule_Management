@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:logger/logger.dart';
 import 'package:oneline2/admin_list/feature/page10_EOS_Management/models/eosl_detail_model.dart';
 import 'package:oneline2/admin_list/feature/page10_EOS_Management/models/eosl_maintenance_model.dart';
 import 'package:oneline2/admin_list/feature/page10_EOS_Management/models/eosl_model.dart';
@@ -294,25 +295,78 @@ class EoslBloc extends Bloc<EoslEvent, EoslState> {
   //     emit(state.copyWith(loading: false, error: e.toString()));
   //   }
   // }
+
+  // Future<void> _onFetchEoslDetail(
+  //     FetchEoslDetail event, Emitter<EoslState> emit) async {
+  //   try {
+  //     emit(state.copyWith(loading: true, error: ''));
+  //     final result = await apiService.fetchEoslDetailWithMaintenance(
+  //         event.eoslNo, event.hostName);
+
+  //     final List<EoslDetailModel> eoslDetailList =
+  //         result['eoslDetail'] as List<EoslDetailModel>;
+  //     final List<EoslMaintenance> maintenanceList =
+  //         result['maintenanceList'] as List<EoslMaintenance>;
+
+  //     print('Response Data: $eoslDetailList');
+  //     print('Response Data: $maintenanceList');
+
+  //     emit(state.copyWith(
+  //       eoslDetailList: eoslDetailList,
+  //       eoslMaintenanceList: maintenanceList,
+  //       loading: false,
+  //     ));
+  //   } catch (e) {
+  //     emit(state.copyWith(loading: false, error: e.toString()));
+  //   }
+  // }
+
   Future<void> _onFetchEoslDetail(
-    FetchEoslDetail event, Emitter<EoslState> emit) async {
-  try {
-    emit(state.copyWith(loading: true, error: ''));
-    final result = await apiService.fetchEoslDetailWithMaintenance(event.eoslNo, event.hostName);
+      FetchEoslDetail event, Emitter<EoslState> emit) async {
+    var logger = Logger(); // Logger instance 생성
 
-    final List<EoslDetailModel> eoslDetailList = result['eoslDetail'] as List<EoslDetailModel>;
-    final List<EoslMaintenance> maintenanceList = result['maintenanceList'] as List<EoslMaintenance>;
+    try {
+      emit(state.copyWith(loading: true, error: ''));
 
-    emit(state.copyWith(
-      eoslDetailList: eoslDetailList,
-      eoslMaintenanceList: maintenanceList,
-      loading: false,
-    ));
-  } catch (e) {
-    emit(state.copyWith(loading: false, error: e.toString()));
+      final result = await apiService.fetchEoslDetailWithMaintenance(
+          event.eoslNo, event.hostName);
+
+      // null 체크 및 데이터 타입 확인
+      final List<EoslDetailModel> eoslDetailList = (result['eoslDetail'] !=
+                  null &&
+              result['eoslDetail'] is List)
+          ? (result['eoslDetail'] as List<dynamic>)
+              .where((e) => e != null)
+              .map((e) => EoslDetailModel.fromJson(e as Map<String, dynamic>))
+              .toList()
+          : [];
+
+      final List<EoslMaintenance> maintenanceList =
+          (result['maintenanceList'] != null &&
+                  result['maintenanceList'] is List)
+              ? (result['maintenanceList'] as List<dynamic>)
+                  .where((e) => e != null)
+                  .map((e) =>
+                      EoslMaintenance.fromJson(e as Map<String, dynamic>))
+                  .toList()
+              : [];
+
+      // Logger를 사용해 JSON 형식으로 데이터 출력
+      logger.i(
+          'Response Data (EoslDetail): ${eoslDetailList.map((e) => e.toJson()).toList()}');
+      logger.i(
+          'Response Data (Maintenance): ${maintenanceList.map((e) => e.toJson()).toList()}');
+
+      emit(state.copyWith(
+        eoslDetailList: eoslDetailList,
+        eoslMaintenanceList: maintenanceList,
+        loading: false,
+      ));
+    } catch (e) {
+      logger.e('Error fetching EOSL detail: $e'); // 에러 로깅
+      emit(state.copyWith(loading: false, error: e.toString()));
+    }
   }
-}
-
 
   Future<void> _onFetchEoslMaintenanceList(
       FetchEoslMaintenanceList event, Emitter<EoslState> emit) async {
@@ -359,8 +413,10 @@ class EoslBloc extends Bloc<EoslEvent, EoslState> {
 
     // 새 유지보수 번호 설정: 기존 리스트의 유지보수 번호에서 가장 큰 값을 가져와 1을 더함
     final newMaintenanceNo = (maintenanceList.isNotEmpty
-            ? (int.tryParse(maintenanceList.map((m) => m.maintenanceNo).reduce(
-                        (a, b) => int.parse(a) > int.parse(b) ? a : b)) ??
+            ? (int.tryParse(maintenanceList
+                        .map((m) => m.maintenanceNo ?? '0') // null 처리 추가
+                        .reduce(
+                            (a, b) => int.parse(a) > int.parse(b) ? a : b)) ??
                     0) +
                 1
             : 1)
