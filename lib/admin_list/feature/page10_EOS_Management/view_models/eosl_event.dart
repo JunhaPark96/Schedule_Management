@@ -54,6 +54,12 @@ class InsertEoslDetail extends EoslEvent {
   InsertEoslDetail(this.newEoslDetail);
 }
 
+class UpdateEoslDetail extends EoslEvent {
+  final EoslDetailModel updatedDetail;
+
+  UpdateEoslDetail(this.updatedDetail);
+}
+
 class FetchEoslMaintenanceList extends EoslEvent {
   final String hostName;
   final String tag;

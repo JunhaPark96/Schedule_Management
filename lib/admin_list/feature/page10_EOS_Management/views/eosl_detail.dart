@@ -145,12 +145,13 @@ class _EoslDetailPageState extends State<EoslDetailPage> {
             final eoslDetailModel = state.eoslDetailList.firstWhere(
               (eosl) => eosl.hostName == hostNameKey,
               orElse: () => EoslDetailModel(
-                  hostName: hostNameKey,
-                  field: '정보 없음',
-                  quantity: '정보 없음',
-                  note: '정보 없음',
-                  supplier: '정보 없음',
-                  eoslDate: '정보 없음'),
+                  // hostName: hostNameKey,
+                  // field: '정보 없음',
+                  // quantity: '정보 없음',
+                  // note: '정보 없음',
+                  // supplier: '정보 없음',
+                  // eoslDate: '정보 없음'
+                  ),
             );
 
             maintenances = state.eoslMaintenanceList.isNotEmpty

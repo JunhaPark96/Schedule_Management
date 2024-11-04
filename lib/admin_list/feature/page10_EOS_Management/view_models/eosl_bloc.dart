@@ -29,6 +29,7 @@ class EoslBloc extends Bloc<EoslEvent, EoslState> {
     on<InsertEoslDetail>(_onInsertEoslDetail);
     // on<FetchEoslDetailList>(_onFetchEoslDetailList);
     on<FetchEoslMaintenanceList>(_onFetchEoslMaintenanceList);
+    on<UpdateEoslDetail>(_onUpdateEoslDetail);
     on<AddTaskToEoslDetail>(_onAddTaskToEoslDetail);
     on<FetchEoslDetail>(_onFetchEoslDetail);
   }
@@ -380,6 +381,34 @@ class EoslBloc extends Bloc<EoslEvent, EoslState> {
       emit(state.copyWith(loading: false, error: e.toString()));
     }
   }
+
+  void _onUpdateEoslDetail(
+      UpdateEoslDetail event, Emitter<EoslState> emit) async {
+    var logger = Logger();
+    try {
+      logger
+          .i('Updating EOSL detail with data: ${event.updatedDetail.toJson()}');
+      emit(state.copyWith(loading: true, error: ''));
+      await apiService.updateEoslDetailData(event.updatedDetail.toJson());
+
+      logger.i(
+          'Update successful for hostname: ${event.updatedDetail.hostName} and field: ${event.updatedDetail.field}');
+
+      // 상태 업데이트
+      final updatedList = state.eoslDetailList.map((detail) {
+        return detail.hostName == event.updatedDetail.hostName &&
+                detail.field == event.updatedDetail.field
+            ? event.updatedDetail
+            : detail;
+      }).toList();
+
+      emit(state.copyWith(eoslDetailList: updatedList, loading: false));
+    } catch (e) {
+      logger.e('Detail update failed: $e');
+      emit(state.copyWith(loading: false, error: 'Detail update failed: $e'));
+    }
+  }
+
   // ---------------------------eosl_detail page method end-------------------------------------
 
   // ---------------------------eosl_history page method start-------------------------------------

@@ -200,48 +200,31 @@ class ApiService {
     }
   }
 
-  // EoslDetail과 EoslMaintenance 데이터를 함께 가져오는 메서드
-  // Future<Map<String, dynamic>> fetchEoslDetailWithMaintenance(
-  //     String hostName) async {
-  //   try {
-  //     // 임시 로컬 JSON 파일 읽기
-  //     final String response = await rootBundle.loadString(mockJsonPath);
-  //     print('Loaded JSON from $mockJsonPath: $response'); // JSON 로드 확인
+  // Detail data update
+  Future<void> updateEoslDetailData(
+      Map<String, dynamic> updatedDetailData) async {
+    final Uri url = Uri.parse('$baseUrl/eosl-detail-update');
+    final logger = Logger();
+    logger.i('Sending update request to $url with data: $updatedDetailData');
+    try {
+      final response = await http.put(
+        url,
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode(updatedDetailData),
+      );
 
-  //     final Map<String, dynamic> jsonResponse = jsonDecode(response);
-
-  //     // JSON 파싱 결과 출력
-  //     print('Parsed JSON: $jsonResponse');
-
-  //     final List<EoslDetailModel> eoslDetailList =
-  //         (jsonResponse['eoslDetailList'] as List)
-  //             .map((detail) => EoslDetailModel.fromJson(detail))
-  //             .toList();
-
-  //     // 첫 번째 항목을 선택하거나 조건에 맞는 항목을 필터링하여 선택
-  //     final eoslDetail = eoslDetailList.firstWhere(
-  //       (detail) => detail.hostName == hostName,
-  //       orElse: () => EoslDetailModel(), // 없을 경우 빈 모델을 반환
-  //     );
-
-  //     final maintenanceList = (jsonResponse['maintenanceList'] as List)
-  //         .map((m) => EoslMaintenance.fromJson(m))
-  //         .where((maintenance) => maintenance.hostName == hostName)
-  //         .toList();
-
-  //     // 데이터 추출 결과 출력
-  //     print('Extracted EoslDetail: $eoslDetail');
-  //     print('Extracted Maintenances: $maintenanceList');
-
-  //     return {
-  //       'eoslDetail': eoslDetail,
-  //       'maintenanceList': maintenanceList,
-  //     };
-  //   } catch (e) {
-  //     print('Failed to load EOSL data: $e');
-  //     throw Exception('Failed to load EOSL data: $e');
-  //   }
-  // }
+      if (response.statusCode == 200) {
+        logger.i('Update successful. Response: ${response.body}');
+      } else {
+        logger.w(
+            'Failed to update EOSL detail. Status code: ${response.statusCode}, Response: ${response.body}');
+        throw Exception('Failed to update EOSL detail data');
+      }
+    } catch (e) {
+      logger.e('Error updating EOSL detail data: $e');
+      throw Exception('Error updating EOSL detail data: $e');
+    }
+  }
 
   // EOSL 유지보수 리스트를 로드하는 메서드 (로컬 -> 웹서버)
   Future<List<EoslMaintenance>> fetchEoslMaintenanceList(

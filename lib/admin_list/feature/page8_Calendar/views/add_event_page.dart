@@ -29,17 +29,29 @@ class _AddEventPageState extends State<AddEventPage> {
   void initState() {
     super.initState();
 
+    // null 에러 시 조건 추가
     if (widget.eoslDetailModel != null) {
       _title = '${widget.eoslDetailModel!.hostName} EOSL 만료일자';
       _description =
           ' - ${widget.eoslDetailModel!.field}\n - ${widget.eoslDetailModel!.note}\n - ${widget.eoslDetailModel!.supplier}';
       _type = 'eos';
 
-      DateTime eoslDate = DateTime.parse(widget.eoslDetailModel!.eoslDate!);
-      _startTime =
-          DateTime(eoslDate.year, eoslDate.month, eoslDate.day, 0, 0); // 00:00
-      _endTime = DateTime(
-          eoslDate.year, eoslDate.month, eoslDate.day, 23, 59); // 23:59
+      if (widget.eoslDetailModel!.eoslDate != null) {
+        try {
+          DateTime eoslDate = DateTime.parse(widget.eoslDetailModel!.eoslDate!);
+          _startTime = DateTime(
+              eoslDate.year, eoslDate.month, eoslDate.day, 0, 0); // 00:00
+          _endTime = DateTime(
+              eoslDate.year, eoslDate.month, eoslDate.day, 23, 59); // 23:59
+        } catch (e) {
+          print('Invalid date format: ${widget.eoslDetailModel!.eoslDate}');
+          _startTime = DateTime.now();
+          _endTime = DateTime.now().add(const Duration(hours: 1));
+        }
+      } else {
+        _startTime = DateTime.now();
+        _endTime = DateTime.now().add(const Duration(hours: 1));
+      }
     }
   }
 
