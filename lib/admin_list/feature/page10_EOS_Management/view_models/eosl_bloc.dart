@@ -30,8 +30,9 @@ class EoslBloc extends Bloc<EoslEvent, EoslState> {
     // on<FetchEoslDetailList>(_onFetchEoslDetailList);
     // on<FetchEoslMaintenanceList>(_onFetchEoslMaintenanceList);
     on<UpdateEoslDetail>(_onUpdateEoslDetail);
-    on<AddTaskToEoslDetail>(_onAddTaskToEoslDetail);
+    // on<AddTaskToEoslDetail>(_onAddTaskToEoslDetail);
     on<FetchEoslDetail>(_onFetchEoslDetail);
+    on<InsertEoslMaintenance>(_onInsertEoslMaintenance);
   }
 
   // ---------------------------eosl_list page method start-------------------------------------
@@ -273,54 +274,6 @@ class EoslBloc extends Bloc<EoslEvent, EoslState> {
   // }
 
   // ---------------------------eosl_detail page method start-------------------------------------
-  // Future<void> _onFetchEoslDetail(
-  //     FetchEoslDetail event, Emitter<EoslState> emit) async {
-  //   try {
-  //     emit(state.copyWith(loading: true, error: ''));
-  //     final result =
-  //         await apiService.fetchEoslDetailWithMaintenance(event.hostName);
-
-  //     print('Fetched EoslDetail and Maintenance: $result'); // 데이터 로드 출력
-
-  //     final eoslDetail = result['eoslDetail'] as EoslDetailModel; // 단일 객체 처리
-  //     final List<EoslMaintenance> maintenanceList =
-  //         result['maintenanceList'] as List<EoslMaintenance>;
-
-  //     emit(state.copyWith(
-  //       eoslDetailList: [eoslDetail], // 단일 객체를 리스트에 넣어 상태 유지
-  //       eoslMaintenanceList: maintenanceList,
-  //       loading: false,
-  //     ));
-  //   } catch (e) {
-  //     print('Error fetching EoslDetail and Maintenance: $e'); // 에러 출력
-  //     emit(state.copyWith(loading: false, error: e.toString()));
-  //   }
-  // }
-
-  // Future<void> _onFetchEoslDetail(
-  //     FetchEoslDetail event, Emitter<EoslState> emit) async {
-  //   try {
-  //     emit(state.copyWith(loading: true, error: ''));
-  //     final result = await apiService.fetchEoslDetailWithMaintenance(
-  //         event.eoslNo, event.hostName);
-
-  //     final List<EoslDetailModel> eoslDetailList =
-  //         result['eoslDetail'] as List<EoslDetailModel>;
-  //     final List<EoslMaintenance> maintenanceList =
-  //         result['maintenanceList'] as List<EoslMaintenance>;
-
-  //     print('Response Data: $eoslDetailList');
-  //     print('Response Data: $maintenanceList');
-
-  //     emit(state.copyWith(
-  //       eoslDetailList: eoslDetailList,
-  //       eoslMaintenanceList: maintenanceList,
-  //       loading: false,
-  //     ));
-  //   } catch (e) {
-  //     emit(state.copyWith(loading: false, error: e.toString()));
-  //   }
-  // }
 
   Future<void> _onFetchEoslDetail(
       FetchEoslDetail event, Emitter<EoslState> emit) async {
@@ -368,19 +321,6 @@ class EoslBloc extends Bloc<EoslEvent, EoslState> {
       emit(state.copyWith(loading: false, error: e.toString()));
     }
   }
-
-  // Future<void> _onFetchEoslMaintenanceList(
-  //     FetchEoslMaintenanceList event, Emitter<EoslState> emit) async {
-  //   try {
-  //     emit(state.copyWith(loading: true, error: ''));
-  //     List<EoslMaintenance> maintenanceList = await apiService
-  //         .fetchEoslMaintenanceList(event.hostName, event.maintenanceNo);
-  //     emit(
-  //         state.copyWith(eoslMaintenanceList: maintenanceList, loading: false));
-  //   } catch (e) {
-  //     emit(state.copyWith(loading: false, error: e.toString()));
-  //   }
-  // }
 
   void _onUpdateEoslDetail(
       UpdateEoslDetail event, Emitter<EoslState> emit) async {
@@ -435,43 +375,58 @@ class EoslBloc extends Bloc<EoslEvent, EoslState> {
   // }
 
   // 새로운 태스크를 추가하는 로직
-  void _onAddTaskToEoslDetail(
-      AddTaskToEoslDetail event, Emitter<EoslState> emit) {
-    final List<EoslMaintenance> maintenanceList =
-        List.from(state.eoslMaintenanceList);
+  // void _onAddTaskToEoslDetail(
+  //     AddTaskToEoslDetail event, Emitter<EoslState> emit) {
+  //   final List<EoslMaintenance> maintenanceList =
+  //       List.from(state.eoslMaintenanceList);
 
-    // 새 유지보수 번호 설정: 기존 리스트의 유지보수 번호에서 가장 큰 값을 가져와 1을 더함
-    final newMaintenanceNo = (maintenanceList.isNotEmpty
-            ? (int.tryParse(maintenanceList
-                        .map((m) => m.maintenanceNo ?? '0') // null 처리 추가
-                        .reduce(
-                            (a, b) => int.parse(a) > int.parse(b) ? a : b)) ??
-                    0) +
-                1
-            : 1)
-        .toString();
+  //   // 새 유지보수 번호 설정: 기존 리스트의 유지보수 번호에서 가장 큰 값을 가져와 1을 더함
+  //   final newMaintenanceNo = (maintenanceList.isNotEmpty
+  //           ? (int.tryParse(maintenanceList
+  //                       .map((m) => m.maintenanceNo ?? '0') // null 처리 추가
+  //                       .reduce(
+  //                           (a, b) => int.parse(a) > int.parse(b) ? a : b)) ??
+  //                   0) +
+  //               1
+  //           : 1)
+  //       .toString();
 
-    // 새로운 유지보수 내역 생성
-    final newMaintenance = EoslMaintenance(
-      maintenanceNo: newMaintenanceNo, // 새로 생성된 maintenanceNo
-      hostName: event.hostName, // event에서 받은 hostName
-      tag: event.tag, // event에서 받은 tag
-      maintenanceDate: event.maintenanceDate, // 사용자 입력 날짜
-      maintenanceTitle: event.maintenanceTitle, // 사용자 입력 제목
-      maintenanceContent: event.maintenanceContent, // 사용자 입력 내용
-    );
+  //   // 새로운 유지보수 내역 생성
+  //   final newMaintenance = EoslMaintenance(
+  //     maintenanceNo: newMaintenanceNo, // 새로 생성된 maintenanceNo
+  //     hostName: event.hostName, // event에서 받은 hostName
+  //     tag: event.tag, // event에서 받은 tag
+  //     maintenanceDate: event.maintenanceDate, // 사용자 입력 날짜
+  //     maintenanceTitle: event.maintenanceTitle, // 사용자 입력 제목
+  //     maintenanceContent: event.maintenanceContent, // 사용자 입력 내용
+  //   );
 
-    // 새로 입력된 유지보수 내역을 리스트에 추가
-    maintenanceList.add(newMaintenance);
+  //   // 새로 입력된 유지보수 내역을 리스트에 추가
+  //   maintenanceList.add(newMaintenance);
 
-    // 상태 업데이트
-    emit(state.copyWith(eoslMaintenanceList: maintenanceList));
-  }
+  //   // 상태 업데이트
+  //   emit(state.copyWith(eoslMaintenanceList: maintenanceList));
+  // }
 
   Future<void> _onInsertEoslMaintenance(
       InsertEoslMaintenance event, Emitter<EoslState> emit) async {
     var logger = Logger(); // Logger instance 생성
     try {
+      // maintenanceNo가 'new_task'이면 1부터 시작하도록 설정
+      if (event.newMaintenance.maintenanceNo == 'new_task') {
+        final newMaintenanceNo = (state.eoslMaintenanceList.isNotEmpty
+                ? (int.tryParse(state.eoslMaintenanceList
+                            .map((m) => m.maintenanceNo ?? '0') // null 처리 추가
+                            .reduce((a, b) =>
+                                int.parse(a) > int.parse(b) ? a : b)) ??
+                        0) +
+                    1
+                : 1)
+            .toString();
+        // maintenanceNo를 직접 변경
+        event.newMaintenance.maintenanceNo = newMaintenanceNo;
+      }
+
       logger.i(
           'Inserting new EOSL maintenance: ${event.newMaintenance.toJson()}');
       emit(state.copyWith(loading: true, error: ''));

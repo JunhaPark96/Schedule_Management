@@ -41,7 +41,7 @@ class _EoslHistoryPageState extends State<EoslHistoryPage> {
   // 데이터 로드
   Future<void> _loadData() async {
     final eoslBloc = context.read<EoslBloc>();
-    // eoslBloc.add(FetchEoslDetail(widget.hostName));
+    eoslBloc.add(FetchEoslDetail(widget.maintenanceNo, widget.hostName));
 
     final eoslState = eoslBloc.state;
     if (eoslState.eoslMaintenanceList.isNotEmpty) {
@@ -90,33 +90,29 @@ class _EoslHistoryPageState extends State<EoslHistoryPage> {
     }
   }
 
-  void _saveTask() {
+  void _saveTask(EoslDetailModel eoslDetail) {
     final eoslBloc = context.read<EoslBloc>();
 
-    // 새로운 유지보수 데이터를 생성
+    // 날짜 포맷 변경: yyyy-MM-dd -> yyyyMMdd
+    final formattedDate = dateController.text.isNotEmpty
+        ? DateFormat('yyyyMMdd')
+            .format(DateFormat('yyyy-MM-dd').parse(dateController.text))
+        : DateFormat('yyyyMMdd').format(DateTime.now());
+
     final newMaintenance = EoslMaintenance(
-      maintenanceNo: widget.maintenanceNo,
+      maintenanceNo: widget.maintenanceNo == 'new_task'
+          ? 'new_task'
+          : widget.maintenanceNo,
       hostName: widget.hostName,
-      tag: '', // 태그는 다른 곳에서 설정되거나 기본값으로
-      maintenanceDate: dateController.text,
+      tag: eoslDetail.field,
+      maintenanceDate: formattedDate,
       maintenanceTitle: taskController.text,
       maintenanceContent: specialNotesController.text,
     );
 
-    // 유지보수 데이터를 블록에 전송하여 저장
-    eoslBloc.add(
-      AddTaskToEoslDetail(
-        newMaintenance.maintenanceNo ?? 'N/A', // null 처리 추가
-        newMaintenance.hostName ?? 'Unknown Host', // null 처리 추가
-        newMaintenance.tag ?? 'No Tag', // null 처리 추가
-        newMaintenance.maintenanceDate ??
-            DateTime.now().toIso8601String(), // null 처리 추가
-        newMaintenance.maintenanceTitle ?? 'Untitled Task', // null 처리 추가
-        newMaintenance.maintenanceContent ?? 'No Content', // null 처리 추가
-      ),
-    );
+    eoslBloc.add(InsertEoslMaintenance(newMaintenance));
 
-    Navigator.of(context).pop(); // 저장 후 페이지를 닫기
+    Navigator.of(context).pop();
   }
 
   //  void _saveTask() {
@@ -228,7 +224,7 @@ class _EoslHistoryPageState extends State<EoslHistoryPage> {
                   const SizedBox(height: 16),
                   buildAttachmentSection(),
                   const SizedBox(height: 16),
-                  buildSubmitButton(context),
+                  buildSubmitButton(context, eoslDetail),
                 ],
               ),
             ),
@@ -408,16 +404,19 @@ class _EoslHistoryPageState extends State<EoslHistoryPage> {
     );
   }
 
-  Widget buildSubmitButton(BuildContext context) {
+  Widget buildSubmitButton(BuildContext context, EoslDetailModel? eoslDetail) {
     final isNewTask = widget.maintenanceNo == 'new_task';
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         ElevatedButton(
-          onPressed: () {
-            _saveTask(); // **`isEditing`과 무관하게 저장 기능 동작**
-          },
+          onPressed: eoslDetail != null
+              ? () {
+                  _saveTask(eoslDetail);
+                }
+              : null, // eoslDetail이 null인 경우 버튼 비활성화
+
           style: ElevatedButton.styleFrom(
             backgroundColor: Colors.teal,
             shape: RoundedRectangleBorder(

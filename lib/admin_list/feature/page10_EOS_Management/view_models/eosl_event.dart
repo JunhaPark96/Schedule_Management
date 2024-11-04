@@ -48,7 +48,6 @@ class FetchEoslDetail extends EoslEvent {
   FetchEoslDetail(this.eoslNo, this.hostName);
 }
 
-
 class InsertEoslDetail extends EoslEvent {
   final EoslDetailModel newEoslDetail;
   InsertEoslDetail(this.newEoslDetail);
@@ -94,7 +93,7 @@ class FetchEoslHistory extends EoslEvent {
 
 // 유지보수 작업 등록 이벤트
 class InsertEoslMaintenance extends EoslEvent {
-  final EoslMaintenance newMaintenance;
+  EoslMaintenance newMaintenance;
   InsertEoslMaintenance(this.newMaintenance);
 }
 

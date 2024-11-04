@@ -1,5 +1,5 @@
 class EoslMaintenance {
-  final String? maintenanceNo;
+  String? maintenanceNo;
   final String? hostName;
   final String? tag;
   final String? maintenanceDate;
@@ -7,12 +7,12 @@ class EoslMaintenance {
   final String? maintenanceContent;
 
   EoslMaintenance({
-     this.maintenanceNo,
-     this.hostName,
-     this.tag,
-     this.maintenanceDate,
-     this.maintenanceTitle,
-     this.maintenanceContent,
+    this.maintenanceNo,
+    this.hostName,
+    this.tag,
+    this.maintenanceDate,
+    this.maintenanceTitle,
+    this.maintenanceContent,
   });
 
   // JSON 데이터를 EoslMaintenance 객체로 변환하는 팩토리 생성자
@@ -30,7 +30,7 @@ class EoslMaintenance {
   // EoslMaintenance 객체를 JSON 형식으로 변환하는 메서드
   Map<String, dynamic> toJson() {
     return {
-      'maintenanceNo': maintenanceNo,
+      'maintenance_no': maintenanceNo,
       'hostname': hostName,
       'tag': tag,
       'maintenance_date': maintenanceDate,
