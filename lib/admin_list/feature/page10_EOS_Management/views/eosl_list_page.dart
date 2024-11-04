@@ -211,8 +211,7 @@ class _EoslListPageState extends State<EoslListPage> {
                     },
                     onRowDoubleTap: (PlutoGridOnRowDoubleTapEvent event) {
                       // 행을 더블 클릭하면 해당 상세 페이지로 이동
-                      final hostName =
-                          event.row.cells['host_name']?.value ?? '';
+                      final hostName = event.row.cells['hostname']?.value ?? '';
                       Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -503,9 +502,9 @@ class _EoslListPageState extends State<EoslListPage> {
                             .insertEoslData(newData);
 
                         await context
-                          .read<EoslBloc>()
-                          .apiService
-                          .insertEoslDetailData(newDetailData.toJson());
+                            .read<EoslBloc>()
+                            .apiService
+                            .insertEoslDetailData(newDetailData.toJson());
 
                         Navigator.of(context).pop(); // 다이얼로그 닫기
                         // loadEoslData(); // 데이터 새로고침

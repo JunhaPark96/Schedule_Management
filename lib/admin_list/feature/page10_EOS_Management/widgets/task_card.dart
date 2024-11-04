@@ -15,19 +15,20 @@ class TaskCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // EoslMaintenance 데이터에서 필요한 필드 추출
-    final maintenanceNo = maintenance.maintenanceNo.isNotEmpty
-        ? maintenance.maintenanceNo
+    final maintenanceNo = (maintenance.maintenanceNo?.isNotEmpty ?? false)
+        ? maintenance.maintenanceNo!
         : 'No Maintenance No';
-    final maintenanceDate = maintenance.maintenanceDate.isNotEmpty
+    final maintenanceDate = (maintenance.maintenanceDate?.isNotEmpty ?? false)
         ? DateFormat('yyyy-MM-dd')
-            .format(DateTime.parse(maintenance.maintenanceDate))
+            .format(DateTime.parse(maintenance.maintenanceDate!))
         : 'No Date';
-    final maintenanceTitle = maintenance.maintenanceTitle.isNotEmpty
-        ? maintenance.maintenanceTitle
+    final maintenanceTitle = (maintenance.maintenanceTitle?.isNotEmpty ?? false)
+        ? maintenance.maintenanceTitle!
         : 'No Title';
-    final maintenanceContent = maintenance.maintenanceContent.isNotEmpty
-        ? maintenance.maintenanceContent
-        : 'No Content Available';
+    final maintenanceContent =
+        (maintenance.maintenanceContent?.isNotEmpty ?? false)
+            ? maintenance.maintenanceContent!
+            : 'No Content Available';
 
     return LayoutBuilder(
       builder: (context, constraints) {

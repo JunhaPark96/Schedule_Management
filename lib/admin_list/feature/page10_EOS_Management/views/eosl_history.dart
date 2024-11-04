@@ -58,11 +58,13 @@ class _EoslHistoryPageState extends State<EoslHistoryPage> {
       );
 
       // 유지보수 데이터 로드
-      taskController.text = maintenance.maintenanceTitle;
-      specialNotesController.text = maintenance.maintenanceContent;
-      dateController.text = maintenance.maintenanceDate.isNotEmpty
+      taskController.text = maintenance.maintenanceTitle ?? ''; // null 처리 추가
+      specialNotesController.text =
+          maintenance.maintenanceContent ?? ''; // null 처리 추가
+      dateController.text = (maintenance.maintenanceDate != null &&
+              maintenance.maintenanceDate!.isNotEmpty)
           ? DateFormat('yyyy-MM-dd')
-              .format(DateTime.parse(maintenance.maintenanceDate))
+              .format(DateTime.parse(maintenance.maintenanceDate!))
           : DateFormat('yyyy-MM-dd').format(DateTime.now());
     } else {
       taskController.text = '';
@@ -104,15 +106,17 @@ class _EoslHistoryPageState extends State<EoslHistoryPage> {
     // 유지보수 데이터를 블록에 전송하여 저장
     eoslBloc.add(
       AddTaskToEoslDetail(
-        newMaintenance.maintenanceNo,
-        newMaintenance.hostName,
-        newMaintenance.tag,
-        newMaintenance.maintenanceDate,
-        newMaintenance.maintenanceTitle,
-        newMaintenance.maintenanceContent,
+        newMaintenance.maintenanceNo ?? 'N/A', // null 처리 추가
+        newMaintenance.hostName ?? 'Unknown Host', // null 처리 추가
+        newMaintenance.tag ?? 'No Tag', // null 처리 추가
+        newMaintenance.maintenanceDate ??
+            DateTime.now().toIso8601String(), // null 처리 추가
+        newMaintenance.maintenanceTitle ?? 'Untitled Task', // null 처리 추가
+        newMaintenance.maintenanceContent ?? 'No Content', // null 처리 추가
       ),
     );
-    Navigator.of(context).pop(); // 저장 후 페이지를 닫
+
+    Navigator.of(context).pop(); // 저장 후 페이지를 닫기
   }
 
   //  void _saveTask() {

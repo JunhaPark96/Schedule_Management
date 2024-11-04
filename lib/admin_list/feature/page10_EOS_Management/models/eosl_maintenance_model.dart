@@ -1,18 +1,18 @@
 class EoslMaintenance {
-  final String maintenanceNo;
-  final String hostName;
-  final String tag;
-  final String maintenanceDate;
-  final String maintenanceTitle;
-  final String maintenanceContent;
+  final String? maintenanceNo;
+  final String? hostName;
+  final String? tag;
+  final String? maintenanceDate;
+  final String? maintenanceTitle;
+  final String? maintenanceContent;
 
   EoslMaintenance({
-    required this.maintenanceNo,
-    required this.hostName,
-    required this.tag,
-    required this.maintenanceDate,
-    required this.maintenanceTitle,
-    required this.maintenanceContent,
+     this.maintenanceNo,
+     this.hostName,
+     this.tag,
+     this.maintenanceDate,
+     this.maintenanceTitle,
+     this.maintenanceContent,
   });
 
   // JSON 데이터를 EoslMaintenance 객체로 변환하는 팩토리 생성자
