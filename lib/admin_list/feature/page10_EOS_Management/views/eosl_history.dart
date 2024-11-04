@@ -116,7 +116,7 @@ class _EoslHistoryPageState extends State<EoslHistoryPage> {
       ),
     );
 
-    Navigator.of(context).pop(); // 저장 후 페이지를 닫
+    Navigator.of(context).pop(); // 저장 후 페이지를 닫기
   }
 
   //  void _saveTask() {

@@ -104,36 +104,36 @@ class ApiService {
 
   // ---------------------------eosl_detail page method start-------------------------------------
   // EOSL 상세 리스트 로드
-  Future<EoslDetailModel> fetchEoslDetail(
-      String eoslNo, String hostName) async {
-    // final Uri url = Uri.parse(
-    // '$baseUrl/eosl-list/eosl-detail-list/$eoslNo?hostname=$hostName');
+  // Future<EoslDetailModel> fetchEoslDetail(
+  //     String eoslNo, String hostName) async {
+  //   // final Uri url = Uri.parse(
+  //   // '$baseUrl/eosl-list/eosl-detail-list/$eoslNo?hostname=$hostName');
 
-    final Uri url = Uri.parse(
-        '$baseUrl/eosl-list/eosl-detail-list?eosl_no=$eoslNo&hostname=$hostName');
-    try {
-      final response = await http.get(url);
+  //   final Uri url = Uri.parse(
+  //       '$baseUrl/eosl-list/eosl-detail-list?eosl_no=$eoslNo&hostname=$hostName');
+  //   try {
+  //     final response = await http.get(url);
 
-      if (response.statusCode == 200 && response.body.isNotEmpty) {
-        final Map<String, dynamic> eoslDetail = jsonDecode(response.body);
-        // print('Response Data: $eoslDetail');
-        return EoslDetailModel.fromJson(eoslDetail);
-      } else {
-        // print('Error: ${response.statusCode}, ${response.body}');
-        // 데이터가 없을 때 빈 객체 반환
-        return EoslDetailModel(
-          hostName: hostName,
-          field: '정보 없음',
-          quantity: '정보 없음',
-          note: '정보 없음',
-          supplier: '정보 없음',
-          eoslDate: '정보 없음',
-        );
-      }
-    } catch (e) {
-      throw Exception('Failed to load EOSL detail data: $e');
-    }
-  }
+  //     if (response.statusCode == 200 && response.body.isNotEmpty) {
+  //       final Map<String, dynamic> eoslDetail = jsonDecode(response.body);
+  //       // print('Response Data: $eoslDetail');
+  //       return EoslDetailModel.fromJson(eoslDetail);
+  //     } else {
+  //       // print('Error: ${response.statusCode}, ${response.body}');
+  //       // 데이터가 없을 때 빈 객체 반환
+  //       return EoslDetailModel(
+  //         hostName: hostName,
+  //         field: '정보 없음',
+  //         quantity: '정보 없음',
+  //         note: '정보 없음',
+  //         supplier: '정보 없음',
+  //         eoslDate: '정보 없음',
+  //       );
+  //     }
+  //   } catch (e) {
+  //     throw Exception('Failed to load EOSL detail data: $e');
+  //   }
+  // }
 
   Future<void> insertEoslDetailData(Map<String, dynamic> newDetailData) async {
     final Uri url = Uri.parse('$baseUrl/eosl-detail-insert');
@@ -200,7 +200,7 @@ class ApiService {
     }
   }
 
-  // Detail data update
+  // Detail data 업데이트
   Future<void> updateEoslDetailData(
       Map<String, dynamic> updatedDetailData) async {
     final Uri url = Uri.parse('$baseUrl/eosl-detail-update');
@@ -227,48 +227,50 @@ class ApiService {
   }
 
   // EOSL 유지보수 리스트를 로드하는 메서드 (로컬 -> 웹서버)
-  Future<List<EoslMaintenance>> fetchEoslMaintenanceList(
-      String hostName, String maintenanceNo) async {
-    // 1. 로컬 JSON 파일에서 데이터 불러오기 시도
-    try {
-      final String response =
-          await rootBundle.loadString(maintenanceMockJsonPath);
-      final List<dynamic> maintenanceList = jsonDecode(response);
+  // Future<List<EoslMaintenance>> fetchEoslMaintenanceList(
+  //     String hostName, String maintenanceNo) async {
+  //   // 1. 로컬 JSON 파일에서 데이터 불러오기 시도
+  //   try {
+  //     final String response =
+  //         await rootBundle.loadString(maintenanceMockJsonPath);
+  //     final List<dynamic> maintenanceList = jsonDecode(response);
 
-      // JSON 파일에서 유지보수 데이터를 파싱하여 반환
-      return maintenanceList
-          .map((maintenance) => EoslMaintenance.fromJson(maintenance))
-          .toList();
-    } catch (e) {
-      print(
-          'Failed to load local EOSL maintenance data: $e'); // 로컬 데이터 로드 실패 로그
-    }
+  //     // JSON 파일에서 유지보수 데이터를 파싱하여 반환
+  //     return maintenanceList
+  //         .map((maintenance) => EoslMaintenance.fromJson(maintenance))
+  //         .toList();
+  //   } catch (e) {
+  //     print(
+  //         'Failed to load local EOSL maintenance data: $e'); // 로컬 데이터 로드 실패 로그
+  //   }
 
-    // 2. 웹 서버에서 데이터 불러오기
-    final Uri url = Uri.parse('$baseUrl/eosl-maintenance/$maintenanceNo');
-    try {
-      final response = await http.get(url);
+  //   // 2. 웹 서버에서 데이터 불러오기
+  //   final Uri url = Uri.parse('$baseUrl/eosl-maintenance/$maintenanceNo');
+  //   try {
+  //     final response = await http.get(url);
 
-      if (response.statusCode == 200) {
-        final List<dynamic> maintenanceList = jsonDecode(response.body);
-        return maintenanceList
-            .map((maintenance) => EoslMaintenance.fromJson(maintenance))
-            .toList();
-      } else {
-        throw Exception(
-            'Failed to load EOSL maintenance data: ${response.statusCode}');
-      }
-    } catch (e) {
-      print(
-          'Failed to load EOSL maintenance data from server: $e'); // 서버 데이터 로드 실패 로그
-      throw Exception('Failed to load EOSL maintenance data: $e');
-    }
-  }
+  //     if (response.statusCode == 200) {
+  //       final List<dynamic> maintenanceList = jsonDecode(response.body);
+  //       return maintenanceList
+  //           .map((maintenance) => EoslMaintenance.fromJson(maintenance))
+  //           .toList();
+  //     } else {
+  //       throw Exception(
+  //           'Failed to load EOSL maintenance data: ${response.statusCode}');
+  //     }
+  //   } catch (e) {
+  //     print(
+  //         'Failed to load EOSL maintenance data from server: $e'); // 서버 데이터 로드 실패 로그
+  //     throw Exception('Failed to load EOSL maintenance data: $e');
+  //   }
+  // }
 
   // EOSL 유지보수 데이터를 추가하는 메서드
   Future<void> insertEoslMaintenanceData(
       Map<String, dynamic> newMaintenanceData) async {
+    final logger = Logger(); // Logger instance 생성
     final Uri url = Uri.parse('$baseUrl/eosl-maintenance-insert');
+    logger.i('Sending POST request to $url with data: $newMaintenanceData');
     try {
       final response = await http.post(
         url,
@@ -277,14 +279,14 @@ class ApiService {
       );
 
       if (response.statusCode == 200) {
-        print('Successfully added new maintenance data.');
+        logger.i('Successfully added new maintenance data.');
       } else {
-        print('Failed to add new maintenance data: ${response.statusCode}');
+        logger.w('Failed to add new maintenance data: ${response.statusCode}');
         throw Exception(
             'Failed to add maintenance data: ${response.statusCode}');
       }
     } catch (e) {
-      print('Error adding maintenance data: $e');
+      logger.e('Error adding maintenance data: $e');
       throw Exception('Error adding maintenance data: $e');
     }
   }
@@ -338,75 +340,75 @@ class ApiService {
 
   // ---------------------------local eosl_list page method start-------------------------------------
   // 로컬 EOSL 리스트를 로드하는 메서드
-  Future<List<EoslModel>> fetchLocalEoslList() async {
-    try {
-      final String response =
-          await rootBundle.loadString('assets/mock_data/eosl_list.json');
-      final List<dynamic> eoslList = jsonDecode(response);
+  // Future<List<EoslModel>> fetchLocalEoslList() async {
+  //   try {
+  //     final String response =
+  //         await rootBundle.loadString('assets/mock_data/eosl_list.json');
+  //     final List<dynamic> eoslList = jsonDecode(response);
 
-      // 데이터가 비어 있는지 확인
-      if (eoslList.isEmpty) {
-        print('Local EOSL List is empty.');
-      }
+  //     // 데이터가 비어 있는지 확인
+  //     if (eoslList.isEmpty) {
+  //       print('Local EOSL List is empty.');
+  //     }
 
-      return eoslList.map((eosl) => EoslModel.fromJson(eosl)).toList();
-    } catch (e) {
-      print('Error fetching Local EOSL List: $e');
-      throw Exception('Local EOSL data 로드 실패: $e');
-    }
-  }
+  //     return eoslList.map((eosl) => EoslModel.fromJson(eosl)).toList();
+  //   } catch (e) {
+  //     print('Error fetching Local EOSL List: $e');
+  //     throw Exception('Local EOSL data 로드 실패: $e');
+  //   }
+  // }
 
-  // 로컬 JSON 파일에 데이터를 저장하는 메서드
-  Future<void> _saveLocalEoslList(List<EoslModel> eoslList) async {
-    final file = File(eoslMockJsonPath);
-    final List<Map<String, dynamic>> jsonList =
-        eoslList.map((eosl) => eosl.toJson()).toList();
-    await file.writeAsString(jsonEncode({'data': jsonList}));
-  }
+  // // 로컬 JSON 파일에 데이터를 저장하는 메서드
+  // Future<void> _saveLocalEoslList(List<EoslModel> eoslList) async {
+  //   final file = File(eoslMockJsonPath);
+  //   final List<Map<String, dynamic>> jsonList =
+  //       eoslList.map((eosl) => eosl.toJson()).toList();
+  //   await file.writeAsString(jsonEncode({'data': jsonList}));
+  // }
 
-  // 로컬 EOSL 데이터를 추가하는 메서드
-  Future<void> insertLocalEoslData(EoslModel newEosl) async {
-    try {
-      final eoslList = await fetchLocalEoslList();
-      eoslList.add(newEosl);
-      await _saveLocalEoslList(eoslList);
-      print('Successfully added new EOSL data to local file.');
-    } catch (e) {
-      print('Error adding EOSL data: $e');
-      throw Exception('Error adding EOSL data: $e');
-    }
-  }
+  // // 로컬 EOSL 데이터를 추가하는 메서드
+  // Future<void> insertLocalEoslData(EoslModel newEosl) async {
+  //   try {
+  //     final eoslList = await fetchLocalEoslList();
+  //     eoslList.add(newEosl);
+  //     await _saveLocalEoslList(eoslList);
+  //     print('Successfully added new EOSL data to local file.');
+  //   } catch (e) {
+  //     print('Error adding EOSL data: $e');
+  //     throw Exception('Error adding EOSL data: $e');
+  //   }
+  // }
 
-  // 로컬 EOSL 데이터를 업데이트하는 메서드
-  Future<void> updateLocalEoslData(EoslModel updatedEosl) async {
-    try {
-      final eoslList = await fetchLocalEoslList();
-      final index =
-          eoslList.indexWhere((eosl) => eosl.eoslNo == updatedEosl.eoslNo);
-      if (index != -1) {
-        eoslList[index] = updatedEosl;
-        await _saveLocalEoslList(eoslList);
-        print('Successfully updated EOSL data in local file.');
-      } else {
-        throw Exception('Eosl data not found.');
-      }
-    } catch (e) {
-      print('Error updating EOSL data: $e');
-      throw Exception('Error updating EOSL data: $e');
-    }
-  }
+  // // 로컬 EOSL 데이터를 업데이트하는 메서드
+  // Future<void> updateLocalEoslData(EoslModel updatedEosl) async {
+  //   try {
+  //     final eoslList = await fetchLocalEoslList();
+  //     final index =
+  //         eoslList.indexWhere((eosl) => eosl.eoslNo == updatedEosl.eoslNo);
+  //     if (index != -1) {
+  //       eoslList[index] = updatedEosl;
+  //       await _saveLocalEoslList(eoslList);
+  //       print('Successfully updated EOSL data in local file.');
+  //     } else {
+  //       throw Exception('Eosl data not found.');
+  //     }
+  //   } catch (e) {
+  //     print('Error updating EOSL data: $e');
+  //     throw Exception('Error updating EOSL data: $e');
+  //   }
+  // }
 
-  // 로컬 EOSL 데이터를 삭제하는 메서드
-  Future<void> deleteLocalEoslData(String eoslNo) async {
-    try {
-      final eoslList = await fetchLocalEoslList();
-      final updatedList =
-          eoslList.where((eosl) => eosl.eoslNo != eoslNo).toList();
-      await _saveLocalEoslList(updatedList);
-      print('Successfully deleted EOSL data from local file.');
-    } catch (e) {
-      print('Error deleting EOSL data: $e');
-      throw Exception('Error deleting EOSL data: $e');
-    }
-  }
+  // // 로컬 EOSL 데이터를 삭제하는 메서드
+  // Future<void> deleteLocalEoslData(String eoslNo) async {
+  //   try {
+  //     final eoslList = await fetchLocalEoslList();
+  //     final updatedList =
+  //         eoslList.where((eosl) => eosl.eoslNo != eoslNo).toList();
+  //     await _saveLocalEoslList(updatedList);
+  //     print('Successfully deleted EOSL data from local file.');
+  //   } catch (e) {
+  //     print('Error deleting EOSL data: $e');
+  //     throw Exception('Error deleting EOSL data: $e');
+  //   }
+  // }
 }
