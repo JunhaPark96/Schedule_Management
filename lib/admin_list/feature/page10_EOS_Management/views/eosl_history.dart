@@ -6,7 +6,6 @@ import 'package:oneline2/admin_list/feature/page10_EOS_Management/models/eosl_ma
 import 'package:oneline2/admin_list/feature/page10_EOS_Management/view_models/eosl_bloc.dart';
 import 'package:oneline2/admin_list/feature/page10_EOS_Management/view_models/eosl_event.dart';
 import 'package:oneline2/admin_list/feature/page10_EOS_Management/view_models/eosl_state.dart';
-import 'package:oneline2/admin_list/feature/page10_EOS_Management/widgets/html_editor.dart';
 import 'package:intl/intl.dart';
 
 class EoslHistoryPage extends StatefulWidget {

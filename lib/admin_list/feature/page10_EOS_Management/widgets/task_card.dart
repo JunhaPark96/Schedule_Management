@@ -68,7 +68,7 @@ class TaskCard extends StatelessWidget {
                     'Maintenance No: $maintenanceNo',
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
-                      fontSize: 18,
+                      fontSize: 18, 
                       color: Colors.teal.shade800,
                     ),
                   ),

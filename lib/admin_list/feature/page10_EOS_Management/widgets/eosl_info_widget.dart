@@ -188,66 +188,6 @@ class _EoslInfoWidgetState extends State<EoslInfoWidget> {
     );
   }
 
-  // 납품업체를 클릭 시 eoslMaintenance 페이지로 이동하는 Row
-  // Widget _buildSupplierRow(
-  //     BuildContext context, String label, String supplier) {
-  //   return Padding(
-  //     padding: const EdgeInsets.only(bottom: 8.0),
-  //     child: Row(
-  //       crossAxisAlignment: CrossAxisAlignment.center,
-  //       children: [
-  //         Text(
-  //           label,
-  //           style: const TextStyle(
-  //             fontWeight: FontWeight.bold,
-  //             color: Color.fromARGB(197, 0, 121, 107),
-  //           ),
-  //         ),
-  //         const SizedBox(width: 8),
-  //         Expanded(
-  //           child: GestureDetector(
-  //             // onTap: () {
-  //             //   context.go('/eoslMaintenance'); // eoslMaintenance 페이지로 이동
-  //             // },
-
-  //             onTap: () {
-  //               // EOS 날짜 등록 로직 ==> add_event_page로 이동
-  //               Navigator.push(
-  //                 context,
-  //                 // MaterialPageRoute(
-  //                 //   builder: (context) => ContactListScreen(
-  //                 //     contactRepository: ContactRepository(),
-  //                 //   ),
-  //                 //   settings: RouteSettings(
-  //                 //     arguments: supplier, // supplier 이름을 arguments로 전달
-  //                 //   ),
-  //                 // ),
-  //                 MaterialPageRoute(
-  //                   builder: (context) => ContactListScreen(
-  //                     // ContactListScreen에 supplier를 검색어로 전달
-  //                     contactRepository: ContactRepository(),
-  //                     initialSearchQuery: supplier,
-  //                   ),
-  //                 ),
-  //               );
-  //             },
-  //             child: Text(
-  //               supplier,
-  //               style: const TextStyle(
-  //                 fontSize: 16,
-  //                 color: Colors.blue,
-  //                 decoration: TextDecoration.underline,
-  //               ),
-  //               overflow: TextOverflow.ellipsis,
-  //               textAlign: TextAlign.left,
-  //             ),
-  //           ),
-  //         ),
-  //       ],
-  //     ),
-  //   );
-  // }
-
   // EOS 날짜 등록 버튼이 포함된 Row
   Widget _buildEoslDateRow(BuildContext context, String eoslDate) {
     return Padding(
@@ -276,14 +216,9 @@ class _EoslInfoWidgetState extends State<EoslInfoWidget> {
               // EOS 날짜 등록 로직 ==> add_event_page로 이동
               Navigator.push(
                 context,
-                // MaterialPageRoute(
-                //   builder: (context) => const AddEventPage(),
-                //   settings: RouteSettings(arguments: eoslDetailModel),
-                // ),
                 MaterialPageRoute(
                   builder: (context) => AddEventPage(
-                    eoslDetailModel:
-                        widget.eoslDetailModel, // EoslDetailModel을 전달
+                    eoslDetailModel: widget.eoslDetailModel,
                   ),
                 ),
               );
