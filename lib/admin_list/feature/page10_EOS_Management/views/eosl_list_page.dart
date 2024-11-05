@@ -212,11 +212,12 @@ class _EoslListPageState extends State<EoslListPage> {
                     onRowDoubleTap: (PlutoGridOnRowDoubleTapEvent event) {
                       // 행을 더블 클릭하면 해당 상세 페이지로 이동
                       final hostName = event.row.cells['hostname']?.value ?? '';
+                      final tag = event.row.cells['tag']?.value ?? '';
                       Navigator.push(
                         context,
                         MaterialPageRoute(
                           builder: (context) =>
-                              EoslDetailPage(hostName: hostName),
+                              EoslDetailPage(hostName: hostName, tag: tag),
                         ),
                       );
                     },
@@ -486,7 +487,7 @@ class _EoslListPageState extends State<EoslListPage> {
 
                       final newDetailData = EoslDetailModel(
                         hostName: hostName!,
-                        field: tagToSave,
+                        tag: tagToSave,
                         eoslDate: formattedEoslDate,
                         quantity: '',
                         note: '',

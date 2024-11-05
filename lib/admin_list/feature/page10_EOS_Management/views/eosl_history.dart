@@ -11,12 +11,14 @@ import 'package:intl/intl.dart';
 
 class EoslHistoryPage extends StatefulWidget {
   final String hostName;
-  final String maintenanceNo;
+  final String? maintenanceNo;
+  final String tag;
 
   const EoslHistoryPage({
     super.key,
     required this.hostName,
-    required this.maintenanceNo,
+    required this.tag,
+    this.maintenanceNo,
   });
 
   @override
@@ -41,7 +43,7 @@ class _EoslHistoryPageState extends State<EoslHistoryPage> {
   // 데이터 로드
   Future<void> _loadData() async {
     final eoslBloc = context.read<EoslBloc>();
-    eoslBloc.add(FetchEoslDetail(widget.maintenanceNo, widget.hostName));
+    eoslBloc.add(FetchEoslDetail(widget.hostName, widget.tag));
 
     final eoslState = eoslBloc.state;
     if (eoslState.eoslMaintenanceList.isNotEmpty) {
@@ -101,10 +103,10 @@ class _EoslHistoryPageState extends State<EoslHistoryPage> {
 
     final newMaintenance = EoslMaintenance(
       maintenanceNo: widget.maintenanceNo == 'new_task'
-          ? 'new_task'
-          : widget.maintenanceNo,
+          ? null
+          : widget.maintenanceNo, // null 처리
       hostName: widget.hostName,
-      tag: eoslDetail.field,
+      tag: eoslDetail.tag,
       maintenanceDate: formattedDate,
       maintenanceTitle: taskController.text,
       maintenanceContent: specialNotesController.text,
@@ -115,34 +117,42 @@ class _EoslHistoryPageState extends State<EoslHistoryPage> {
     Navigator.of(context).pop();
   }
 
-  //  void _saveTask() {
-  //   final eoslBloc = context.read<EoslBloc>();
+  void _updateTask(EoslDetailModel eoslDetail) {
+    final eoslBloc = context.read<EoslBloc>();
 
-  //   final newMaintenance = EoslMaintenance(
-  //     maintenanceNo: widget.maintenanceNo,
-  //     hostName: widget.hostName,
-  //     tag: '', // 태그는 다른 곳에서 설정되거나 기본값으로
-  //     maintenanceDate: dateController.text,
-  //     maintenanceTitle: taskController.text,
-  //     maintenanceContent: specialNotesController.text,
-  //   );
+    // 날짜 포맷 변경: yyyy-MM-dd -> yyyyMMdd
+    final formattedDate = dateController.text.isNotEmpty
+        ? DateFormat('yyyyMMdd')
+            .format(DateFormat('yyyy-MM-dd').parse(dateController.text))
+        : DateFormat('yyyyMMdd').format(DateTime.now());
 
-  //   // 작업 저장
-  //   if (widget.maintenanceNo == 'new_task') {
-  //     eoslBloc.add(InsertEoslMaintenance(newMaintenance));
-  //   } else {
-  //     eoslBloc.add(UpdateEoslMaintenance(widget.maintenanceNo, newMaintenance));
-  //   }
+    // 기존 유지보수 데이터를 수정
+    final updatedMaintenance = EoslMaintenance(
+      maintenanceNo: widget.maintenanceNo,
+      hostName: widget.hostName,
+      tag: eoslDetail.tag,
+      maintenanceDate: formattedDate,
+      maintenanceTitle: taskController.text,
+      maintenanceContent: specialNotesController.text,
+    );
 
-  //   Navigator.of(context).pop();
-  // }
+    // UpdateEoslMaintenance 이벤트 발생
+    eoslBloc
+        .add(UpdateEoslMaintenance(widget.maintenanceNo!, updatedMaintenance));
+
+    Navigator.of(context).pop();
+  }
 
   void _deleteTask() {
     final eoslBloc = context.read<EoslBloc>();
 
-    eoslBloc.add(DeleteEoslMaintenance(widget.maintenanceNo));
-
-    Navigator.of(context).pop();
+    // maintenanceNo가 null이 아니어야만 삭제를 요청합니다.
+    if (widget.maintenanceNo != null) {
+      eoslBloc.add(DeleteEoslMaintenance(widget.maintenanceNo!));
+      Navigator.of(context).pop();
+    } else {
+      print("Error: maintenanceNo가 null입니다. 삭제할 수 없습니다.");
+    }
   }
 
   Future<void> pickFiles() async {
@@ -169,7 +179,7 @@ class _EoslHistoryPageState extends State<EoslHistoryPage> {
         (detail) => detail.hostName == widget.hostName,
         orElse: () => EoslDetailModel(
           hostName: widget.hostName,
-          field: '정보 없음',
+          tag: '정보 없음',
           quantity: '정보 없음',
           note: '정보 없음',
           supplier: '정보 없음',
@@ -185,16 +195,15 @@ class _EoslHistoryPageState extends State<EoslHistoryPage> {
       ),
       body: eoslDetail == null
           ? const Center(child: Text('데이터를 불러오는 중 오류가 발생'))
-          : Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Expanded(
-                    child: LayoutBuilder(
+          : SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    LayoutBuilder(
                       builder: (context, constraints) {
                         const double maxHeight = 200;
-
                         return Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -219,13 +228,14 @@ class _EoslHistoryPageState extends State<EoslHistoryPage> {
                         );
                       },
                     ),
-                  ),
-                  buildTaskInformationSection(),
-                  const SizedBox(height: 16),
-                  buildAttachmentSection(),
-                  const SizedBox(height: 16),
-                  buildSubmitButton(context, eoslDetail),
-                ],
+                    const SizedBox(height: 16),
+                    buildTaskInformationSection(),
+                    const SizedBox(height: 16),
+                    buildAttachmentSection(),
+                    const SizedBox(height: 16),
+                    buildSubmitButton(context, eoslDetail),
+                  ],
+                ),
               ),
             ),
     );
@@ -258,7 +268,7 @@ class _EoslHistoryPageState extends State<EoslHistoryPage> {
           subtitle: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('Field: ${detail.field}'),
+              Text('tag: ${detail.tag}'),
               Text('Quantity: ${detail.quantity}'),
               Text('Note: ${detail.note}'),
               Text('Supplier: ${detail.supplier}'),
@@ -405,7 +415,7 @@ class _EoslHistoryPageState extends State<EoslHistoryPage> {
   }
 
   Widget buildSubmitButton(BuildContext context, EoslDetailModel? eoslDetail) {
-    final isNewTask = widget.maintenanceNo == 'new_task';
+    final isNewTask = widget.maintenanceNo == null;
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -413,7 +423,13 @@ class _EoslHistoryPageState extends State<EoslHistoryPage> {
         ElevatedButton(
           onPressed: eoslDetail != null
               ? () {
-                  _saveTask(eoslDetail);
+                  if (isNewTask) {
+                    // 새 작업인 경우, 작업 등록 로직 실행
+                    _saveTask(eoslDetail);
+                  } else {
+                    // 기존 작업 수정인 경우, 수정 로직 실행
+                    _updateTask(eoslDetail);
+                  }
                 }
               : null, // eoslDetail이 null인 경우 버튼 비활성화
 
@@ -427,7 +443,7 @@ class _EoslHistoryPageState extends State<EoslHistoryPage> {
           child: Text(isNewTask ? '작업 등록' : '작업 수정'),
         ),
         const SizedBox(width: 16),
-        // **작업 삭제 버튼** - `isEditing`과 상관없이 삭제 가능
+        // 작업 삭제 버튼 - 수정 모드에서만 표시
         if (!isNewTask)
           ElevatedButton(
             onPressed: _deleteTask,

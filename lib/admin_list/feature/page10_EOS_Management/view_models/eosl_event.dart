@@ -37,15 +37,10 @@ class DeleteEosl extends EoslEvent {
 
 class FetchEoslDetailList extends EoslEvent {}
 
-// class FetchEoslDetail extends EoslEvent {
-//   final String hostName;
-//   FetchEoslDetail(this.hostName);
-// }
-
 class FetchEoslDetail extends EoslEvent {
-  final String eoslNo;
   final String hostName;
-  FetchEoslDetail(this.eoslNo, this.hostName);
+  final String tag;
+  FetchEoslDetail(this.hostName, this.tag);
 }
 
 class InsertEoslDetail extends EoslEvent {
