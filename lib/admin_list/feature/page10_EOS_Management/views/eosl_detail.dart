@@ -15,10 +15,12 @@ import 'package:oneline2/admin_list/feature/page10_EOS_Management/models/eosl_ma
 
 class EoslDetailPage extends StatefulWidget {
   final String hostName;
+  final String tag;
 
   const EoslDetailPage({
     super.key,
     required this.hostName,
+    required this.tag,
   });
 
   @override
@@ -47,17 +49,21 @@ class _EoslDetailPageState extends State<EoslDetailPage> {
   void _loadData() {
     final eoslBloc = context.read<EoslBloc>();
 
-    // state에서 가져온 현재 선택된 EoslModel의 eoslNo를 사용
+    // state에서 가져온 현재 선택된 EoslModel의 tag를 사용
     final currentEosl = eoslBloc.state.eoslList.firstWhere(
       (eosl) => eosl.hostName == widget.hostName,
-      orElse: () => EoslModel(eoslNo: '1'), // 기본 값 설정
+      orElse: () => EoslModel(
+        tag: 'default', // 기본 값으로 'default' 문자열을 사용
+        hostName: widget.hostName,
+      ),
     );
 
-    // 로그 추가
-    print(
-        'Fetching data for eoslNo: ${currentEosl.eoslNo}, hostName: ${widget.hostName}');
+    final String currentTag = currentEosl.tag ?? 'default'; // null 안전 처리
 
-    eoslBloc.add(FetchEoslDetail(currentEosl.eoslNo ?? '1', widget.hostName));
+    // 로그 추가
+    print('Fetching data for hostName: ${widget.hostName}, tag: $currentTag');
+
+    eoslBloc.add(FetchEoslDetail(widget.hostName, currentTag));
   }
 
   // 필터 메소드
@@ -120,7 +126,8 @@ class _EoslDetailPageState extends State<EoslDetailPage> {
       MaterialPageRoute(
         builder: (context) => EoslHistoryPage(
           hostName: widget.hostName,
-          maintenanceNo: 'new_task',
+          tag: widget.tag, // 추가된 tag 인자
+          maintenanceNo: null, // 새로운 작업임을 나타내기 위해 null 사용
         ),
       ),
     );
@@ -145,11 +152,6 @@ class _EoslDetailPageState extends State<EoslDetailPage> {
             final eoslDetailModel = state.eoslDetailList.firstWhere(
               (eosl) => eosl.hostName == hostNameKey,
               orElse: () => EoslDetailModel(
-                  // hostName: hostNameKey,
-                  // field: '정보 없음',
-                  // quantity: '정보 없음',
-                  // note: '정보 없음',
-                  // supplier: '정보 없음',
                   // eoslDate: '정보 없음'
                   ),
             );
@@ -265,6 +267,7 @@ class _EoslDetailPageState extends State<EoslDetailPage> {
                       MaterialPageRoute(
                         builder: (context) => EoslHistoryPage(
                           hostName: widget.hostName,
+                          tag: widget.tag,
                           maintenanceNo: maintenance.maintenanceNo ??
                               'N/A', // maintenanceNo 사용
                         ),

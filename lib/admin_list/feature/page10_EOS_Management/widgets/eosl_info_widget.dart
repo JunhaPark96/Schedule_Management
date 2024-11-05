@@ -61,7 +61,7 @@ class _EoslInfoWidgetState extends State<EoslInfoWidget> {
   void _sendUpdateRequest() {
     final updatedDetail = EoslDetailModel(
       hostName: widget.eoslDetailModel.hostName,
-      field: widget.eoslDetailModel.field,
+      tag: widget.eoslDetailModel.tag,
       note: noteController.text,
       quantity: quantityController.text,
       supplier: supplierController.text,
@@ -99,7 +99,7 @@ class _EoslInfoWidgetState extends State<EoslInfoWidget> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _buildInfoRow('호스트 네임:', widget.eoslDetailModel.hostName ?? '없음'),
-          _buildInfoRow('구분:', widget.eoslDetailModel.field ?? '없음'),
+          _buildInfoRow('구분:', widget.eoslDetailModel.tag ?? '없음'),
           _buildEditableRow('상세:', noteController, isEditingNote, 'note'),
           _buildEditableRow(
               '유지보수 횟수:', quantityController, isEditingQuantity, 'quantity'),

@@ -30,8 +30,12 @@ class EoslBloc extends Bloc<EoslEvent, EoslState> {
     // on<FetchEoslDetailList>(_onFetchEoslDetailList);
     // on<FetchEoslMaintenanceList>(_onFetchEoslMaintenanceList);
     on<UpdateEoslDetail>(_onUpdateEoslDetail);
-    on<AddTaskToEoslDetail>(_onAddTaskToEoslDetail);
+    // on<AddTaskToEoslDetail>(_onAddTaskToEoslDetail);
     on<FetchEoslDetail>(_onFetchEoslDetail);
+
+    on<InsertEoslMaintenance>(_onInsertEoslMaintenance);
+    on<UpdateEoslMaintenance>(_onUpdateEoslMaintenance);
+    on<DeleteEoslMaintenance>(_onDeleteEoslMaintenance);
   }
 
   // ---------------------------eosl_list page method start-------------------------------------
@@ -140,24 +144,6 @@ class EoslBloc extends Bloc<EoslEvent, EoslState> {
     }
   }
 
-  // Future<void> _onFetchLocalEoslList(
-  //     FetchLocalEoslList event, Emitter<EoslState> emit) async {
-  //   try {
-  //     emit(state.copyWith(loading: true, error: ''));
-  //     List<EoslModel> eoslList = await apiService.fetchLocalEoslList();
-  //     print('Fetched Local EOSL List: ${eoslList.length} items');
-
-  //     // columns가 제대로 생성되고 있는지 확인
-  //     List<PlutoColumn> columns = createColumns();
-
-  //     emit(
-  //         state.copyWith(eoslList: eoslList, columns: columns, loading: false));
-  //   } catch (e) {
-  //     print('Error fetching Local EOSL List: $e');
-  //     emit(state.copyWith(loading: false, error: e.toString()));
-  //   }
-  // }
-
   Future<void> _onInsertEosl(InsertEosl event, Emitter<EoslState> emit) async {
     try {
       emit(state.copyWith(loading: true, error: ''));
@@ -227,132 +213,23 @@ class EoslBloc extends Bloc<EoslEvent, EoslState> {
       emit(state.copyWith(loading: false, error: e.toString()));
     }
   }
-  // Future<void> _onFetchEoslDetailList(
-  //     FetchEoslDetailList event, Emitter<EoslState> emit) async {
-  //   try {
-  //     emit(state.copyWith(loading: true, error: ''));
-  //     List<EoslDetailModel> detailList = await apiService.fetchEoslDetailList();
-  //     emit(state.copyWith(eoslDetailList: detailList, loading: false));
-  //   } catch (e) {
-  //     emit(state.copyWith(loading: false, error: e.toString()));
-  //   }
-  // }
-
-  // Future<void> _onFetchEoslDetail(
-  //     FetchEoslDetail event, Emitter<EoslState> emit) async {
-  //   try {
-  //     emit(state.copyWith(loading: true, error: ''));
-  //     EoslDetailModel detail = await apiService.fetchEoslDetail(event.hostName);
-  //     emit(state.copyWith(eoslDetailList: [detail], loading: false));
-  //   } catch (e) {
-  //     emit(state.copyWith(loading: false, error: e.toString()));
-  //   }
-  // }
-
-  // Future<void> _onFetchEoslDetail(
-  //     FetchEoslDetail event, Emitter<EoslState> emit) async {
-  //   try {
-  //     emit(state.copyWith(loading: true, error: ''));
-  //     final result =
-  //         await apiService.fetchEoslDetailWithMaintenance(event.hostName);
-
-  //     print('Fetched EoslDetail and Maintenance: $result'); // 데이터 로드 출력
-
-  //     final eoslDetail = result['eoslDetail'] as EoslDetailModel;
-  //     final maintenanceList = result['maintenances'] as List<EoslMaintenance>;
-
-  //     emit(state.copyWith(
-  //       eoslDetailList: [eoslDetail],
-  //       eoslMaintenanceList: maintenanceList,
-  //       loading: false,
-  //     ));
-  //   } catch (e) {
-  //     print('Error fetching EoslDetail and Maintenance: $e'); // 에러 출력
-  //     emit(state.copyWith(loading: false, error: e.toString()));
-  //   }
-  // }
 
   // ---------------------------eosl_detail page method start-------------------------------------
-  // Future<void> _onFetchEoslDetail(
-  //     FetchEoslDetail event, Emitter<EoslState> emit) async {
-  //   try {
-  //     emit(state.copyWith(loading: true, error: ''));
-  //     final result =
-  //         await apiService.fetchEoslDetailWithMaintenance(event.hostName);
-
-  //     print('Fetched EoslDetail and Maintenance: $result'); // 데이터 로드 출력
-
-  //     final eoslDetail = result['eoslDetail'] as EoslDetailModel; // 단일 객체 처리
-  //     final List<EoslMaintenance> maintenanceList =
-  //         result['maintenanceList'] as List<EoslMaintenance>;
-
-  //     emit(state.copyWith(
-  //       eoslDetailList: [eoslDetail], // 단일 객체를 리스트에 넣어 상태 유지
-  //       eoslMaintenanceList: maintenanceList,
-  //       loading: false,
-  //     ));
-  //   } catch (e) {
-  //     print('Error fetching EoslDetail and Maintenance: $e'); // 에러 출력
-  //     emit(state.copyWith(loading: false, error: e.toString()));
-  //   }
-  // }
-
-  // Future<void> _onFetchEoslDetail(
-  //     FetchEoslDetail event, Emitter<EoslState> emit) async {
-  //   try {
-  //     emit(state.copyWith(loading: true, error: ''));
-  //     final result = await apiService.fetchEoslDetailWithMaintenance(
-  //         event.eoslNo, event.hostName);
-
-  //     final List<EoslDetailModel> eoslDetailList =
-  //         result['eoslDetail'] as List<EoslDetailModel>;
-  //     final List<EoslMaintenance> maintenanceList =
-  //         result['maintenanceList'] as List<EoslMaintenance>;
-
-  //     print('Response Data: $eoslDetailList');
-  //     print('Response Data: $maintenanceList');
-
-  //     emit(state.copyWith(
-  //       eoslDetailList: eoslDetailList,
-  //       eoslMaintenanceList: maintenanceList,
-  //       loading: false,
-  //     ));
-  //   } catch (e) {
-  //     emit(state.copyWith(loading: false, error: e.toString()));
-  //   }
-  // }
 
   Future<void> _onFetchEoslDetail(
       FetchEoslDetail event, Emitter<EoslState> emit) async {
-    var logger = Logger(); // Logger instance 생성
+    var logger = Logger();
 
     try {
       emit(state.copyWith(loading: true, error: ''));
 
       final result = await apiService.fetchEoslDetailWithMaintenance(
-          event.eoslNo, event.hostName);
+          event.tag, event.hostName);
 
-      // null 체크 및 데이터 타입 확인
-      final List<EoslDetailModel> eoslDetailList = (result['eoslDetail'] !=
-                  null &&
-              result['eoslDetail'] is List)
-          ? (result['eoslDetail'] as List<dynamic>)
-              .where((e) => e != null)
-              .map((e) => EoslDetailModel.fromJson(e as Map<String, dynamic>))
-              .toList()
-          : [];
+      final eoslDetailList = result['eoslDetail'] as List<EoslDetailModel>;
+      final maintenanceList =
+          result['maintenanceList'] as List<EoslMaintenance>;
 
-      final List<EoslMaintenance> maintenanceList =
-          (result['maintenanceList'] != null &&
-                  result['maintenanceList'] is List)
-              ? (result['maintenanceList'] as List<dynamic>)
-                  .where((e) => e != null)
-                  .map((e) =>
-                      EoslMaintenance.fromJson(e as Map<String, dynamic>))
-                  .toList()
-              : [];
-
-      // Logger를 사용해 JSON 형식으로 데이터 출력
       logger.i(
           'Response Data (EoslDetail): ${eoslDetailList.map((e) => e.toJson()).toList()}');
       logger.i(
@@ -364,23 +241,10 @@ class EoslBloc extends Bloc<EoslEvent, EoslState> {
         loading: false,
       ));
     } catch (e) {
-      logger.e('Error fetching EOSL detail: $e'); // 에러 로깅
+      logger.e('Error fetching EOSL detail: $e');
       emit(state.copyWith(loading: false, error: e.toString()));
     }
   }
-
-  // Future<void> _onFetchEoslMaintenanceList(
-  //     FetchEoslMaintenanceList event, Emitter<EoslState> emit) async {
-  //   try {
-  //     emit(state.copyWith(loading: true, error: ''));
-  //     List<EoslMaintenance> maintenanceList = await apiService
-  //         .fetchEoslMaintenanceList(event.hostName, event.maintenanceNo);
-  //     emit(
-  //         state.copyWith(eoslMaintenanceList: maintenanceList, loading: false));
-  //   } catch (e) {
-  //     emit(state.copyWith(loading: false, error: e.toString()));
-  //   }
-  // }
 
   void _onUpdateEoslDetail(
       UpdateEoslDetail event, Emitter<EoslState> emit) async {
@@ -392,12 +256,12 @@ class EoslBloc extends Bloc<EoslEvent, EoslState> {
       await apiService.updateEoslDetailData(event.updatedDetail.toJson());
 
       logger.i(
-          'Update successful for hostname: ${event.updatedDetail.hostName} and field: ${event.updatedDetail.field}');
+          'Update successful for hostname: ${event.updatedDetail.hostName} and tag: ${event.updatedDetail.tag}');
 
       // 상태 업데이트
       final updatedList = state.eoslDetailList.map((detail) {
         return detail.hostName == event.updatedDetail.hostName &&
-                detail.field == event.updatedDetail.field
+                detail.tag == event.updatedDetail.tag
             ? event.updatedDetail
             : detail;
       }).toList();
@@ -434,40 +298,6 @@ class EoslBloc extends Bloc<EoslEvent, EoslState> {
   //   }
   // }
 
-  // 새로운 태스크를 추가하는 로직
-  void _onAddTaskToEoslDetail(
-      AddTaskToEoslDetail event, Emitter<EoslState> emit) {
-    final List<EoslMaintenance> maintenanceList =
-        List.from(state.eoslMaintenanceList);
-
-    // 새 유지보수 번호 설정: 기존 리스트의 유지보수 번호에서 가장 큰 값을 가져와 1을 더함
-    final newMaintenanceNo = (maintenanceList.isNotEmpty
-            ? (int.tryParse(maintenanceList
-                        .map((m) => m.maintenanceNo ?? '0') // null 처리 추가
-                        .reduce(
-                            (a, b) => int.parse(a) > int.parse(b) ? a : b)) ??
-                    0) +
-                1
-            : 1)
-        .toString();
-
-    // 새로운 유지보수 내역 생성
-    final newMaintenance = EoslMaintenance(
-      maintenanceNo: newMaintenanceNo, // 새로 생성된 maintenanceNo
-      hostName: event.hostName, // event에서 받은 hostName
-      tag: event.tag, // event에서 받은 tag
-      maintenanceDate: event.maintenanceDate, // 사용자 입력 날짜
-      maintenanceTitle: event.maintenanceTitle, // 사용자 입력 제목
-      maintenanceContent: event.maintenanceContent, // 사용자 입력 내용
-    );
-
-    // 새로 입력된 유지보수 내역을 리스트에 추가
-    maintenanceList.add(newMaintenance);
-
-    // 상태 업데이트
-    emit(state.copyWith(eoslMaintenanceList: maintenanceList));
-  }
-
   Future<void> _onInsertEoslMaintenance(
       InsertEoslMaintenance event, Emitter<EoslState> emit) async {
     var logger = Logger(); // Logger instance 생성
@@ -477,9 +307,13 @@ class EoslBloc extends Bloc<EoslEvent, EoslState> {
       emit(state.copyWith(loading: true, error: ''));
 
       // 서버에 새로운 유지보수 데이터를 전송
-      await apiService.insertEoslMaintenanceData(event.newMaintenance.toJson());
+      // maintenance_no는 서버에서 자동으로 생성되므로 포함하지 않음
+      final maintenanceData = event.newMaintenance.toJson();
+      maintenanceData.remove('maintenanceNo'); // maintenanceNo 제거
 
-      // 기존 유지보수 리스트에 새로 추가
+      await apiService.insertEoslMaintenanceData(maintenanceData);
+
+      // 서버에서 성공적으로 추가된 후, 서버의 응답 데이터를 활용해 새 항목을 추가
       List<EoslMaintenance> updatedMaintenanceList =
           List.from(state.eoslMaintenanceList)..add(event.newMaintenance);
 
@@ -499,13 +333,14 @@ class EoslBloc extends Bloc<EoslEvent, EoslState> {
       emit(state.copyWith(loading: true, error: ''));
 
       // 서버에 유지보수 데이터 업데이트 요청
-      await apiService.updateEoslMaintenanceData(
-          event.maintenanceNo, event.updatedMaintenance.toJson());
+      await apiService
+          .updateEoslMaintenanceData(event.updatedMaintenance.toJson());
 
       // 유지보수 리스트를 업데이트
       final updatedMaintenanceList =
           state.eoslMaintenanceList.map((maintenance) {
-        return maintenance.maintenanceNo == event.maintenanceNo
+        return maintenance.maintenanceNo ==
+                event.updatedMaintenance.maintenanceNo
             ? event.updatedMaintenance
             : maintenance;
       }).toList();
@@ -517,23 +352,29 @@ class EoslBloc extends Bloc<EoslEvent, EoslState> {
     }
   }
 
+  // 삭제 이벤트를 처리하는 메서드
   Future<void> _onDeleteEoslMaintenance(
       DeleteEoslMaintenance event, Emitter<EoslState> emit) async {
+    var logger = Logger();
+
     try {
       emit(state.copyWith(loading: true, error: ''));
 
-      // 서버에서 유지보수 데이터 삭제
+      // API 요청을 통해 유지보수 데이터 삭제
       await apiService.deleteEoslMaintenanceData(event.maintenanceNo);
 
-      // 삭제 후 유지보수 리스트 업데이트
+      // 상태 갱신: 삭제 후 유지보수 리스트 업데이트
       final updatedMaintenanceList = state.eoslMaintenanceList
           .where(
               (maintenance) => maintenance.maintenanceNo != event.maintenanceNo)
           .toList();
 
+      logger.i(
+          'Successfully deleted maintenance with maintenanceNo: ${event.maintenanceNo}');
       emit(state.copyWith(
           eoslMaintenanceList: updatedMaintenanceList, loading: false));
     } catch (e) {
+      logger.e('Error deleting maintenance: $e');
       emit(state.copyWith(loading: false, error: e.toString()));
     }
   }

@@ -21,7 +21,7 @@ class ApiService {
       'assets/mock_data/maintenance_list.json'; // 유지보수 데이터 임시 경로
   final String eoslMockJsonPath =
       'assets/mock_data/eosl_list.json'; // EOSL 임시 데이터 경로
-
+  final Logger logger = Logger();
   // ---------------------------eosl_list page method start-------------------------------------
   // EOSL 리스트를 로드하는 메서드
   Future<List<EoslModel>> fetchEoslList() async {
@@ -159,17 +159,15 @@ class ApiService {
 
   // API에서 EoslDetail과 EoslMaintenance 데이터를 함께 가져오는 메서드
   Future<Map<String, dynamic>> fetchEoslDetailWithMaintenance(
-      String eoslNo, String hostName) async {
+      String tag, String hostName) async {
     final logger = Logger();
     final Uri url = Uri.parse(
-        '$baseUrl/eosl-list/eosl-detail-list?eosl_no=$eoslNo&hostname=$hostName');
+        '$baseUrl/eosl-list/eosl-detail-list?hostname=$hostName&tag=$tag');
     try {
       final response = await http.get(url);
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> jsonResponse = jsonDecode(response.body);
-
-        // 응답 구조에서 'data' 키를 참조하여 데이터를 파싱
         final List<dynamic> data = jsonResponse['data'] ?? [];
 
         if (data.isEmpty) {
@@ -177,17 +175,47 @@ class ApiService {
           return {'eoslDetail': [], 'maintenanceList': []};
         }
 
-        final List<Map<String, dynamic>> eoslDetailJsonList = data
-            .map((detail) =>
-                EoslDetailModel.fromJson(detail as Map<String, dynamic>)
-                    .toJson())
-            .toList();
+        // 각 데이터를 분리하여 EoslDetailData와 MaintenanceData 리스트를 생성
+        final List<EoslDetailModel> eoslDetailList = [];
+        final List<EoslMaintenance> maintenanceList = [];
 
-        logger.i('Parsed EoslDetailList as JSON: $eoslDetailJsonList');
+        for (var item in data) {
+          final Map<String, dynamic> detail = item as Map<String, dynamic>;
+
+          // `eoslDetailData`와 `maintenanceData` 조건에 맞게 데이터 분리
+          final eoslDetailData = {
+            'eosl_date': detail['eosl_date'],
+            'tag': detail['tag'],
+            'hostname': detail['hostname'],
+            'note': detail['note'],
+            'quantity': detail['quantity'],
+            'supplier': detail['supplier'],
+          };
+
+          eoslDetailList.add(EoslDetailModel.fromJson(eoslDetailData));
+
+          // `maintenanceData` 관련 정보만 필터링
+          final maintenanceData = {
+            'hostname': detail['hostname'],
+            'tag': detail['tag'],
+            'maintenance_content': detail['maintenance_content'],
+            'maintenance_date': detail['maintenance_date'],
+            'maintenance_no': detail['maintenance_no'],
+            'maintenance_title': detail['maintenance_title'],
+          };
+
+          maintenanceList.add(EoslMaintenance.fromJson(maintenanceData));
+        }
+
+        // JSON 형식으로 로깅
+        logger.i(
+            'Parsed EoslDetailList as JSON: ${eoslDetailList.map((e) => e.toJson()).toList()}');
+        logger.i(
+            'Parsed MaintenanceList as JSON: ${maintenanceList.map((e) => e.toJson()).toList()}');
 
         return {
-          'eoslDetail': eoslDetailJsonList,
-          'maintenanceList': [] // 유지보수 정보는 응답에 추가 로직이 필요할 수 있음
+          'eoslDetail': eoslDetailList,
+          'maintenanceList': maintenanceList,
         };
       } else {
         logger.e('Error: ${response.statusCode}, ${response.body}');
@@ -293,10 +321,14 @@ class ApiService {
 
   // EOSL 유지보수 데이터를 업데이트하는 메서드
   Future<void> updateEoslMaintenanceData(
-      String maintenanceNo, Map<String, dynamic> updatedMaintenanceData) async {
-    final Uri url =
-        Uri.parse('$baseUrl/eosl-maintenance-update/$maintenanceNo');
+      Map<String, dynamic> updatedMaintenanceData) async {
+    final Uri url = Uri.parse('$baseUrl/eosl-maintenance-update');
+
     try {
+      // 전송 전 데이터 로깅
+      print(
+          'Sending maintenance data for update: ${jsonEncode(updatedMaintenanceData)}');
+
       final response = await http.put(
         url,
         headers: {'Content-Type': 'application/json'},
@@ -320,18 +352,24 @@ class ApiService {
   Future<void> deleteEoslMaintenanceData(String maintenanceNo) async {
     final Uri url =
         Uri.parse('$baseUrl/eosl-maintenance-delete/$maintenanceNo');
+    logger.i(
+        'Attempting to delete maintenance data with maintenanceNo: $maintenanceNo');
+    logger.i('DELETE request URL: $url');
+
     try {
       final response = await http.delete(url);
 
       if (response.statusCode == 200) {
-        print('Successfully deleted maintenance data.');
+        logger.i(
+            'Successfully deleted maintenance data with maintenanceNo: $maintenanceNo');
       } else {
-        print('Failed to delete maintenance data: ${response.statusCode}');
+        logger.w(
+            'Failed to delete maintenance data. Status code: ${response.statusCode}');
         throw Exception(
             'Failed to delete maintenance data: ${response.statusCode}');
       }
     } catch (e) {
-      print('Error deleting maintenance data: $e');
+      logger.e('Error deleting maintenance data: $e');
       throw Exception('Error deleting maintenance data: $e');
     }
   }

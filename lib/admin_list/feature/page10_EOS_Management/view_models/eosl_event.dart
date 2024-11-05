@@ -37,17 +37,11 @@ class DeleteEosl extends EoslEvent {
 
 class FetchEoslDetailList extends EoslEvent {}
 
-// class FetchEoslDetail extends EoslEvent {
-//   final String hostName;
-//   FetchEoslDetail(this.hostName);
-// }
-
 class FetchEoslDetail extends EoslEvent {
-  final String eoslNo;
   final String hostName;
-  FetchEoslDetail(this.eoslNo, this.hostName);
+  final String tag;
+  FetchEoslDetail(this.hostName, this.tag);
 }
-
 
 class InsertEoslDetail extends EoslEvent {
   final EoslDetailModel newEoslDetail;
@@ -94,7 +88,7 @@ class FetchEoslHistory extends EoslEvent {
 
 // 유지보수 작업 등록 이벤트
 class InsertEoslMaintenance extends EoslEvent {
-  final EoslMaintenance newMaintenance;
+  EoslMaintenance newMaintenance;
   InsertEoslMaintenance(this.newMaintenance);
 }
 
