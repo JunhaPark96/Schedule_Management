@@ -15,12 +15,12 @@ class ApiService {
   // TODO: 경준 대리님이 수정해야하는 부분 - baseURL
   final String baseUrl = 'http://52.78.12.208:5050';
 
-  final String mockJsonPath =
-      'assets/mock_data/eosl_detail_with_maintenance.json'; // 임시 데이터 생성
-  final String maintenanceMockJsonPath =
-      'assets/mock_data/maintenance_list.json'; // 유지보수 데이터 임시 경로
-  final String eoslMockJsonPath =
-      'assets/mock_data/eosl_list.json'; // EOSL 임시 데이터 경로
+  // final String mockJsonPath =
+  //     'assets/mock_data/eosl_detail_with_maintenance.json'; // 임시 데이터 생성
+  // final String maintenanceMockJsonPath =
+  //     'assets/mock_data/maintenance_list.json'; // 유지보수 데이터 임시 경로
+  // final String eoslMockJsonPath =
+  //     'assets/mock_data/eosl_list.json'; // EOSL 임시 데이터 경로
   final Logger logger = Logger();
   // ---------------------------eosl_list page method start-------------------------------------
   // EOSL 리스트를 로드하는 메서드
