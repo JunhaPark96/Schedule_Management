@@ -10,7 +10,7 @@ import 'package:intl/intl.dart';
 class AddEventPage extends StatefulWidget {
   final EoslDetailModel? eoslDetailModel;
 
-  const AddEventPage({super.key, this.eoslDetailModel});
+  const AddEventPage({Key? key, this.eoslDetailModel}) : super(key: key);
 
   @override
   _AddEventPageState createState() => _AddEventPageState();
@@ -180,9 +180,9 @@ class _AddEventPageState extends State<AddEventPage> {
                       id: _id,
                       title: _title,
                       description: _description,
-                      startTime: _startTime ?? DateTime.now(),
-                      endTime: _endTime ??
-                          DateTime.now().add(const Duration(hours: 1)),
+                      start_time: _startTime ?? DateTime.now(),
+                      end_time:
+                          _endTime ?? DateTime.now().add(Duration(hours: 1)),
                       type: _type,
                     );
 

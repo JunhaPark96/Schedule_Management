@@ -59,18 +59,19 @@ class Contact {
 
   factory Contact.fromJson(Map<String, dynamic> json) {
     return Contact(
-      id: json['id'],
-      name: json['name'],
-      phoneNumber: json['phoneNumber'],
-      faxNumber: json['faxNumber'],
-      email: json['email'],
-      address: json['address'],
-      organization: json['organization'],
-      title: json['title'],
-      role: json['role'],
-      memo: json['memo'],
-      createdAt: DateTime.parse(json['createdAt']),
-      modifiedAt: DateTime.parse(json['modifiedAt']),
+      id: json['id'] ?? 0,
+      name: json['name'] ?? '',
+      phoneNumber: json['phone_number'] ?? '',
+      faxNumber: json['fax_number'] ?? '',
+      email: json['email'] ?? '',
+      address: json['address'] ?? '',
+      organization: json['organization'] ?? '',
+      title: json['title'] ?? '',
+      role: json['role'] ?? '',
+      memo: json['memo'] ?? '',
+      createdAt: DateTime.tryParse(json['created_at'] ?? '') ?? DateTime.now(),
+      modifiedAt:
+          DateTime.tryParse(json['modified_at'] ?? '') ?? DateTime.now(),
     );
   }
 

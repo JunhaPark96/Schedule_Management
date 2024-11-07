@@ -20,9 +20,9 @@ class _CalendarScreenState extends State<CalendarScreen> {
   CalendarFormat calendarFormat = CalendarFormat.month;
   DateTime _focusedDay = DateTime.now();
   DateTime _selectedDay = DateTime.now();
-  final TextEditingController _searchController = TextEditingController();
+  TextEditingController _searchController = TextEditingController();
   String _searchQuery = '';
-  final Set<DateTime> _eventDays = {}; // 이벤트가 있는 날짜를 저장할 Set
+  Set<DateTime> _eventDays = {}; // 이벤트가 있는 날짜를 저장할 Set
 
   @override
   void initState() {
@@ -88,10 +88,10 @@ class _CalendarScreenState extends State<CalendarScreen> {
                 final eventBlocState = context.watch<EventBloc>().state;
                 if (eventBlocState is EventLoadSuccess) {
                   final dayEvents = eventBlocState.events.where((event) {
-                    return day.isAtSameMomentAs(event.startTime) ||
-                        (day.isAfter(event.startTime) &&
-                            day.isBefore(event.endTime)) ||
-                        day.isAtSameMomentAs(event.endTime);
+                    return day.isAtSameMomentAs(event.start_time) ||
+                        (day.isAfter(event.start_time) &&
+                            day.isBefore(event.start_time)) ||
+                        day.isAtSameMomentAs(event.start_time);
                   }).toList();
 
                   if (dayEvents.isNotEmpty) {
@@ -100,7 +100,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                       child: Container(
                         width: 8.0,
                         height: 8.0,
-                        decoration: const BoxDecoration(
+                        decoration: BoxDecoration(
                           color: Colors.green,
                           shape: BoxShape.circle,
                         ),
@@ -115,8 +115,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
               final state = context.watch<EventBloc>().state;
               if (state is EventLoadSuccess) {
                 return state.events.where((event) {
-                  final startDate = event.startTime;
-                  final endDate = event.endTime;
+                  final startDate = event.start_time;
+                  final endDate = event.end_time;
 
                   // 이벤트의 시작과 끝 날짜가 같은 경우
                   if (isSameDay(day, startDate) || isSameDay(day, endDate)) {
@@ -137,8 +137,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
               if (state is EventLoadSuccess) {
                 final events = state.events
                     .where((event) {
-                      final eventStart = event.startTime;
-                      final eventEnd = event.endTime;
+                      final eventStart = event.start_time;
+                      final eventEnd = event.end_time;
 
                       // selectedDay의 시작과 종료 범위 설정
                       final startOfSelectedDay = DateTime(
@@ -157,9 +157,9 @@ class _CalendarScreenState extends State<CalendarScreen> {
 
                       // 이벤트가 선택된 날짜 범위와 겹치는지 확인
                       final isWithinRange = eventStart.isBefore(endOfSelectedDay
-                              .add(const Duration(milliseconds: 1))) &&
+                              .add(Duration(milliseconds: 1))) &&
                           eventEnd.isAfter(startOfSelectedDay
-                              .subtract(const Duration(milliseconds: 1)));
+                              .subtract(Duration(milliseconds: 1)));
 
                       print(
                           'Event: ${event.title}, Start: $eventStart, End: $eventEnd, Selected Day Start: $startOfSelectedDay, Selected Day End: $endOfSelectedDay, Is Within Range: $isWithinRange');
@@ -208,8 +208,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
                 if (state is EventLoadSuccess) {
                   final events = state.events
                       .where((event) {
-                        final eventStart = event.startTime;
-                        final eventEnd = event.endTime;
+                        final eventStart = event.start_time;
+                        final eventEnd = event.end_time;
 
                         // 선택된 날짜의 시작과 종료 범위 설정
                         final startOfSelectedDay = DateTime(
@@ -234,14 +234,14 @@ class _CalendarScreenState extends State<CalendarScreen> {
                         // 이벤트의 시작과 끝 시간이 선택된 날짜 범위와 겹치는지 확인
                         final isStartWithinRange = eventStart.isBefore(
                                 endOfSelectedDay
-                                    .add(const Duration(milliseconds: 1))) &&
+                                    .add(Duration(milliseconds: 1))) &&
                             eventStart.isAfter(startOfSelectedDay
-                                .subtract(const Duration(milliseconds: 1)));
+                                .subtract(Duration(milliseconds: 1)));
                         final isEndWithinRange = eventEnd.isAfter(
-                                startOfSelectedDay.subtract(
-                                    const Duration(milliseconds: 1))) &&
+                                startOfSelectedDay
+                                    .subtract(Duration(milliseconds: 1))) &&
                             eventEnd.isBefore(endOfSelectedDay
-                                .add(const Duration(milliseconds: 1)));
+                                .add(Duration(milliseconds: 1)));
 
                         // 로그 찍기: 이벤트 시작 및 끝 날짜
                         print('Event Start: $eventStart');
@@ -286,7 +286,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                                   const TextStyle(fontWeight: FontWeight.bold),
                             ),
                             subtitle: Text(
-                              '${event.startTime.hour}:${event.startTime.minute.toString().padLeft(2, '0')} - ${event.endTime.hour}:${event.endTime.minute.toString().padLeft(2, '0')}',
+                              '${event.start_time.hour}:${event.start_time.minute.toString().padLeft(2, '0')} - ${event.end_time.hour}:${event.end_time.minute.toString().padLeft(2, '0')}',
                             ),
                             trailing: IconButton(
                               icon: const Icon(Icons.delete, color: Colors.red),
@@ -378,7 +378,7 @@ class EventSearchDelegate extends SearchDelegate<String> {
         return ListTile(
           title: Text(event.title),
           subtitle: Text(
-            '${event.startTime.hour}:${event.startTime.minute.toString().padLeft(2, '0')} - ${event.endTime.hour}:${event.endTime.minute.toString().padLeft(2, '0')}',
+            '${event.start_time.hour}:${event.start_time.minute.toString().padLeft(2, '0')} - ${event.end_time.hour}:${event.end_time.minute.toString().padLeft(2, '0')}',
           ),
           onTap: () {
             Navigator.push(

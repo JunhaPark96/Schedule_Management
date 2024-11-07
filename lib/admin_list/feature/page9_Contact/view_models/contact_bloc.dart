@@ -52,7 +52,9 @@ class ContactBloc extends Bloc<ContactEvent, ContactState> {
   Future<void> _onRemoveContact(
       RemoveContact event, Emitter<ContactState> emit) async {
     try {
-      await ContactRepository().removeContact(event.contact);
+      /* Array ver */
+      //await ContactRepository().removeContact(event.contact);
+      await ContactRepository().removeContact(event.contact.id);
       final updatedList = state.contactList
           .where((contact) => contact != event.contact)
           .toList();

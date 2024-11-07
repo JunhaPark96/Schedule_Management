@@ -36,7 +36,9 @@ class ContactDetailPage extends StatelessWidget {
           IconButton(
             icon: const Icon(Icons.delete),
             onPressed: () {
-              contactRepository.removeContact(contact);
+              /* Array ver */
+              //contactRepository.removeContact(contact);
+              contactRepository.removeContact(contact.id);
               Navigator.pop(context);
             },
           ),

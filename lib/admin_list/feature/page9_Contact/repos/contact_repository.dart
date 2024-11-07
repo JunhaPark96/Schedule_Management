@@ -1,7 +1,10 @@
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 import '../models/contact_model.dart';
 
 class ContactRepository {
-  int _currentId = 0;
+  final String baseUrl = 'http://52.78.12.208:5050';
+  final int _currentId = 0;
 
   final List<Contact> _contacts = [
     Contact(
@@ -314,29 +317,116 @@ class ContactRepository {
     ),
   ];
 
+  // 모든 연락처 조회(Fetch)
   Future<List<Contact>> fetchContacts() async {
-    await Future.delayed(const Duration(seconds: 1));
-    List<Map<String, dynamic>> jsonContacts =
-        _contacts.map((contact) => contact.toJson()).toList();
-    List<Contact> contactsFromJson =
-        jsonContacts.map((json) => Contact.fromJson(json)).toList();
-    return contactsFromJson;
-  }
+    final Uri url = Uri.parse('$baseUrl/contacts');
+    try {
+      final response = await http.get(url);
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> jsonResponse = jsonDecode(response.body);
 
-  Future<void> addContact(Contact contact) async {
-    _contacts.add(contact.copyWith(id: ++_currentId));
-  }
-
-  Future<void> removeContact(Contact contact) async {
-    _contacts.removeWhere((c) => c.id == contact.id);
-  }
-
-  Future<void> updateContact(Contact updatedContact) async {
-    final index = _contacts.indexWhere((c) => c.id == updatedContact.id);
-    if (index != -1) {
-      _contacts[index] = updatedContact;
+        final List<dynamic> contactList = jsonResponse['data'];
+        return contactList.map((contact) => Contact.fromJson(contact)).toList();
+      } else {
+        throw Exception('서버 응답 실패: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('서버 응답 없음 또는 데이터 로드 실패: $e');
+      throw Exception('데이터 로드 실패: $e');
     }
   }
+
+  // 단일 연락처 조회
+  Future<Contact> fetchContactById(int contactId) async {
+    final Uri url = Uri.parse('$baseUrl/contact/$contactId');
+    try {
+      final response = await http.get(url);
+      if (response.statusCode == 200) {
+        return Contact.fromJson(jsonDecode(response.body));
+      } else {
+        throw Exception('서버 응답 실패: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('연락처 조회 실패: $e');
+      throw Exception('연락처 조회 실패: $e');
+    }
+  }
+
+/* Array를 이용한 기존의 Fetch */
+//    Future<List<Contact>> fetchContacts() async {
+//    await Future.delayed(const Duration(seconds: 1));
+//    List<Map<String, dynamic>> jsonContacts = _contacts.map((contact) => contact.toJson()).toList();
+//    List<Contact> contactsFromJson = jsonContacts.map((json) => Contact.fromJson(json)).toList();
+//    return contactsFromJson;
+//  }
+
+  // 새로운 연락처 등록
+  Future<void> addContact(Contact contact) async {
+    final Uri url = Uri.parse('$baseUrl/contact');
+    try {
+      final response = await http.post(
+        url,
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode(contact.toJson()),
+      );
+      if (response.statusCode != 201) {
+        throw Exception('연락처 등록 실패: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('연락처 등록 실패: $e');
+      throw Exception('연락처 등록 실패: $e');
+    }
+  }
+
+  /* Array를 이용한 기존의 Add */
+  //Future<void> addContact(Contact contact) async {
+  //   _contacts.add(contact.copyWith(id: ++_currentId));
+  //}
+
+  // 연락처 삭제
+  Future<void> removeContact(int contactId) async {
+    final Uri url = Uri.parse('$baseUrl/contact/$contactId');
+    try {
+      final response = await http.delete(url);
+      if (response.statusCode != 200) {
+        throw Exception('연락처 삭제 실패: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('연락처 삭제 실패: $e');
+      throw Exception('연락처 삭제 실패: $e');
+    }
+  }
+
+  /* Array를 이용한 기존의 Remove */
+  //Future<void> removeContact(Contact contact) async {
+  //  _contacts.removeWhere((c) => c.id == contact.id);
+  //}
+
+  // 기존 연락처 수정
+  Future<void> updateContact(Contact updatedContact) async {
+    final Uri url = Uri.parse('$baseUrl/contact/${updatedContact.id}');
+    try {
+      final response = await http.put(
+        url,
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode(updatedContact.toJson()),
+      );
+      if (response.statusCode != 200) {
+        throw Exception('연락처 수정 실패: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('연락처 수정 실패: $e');
+      throw Exception('연락처 수정 실패: $e');
+    }
+  }
+
+  /* Array를 이용한 기존의 Update */
+  //Future<void> updateContact(Contact updatedContact) async {
+  //  final index = _contacts.indexWhere((c) => c.id == updatedContact.id);
+  //  if (index != -1) {
+  //    _contacts[index] = updatedContact;
+  //  }
+  //}
 
   List<Map<String, dynamic>> contactsToJson() {
     return _contacts.map((contact) => contact.toJson()).toList();
