@@ -218,6 +218,9 @@ class _EoslListPageState extends State<EoslListPage> {
                         MaterialPageRoute(
                           builder: (context) =>
                               EoslDetailPage(hostName: hostName, tag: tag),
+                        ),
+                      );
+                    },
                     configuration: const PlutoGridConfiguration(
                       style: PlutoGridStyleConfig(
                         activatedColor: Colors.tealAccent,
