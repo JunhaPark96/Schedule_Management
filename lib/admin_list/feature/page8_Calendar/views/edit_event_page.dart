@@ -28,8 +28,8 @@ class _EditEventPageState extends State<EditEventPage> {
     _titleController = TextEditingController(text: widget.event.title);
     _descriptionController =
         TextEditingController(text: widget.event.description);
-    _startTime = widget.event.startTime;
-    _endTime = widget.event.endTime;
+    _startTime = widget.event.start_time;
+    _endTime = widget.event.end_time;
   }
 
   Future<void> _selectDateTime(BuildContext context, bool isStart) async {
@@ -72,8 +72,8 @@ class _EditEventPageState extends State<EditEventPage> {
               final updatedEvent = widget.event.copyWith(
                 title: _titleController.text,
                 description: _descriptionController.text,
-                startTime: _startTime ?? widget.event.startTime,
-                endTime: _endTime ?? widget.event.endTime,
+                startTime: _startTime ?? widget.event.start_time,
+                endTime: _endTime ?? widget.event.end_time,
               );
 
               // EventBloc에 업데이트된 이벤트를 추가

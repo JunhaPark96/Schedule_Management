@@ -33,7 +33,7 @@ class DeleteEosl extends EoslEvent {
   DeleteEosl(this.eoslNo);
 }
 
-// ------------------------------------------------------------
+// ---------------------------eosl_detail page method start-------------------------------------
 
 class FetchEoslDetailList extends EoslEvent {}
 
@@ -53,6 +53,9 @@ class UpdateEoslDetail extends EoslEvent {
 
   UpdateEoslDetail(this.updatedDetail);
 }
+
+// ---------------------------eosl_detail page method end-------------------------------------
+// ---------------------------eosl_maintenance page method end-------------------------------------
 
 class FetchEoslMaintenanceList extends EoslEvent {
   final String hostName;

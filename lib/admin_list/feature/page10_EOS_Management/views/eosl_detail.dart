@@ -42,26 +42,21 @@ class _EoslDetailPageState extends State<EoslDetailPage> {
   void initState() {
     super.initState();
     print('Initializing EoslDetailPage with hostName: ${widget.hostName}');
-    _loadData(); // 초기 데이터 로드
+    _loadData();
   }
 
-  // 데이터를 로드하는 메서드
   void _loadData() {
     final eoslBloc = context.read<EoslBloc>();
 
-    // state에서 가져온 현재 선택된 EoslModel의 tag를 사용
     final currentEosl = eoslBloc.state.eoslList.firstWhere(
       (eosl) => eosl.hostName == widget.hostName,
       orElse: () => EoslModel(
-        tag: 'default', // 기본 값으로 'default' 문자열을 사용
+        tag: 'default',
         hostName: widget.hostName,
       ),
     );
 
     final String currentTag = currentEosl.tag ?? 'default'; // null 안전 처리
-
-    // 로그 추가
-    print('Fetching data for hostName: ${widget.hostName}, tag: $currentTag');
 
     eoslBloc.add(FetchEoslDetail(widget.hostName, currentTag));
   }
@@ -120,13 +115,12 @@ class _EoslDetailPageState extends State<EoslDetailPage> {
 
   // 새로운 Task를 추가하는 메서드
   void _addTask() {
-    // 새로운 작업을 추가할 때 "new_task"라는 특수 인자를 사용하여 이동
     Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => EoslHistoryPage(
           hostName: widget.hostName,
-          tag: widget.tag, // 추가된 tag 인자
+          tag: widget.tag,
           maintenanceNo: null, // 새로운 작업임을 나타내기 위해 null 사용
         ),
       ),
@@ -159,7 +153,7 @@ class _EoslDetailPageState extends State<EoslDetailPage> {
             maintenances = state.eoslMaintenanceList.isNotEmpty
                 ? state.eoslMaintenanceList
                 : [];
-            _applyFilters(); // 필터 적용
+            _applyFilters();
 
             return _buildDetailContent(context, eoslDetailModel);
           } else {
@@ -261,15 +255,13 @@ class _EoslDetailPageState extends State<EoslDetailPage> {
                 return TaskCard(
                   maintenance: maintenance,
                   onTap: () {
-                    // 기존의 taskIndex 대신 maintenanceNo를 전달하여 이동
                     Navigator.push(
                       context,
                       MaterialPageRoute(
                         builder: (context) => EoslHistoryPage(
                           hostName: widget.hostName,
                           tag: widget.tag,
-                          maintenanceNo: maintenance.maintenanceNo ??
-                              'N/A', // maintenanceNo 사용
+                          maintenanceNo: maintenance.maintenanceNo ?? 'N/A',
                         ),
                       ),
                     );
